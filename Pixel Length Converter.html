@@ -1,0 +1,783 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">     
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+    <title>Pixel Length Converter | px to cm, mm, inches, feet & more</title>
+
+    <meta
+        name="description"
+        content="Compare pixels with centimeters, millimeters, inches, feet, meters, points and picas using an easy pixel length converter."
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        header {
+            background: #111827;
+            color: #ffffff;
+            padding: 22px 20px;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .header-inner h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            margin-bottom: 8px;
+        }
+
+        .header-inner p {
+            color: #d1d5db;
+            font-size: 1rem;
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================== */
+
+        main {
+            width: min(1100px, calc(100% - 30px));
+            margin: 35px auto 60px;
+        }
+
+        /* =========================
+           CONVERTER PANEL
+        ========================== */
+
+        .converter-panel {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .converter-panel h2 {
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+
+        .converter-description {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 14px 15px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .input-note {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        /* =========================
+           RESULTS
+        ========================== */
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .results h2 {
+            font-size: 1.5rem;
+            margin-bottom: 18px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .result-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+            min-width: 0;
+        }
+
+        .result-card .unit {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 7px;
+        }
+
+        .result-card .value {
+            font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .result-card .symbol {
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           VISUAL COMPARISON
+        ========================== */
+
+        .visual-section {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+        }
+
+        .visual-section h2 {
+            margin-bottom: 8px;
+        }
+
+        .visual-section > p {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .ruler-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .ruler {
+            position: relative;
+            height: 80px;
+            min-width: 700px;
+            background:
+                repeating-linear-gradient(
+                    to right,
+                    #111827 0,
+                    #111827 1px,
+                    transparent 1px,
+                    transparent 10px
+                );
+            border-bottom: 3px solid #111827;
+        }
+
+        .ruler-labels {
+            display: flex;
+            justify-content: space-between;
+            min-width: 700px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .pixel-marker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 65px;
+            width: 96px;
+            border-right: 4px solid #2563eb;
+            background: rgba(37, 99, 235, 0.08);
+            transition: width 0.2s ease;
+        }
+
+        .pixel-marker::after {
+            content: "Selected length";
+            position: absolute;
+            top: -27px;
+            right: -42px;
+            white-space: nowrap;
+            color: #2563eb;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* =========================
+           REFERENCE TABLE
+        ========================== */
+
+        .table-section {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .table-section h2 {
+            margin-bottom: 8px;
+        }
+
+        .table-section > p {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 14px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-size: 0.9rem;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+
+        /* =========================
+           INFO BOX
+        ========================== */
+
+        .info-box {
+            margin-top: 30px;
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .info-box p {
+            color: #374151;
+            font-size: 0.92rem;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            background: #111827;
+            color: #d1d5db;
+            text-align: center;
+            padding: 25px 15px;
+            font-size: 0.9rem;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 850px) {
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            main {
+                width: min(100% - 20px, 1100px);
+                margin-top: 20px;
+            }
+
+            .converter-panel,
+            .visual-section,
+            .table-section {
+                padding: 20px;
+                border-radius: 14px;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .result-card {
+                padding: 15px;
+            }
+
+            .pixel-marker {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-inner p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <h1>Pixel Length Converter</h1>
+            <p>Compare pixels with real-world units and digital measurement units.</p>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- CONVERTER -->
+
+        <section class="converter-panel">
+
+            <h2>Convert Pixels to Length</h2>
+
+            <p class="converter-description">
+                Enter a pixel value and DPI/PPI to see its equivalent in
+                centimeters, millimeters, inches, feet, meters, points and picas.
+            </p>
+
+            <div class="input-grid">
+
+                <div class="input-group">
+                    <label for="pixels">Pixel Length (px)</label>
+
+                    <input
+                        type="number"
+                        id="pixels"
+                        value="100"
+                        min="0"
+                        step="any"
+                        placeholder="Enter pixels"
+                    >
+
+                    <span class="input-note">
+                        Example: 100 px
+                    </span>
+                </div>
+
+                <div class="input-group">
+                    <label for="dpi">DPI / PPI</label>
+
+                    <input
+                        type="number"
+                        id="dpi"
+                        value="96"
+                        min="1"
+                        step="any"
+                        placeholder="Enter DPI"
+                    >
+
+                    <span class="input-note">
+                        96 DPI is commonly used for CSS/screen calculations.
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- RESULTS -->
+
+            <div class="results">
+
+                <h2>Equivalent Lengths</h2>
+
+                <div class="results-grid">
+
+                    <div class="result-card">
+                        <div class="unit">Pixels</div>
+                        <div class="value" id="resultPx">100</div>
+                        <div class="symbol">px</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="unit">Centimeters</div>
+                        <div class="value" id="resultCm">2.6458</div>
+                        <div class="symbol">cm</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="unit">Millimeters</div>
+                        <div class="value" id="resultMm">26.4583</div>
+                        <div class="symbol">mm</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="unit">Inches</div>
+                        <div class="value" id="resultIn">1.0417</div>
+                        <div class="symbol">in</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="unit">Feet</div>
+                        <div class="value" id="resultFt">0.0868</div>
+                        <div class="symbol">ft</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="unit">Meters</div>
+                        <div class="value" id="resultM">0.026458</div>
+                        <div class="symbol">m</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="unit">Points</div>
+                        <div class="value" id="resultPt">75</div>
+                        <div class="symbol">pt</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="unit">Picas</div>
+                        <div class="value" id="resultPc">6.25</div>
+                        <div class="symbol">pc</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- VISUAL RULER -->
+
+        <section class="visual-section">
+
+            <h2>Visual Pixel Comparison</h2>
+
+            <p>
+                The blue section represents the selected pixel length
+                relative to the ruler below.
+            </p>
+
+            <div class="ruler-wrapper">
+
+                <div class="ruler">
+
+                    <div
+                        class="pixel-marker"
+                        id="pixelMarker"
+                    ></div>
+
+                </div>
+
+                <div class="ruler-labels">
+                    <span>0</span>
+                    <span>100</span>
+                    <span>200</span>
+                    <span>300</span>
+                    <span>400</span>
+                    <span>500</span>
+                    <span>600 px</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- QUICK REFERENCE -->
+
+        <section class="table-section">
+
+            <h2>Quick Pixel Reference</h2>
+
+            <p>
+                Approximate physical equivalents at 96 DPI/PPI.
+            </p>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Pixels</th>
+                            <th>Centimeters</th>
+                            <th>Millimeters</th>
+                            <th>Inches</th>
+                            <th>Feet</th>
+                            <th>Meters</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="referenceTable">
+
+                        <tr>
+                            <td>10 px</td>
+                            <td>0.2646 cm</td>
+                            <td>2.6458 mm</td>
+                            <td>0.1042 in</td>
+                            <td>0.0087 ft</td>
+                            <td>0.0026 m</td>
+                        </tr>
+
+                        <tr>
+                            <td>50 px</td>
+                            <td>1.3229 cm</td>
+                            <td>13.2292 mm</td>
+                            <td>0.5208 in</td>
+                            <td>0.0434 ft</td>
+                            <td>0.0132 m</td>
+                        </tr>
+
+                        <tr>
+                            <td>100 px</td>
+                            <td>2.6458 cm</td>
+                            <td>26.4583 mm</td>
+                            <td>1.0417 in</td>
+                            <td>0.0868 ft</td>
+                            <td>0.0265 m</td>
+                        </tr>
+
+                        <tr>
+                            <td>200 px</td>
+                            <td>5.2917 cm</td>
+                            <td>52.9167 mm</td>
+                            <td>2.0833 in</td>
+                            <td>0.1736 ft</td>
+                            <td>0.0529 m</td>
+                        </tr>
+
+                        <tr>
+                            <td>500 px</td>
+                            <td>13.2292 cm</td>
+                            <td>132.2917 mm</td>
+                            <td>5.2083 in</td>
+                            <td>0.4340 ft</td>
+                            <td>0.1323 m</td>
+                        </tr>
+
+                        <tr>
+                            <td>1000 px</td>
+                            <td>26.4583 cm</td>
+                            <td>264.5833 mm</td>
+                            <td>10.4167 in</td>
+                            <td>0.8681 ft</td>
+                            <td>0.2646 m</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <strong>Important: Pixels do not have a fixed physical size.</strong>
+
+                <p>
+                    A pixel is a digital measurement. Its physical size depends
+                    on the pixel density (DPI/PPI). For example, at 96 DPI,
+                    96 pixels correspond to 1 inch. At 300 DPI, 300 pixels
+                    correspond to 1 inch. Change the DPI above to calculate
+                    different physical-size equivalents.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        Pixel Length Converter &copy; 2026
+    </footer>
+
+
+    <script>
+
+        const pixelsInput = document.getElementById("pixels");
+        const dpiInput = document.getElementById("dpi");
+
+        const resultPx = document.getElementById("resultPx");
+        const resultCm = document.getElementById("resultCm");
+        const resultMm = document.getElementById("resultMm");
+        const resultIn = document.getElementById("resultIn");
+        const resultFt = document.getElementById("resultFt");
+        const resultM = document.getElementById("resultM");
+        const resultPt = document.getElementById("resultPt");
+        const resultPc = document.getElementById("resultPc");
+
+        const pixelMarker = document.getElementById("pixelMarker");
+
+        function formatNumber(number, decimals = 6) {
+
+            if (!Number.isFinite(number)) {
+                return "0";
+            }
+
+            return Number(
+                number.toFixed(decimals)
+            ).toLocaleString("en-US");
+
+        }
+
+        function convertPixels() {
+
+            const pixels = parseFloat(pixelsInput.value);
+            const dpi = parseFloat(dpiInput.value);
+
+            if (
+                !Number.isFinite(pixels) ||
+                !Number.isFinite(dpi) ||
+                dpi <= 0 ||
+                pixels < 0
+            ) {
+                return;
+            }
+
+            /*
+                Basic conversion:
+
+                inches = pixels / DPI
+                cm     = inches × 2.54
+                mm     = inches × 25.4
+                feet   = inches / 12
+                meters = inches × 0.0254
+                points = inches × 72
+                picas  = inches × 6
+            */
+
+            const inches = pixels / dpi;
+
+            const centimeters = inches * 2.54;
+            const millimeters = inches * 25.4;
+            const feet = inches / 12;
+            const meters = inches * 0.0254;
+            const points = inches * 72;
+            const picas = inches * 6;
+
+            resultPx.textContent = formatNumber(pixels, 4);
+            resultCm.textContent = formatNumber(centimeters, 6);
+            resultMm.textContent = formatNumber(millimeters, 6);
+            resultIn.textContent = formatNumber(inches, 6);
+            resultFt.textContent = formatNumber(feet, 6);
+            resultM.textContent = formatNumber(meters, 8);
+            resultPt.textContent = formatNumber(points, 4);
+            resultPc.textContent = formatNumber(picas, 4);
+
+            /*
+                Visual ruler.
+
+                The ruler represents 600 px.
+                The selected length is scaled so very large
+                pixel values don't destroy the layout.
+            */
+
+            const maxVisualPixels = 600;
+
+            let visualWidth =
+                (pixels / maxVisualPixels) * 100;
+
+            visualWidth = Math.max(
+                0,
+                Math.min(100, visualWidth)
+            );
+
+            pixelMarker.style.width =
+                visualWidth + "%";
+        }
+
+        pixelsInput.addEventListener(
+            "input",
+            convertPixels
+        );
+
+        dpiInput.addEventListener(
+            "input",
+            convertPixels
+        );
+
+        convertPixels();
+
+    </script>
+
+
+<footer>
+© 2026 Frambuk International Ventures
+</footer>
+
+<script src="script.js"></script>
+    <script>
+        function slideSection(id,direction){
+        let slider=document.getElementById(id);
+    slider.scrollLeft += direction * 350;
+    }
+
+</script>
+    </body>
+
+</html>
+

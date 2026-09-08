@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d7a43">
+
+<title>Frambuk Document Searcher — PDF, Word, Text & EPUB</title>
+
+<link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<style>
+:root{
+    --brand:#0d7a43;
+    --brand-2:#19a45b;
+    --brand-soft:#eaf8f0;
+    --navy:#10251a;
+    --ink:#24332a;
+    --muted:#6f7d74;
+    --line:#dfe8e2;
+    --surface:#ffffff;
+    --surface-2:#f6faf7;
+    --page:#eef4f0;
+    --warning:#a96800;
+    --warning-bg:#fff7e7;
+    --danger:#b42318;
+    --shadow:0 22px 60px rgba(19,46,31,.10);
+    --shadow-sm:0 8px 24px rgba(19,46,31,.08);
+    --radius:22px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Poppins,Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 8% 0%,rgba(25,164,91,.10),transparent 27%),
+      radial-gradient(circle at 92% 4%,rgba(13,122,67,.08),transparent 25%),
+      linear-gradient(180deg,#f8fbf9 0%,var(--page) 100%);
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.45}
+
+/* Header */
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(18,43,28,.07);
+}
+.header-container{
+    width:min(1220px,94%);
+    min-height:76px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+}
+.logo img{width:145px;display:block}
+nav{display:flex;gap:6px;align-items:center}
+nav a{
+    color:#435148;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:700;
+    padding:11px 16px;
+    border-radius:999px;
+}
+nav a:hover,nav a.active{color:var(--brand);background:var(--brand-soft)}
+.hamburger{display:none;font-size:25px}
+.header-icons{display:flex;gap:9px}
+.header-icons>div{
+    position:relative;
+    width:42px;height:42px;
+    display:grid;place-items:center;
+    border-radius:50%;
+    background:#f1f5f2;
+    transition:.2s;
+    cursor:pointer;
+}
+.header-icons>div:hover{transform:translateY(-2px);background:var(--brand-soft)}
+#cartCount{
+    position:absolute;top:-3px;right:-2px;
+    min-width:18px;height:18px;padding:0 4px;
+    border-radius:20px;background:#d92d20;color:#fff;
+    display:grid;place-items:center;
+    font-size:15px;font-weight:800;
+}
+
+/* Hero */
+.hero{
+    width:min(1120px,92%);
+    margin:48px auto 25px;
+    text-align:center;
+}
+.eyebrow{
+    display:inline-flex;gap:8px;align-items:center;
+    padding:8px 14px;border:1px solid #cfe8d9;
+    background:var(--brand-soft);color:var(--brand);
+    border-radius:999px;font-size:15px;font-weight:800;
+    letter-spacing:.3px;
+}
+.hero h1{
+    margin:16px 0 12px;
+    font:800 clamp(34px,5.4vw,60px)/1.05 "Playfair Display",serif;
+    color:var(--navy);
+}
+.hero h1 span{color:var(--brand)}
+.hero p{
+    max-width:760px;margin:auto;
+    color:var(--muted);font-size:13px;line-height:1.85;
+}
+
+/* Main app */
+.app{
+    width:min(1180px,94%);
+    margin:0 auto 65px;
+}
+.shell{
+    background:rgba(255,255,255,.97);
+    border:1px solid rgba(13,122,67,.10);
+    border-radius:30px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+.toolbar{
+    padding:12px;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:10px;
+    align-items:center;
+    background:#f4f8f5;
+    border-bottom:1px solid var(--line);
+}
+.file-pill{
+    min-height:48px;
+    display:flex;align-items:center;gap:10px;
+    padding:8px 14px;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:14px;
+}
+.file-pill i{color:var(--brand)}
+.file-pill strong{font-size:13px}
+.file-pill small{display:block;color:var(--muted);font-size:15px;margin-top:2px}
+.search-box{
+    min-height:48px;
+    display:flex;align-items:center;gap:9px;
+    padding:0 13px;
+    background:#fff;border:1px solid var(--line);
+    border-radius:14px;
+}
+.search-box i{color:#8b9890}
+.search-box input{
+    width:100%;border:0;outline:0;background:transparent;
+    color:var(--ink);font-size:14px;
+}
+.tool-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.icon-btn,.text-btn{
+    min-height:42px;border:1px solid var(--line);
+    background:#fff;color:#46534b;border-radius:12px;
+    padding:0 12px;font-size:13px;font-weight:800;
+    transition:.2s;
+}
+.icon-btn{width:42px;padding:0}
+.icon-btn:hover,.text-btn:hover{border-color:#b9d9c5;background:var(--brand-soft);color:var(--brand)}
+.primary{
+    background:var(--brand);border-color:var(--brand);color:#fff;
+}
+.primary:hover{background:#096737;color:#fff}
+.danger:hover{color:var(--danger);background:#fff1f0}
+
+/* Secondary controls */
+.control-row{
+    display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line);
+}
+.control-group{
+    display:flex;align-items:center;gap:6px;
+    padding:4px;border:1px solid var(--line);
+    background:#fbfdfc;border-radius:12px;
+}
+.control-label{
+    color:#748077;font-size:13px;font-weight:800;
+    padding:0 7px;
+}
+.compact{
+    min-height:34px;padding:0 9px;
+    border:0;border-radius:8px;
+    background:transparent;color:#4a574f;
+    font-size:13px;font-weight:800;
+}
+.compact:hover{background:var(--brand-soft);color:var(--brand)}
+.counter{
+    min-width:76px;text-align:center;
+    font-size:13px;font-weight:800;color:#56635a;
+}
+.spacer{flex:1}
+.status-chip{
+    padding:7px 10px;border-radius:999px;
+    background:var(--brand-soft);color:var(--brand);
+    font-size:13px;font-weight:800;
+}
+.status-chip.warn{background:var(--warning-bg);color:var(--warning)}
+.status-chip.error{background:#fff1f0;color:var(--danger)}
+
+/* Drop area */
+.workspace{
+    display:grid;
+    grid-template-columns:280px minmax(0,1fr);
+    min-height:650px;
+}
+.sidebar{
+    padding:18px;
+    border-right:1px solid var(--line);
+    background:linear-gradient(180deg,#fbfdfc,#f6faf7);
+}
+.dropzone{
+    min-height:230px;
+    padding:25px 18px;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;flex-direction:column;
+    border:2px dashed #b9d6c3;
+    border-radius:20px;
+    background:#fff;
+    transition:.25s;
+}
+.dropzone.drag{
+    border-color:var(--brand);
+    background:var(--brand-soft);
+    transform:translateY(-2px);
+}
+.drop-icon{
+    width:68px;height:68px;display:grid;place-items:center;
+    border-radius:19px;background:var(--brand-soft);
+    color:var(--brand);font-size:27px;
+    margin-bottom:13px;
+}
+.dropzone h3{font-size:16px;margin:0 0 6px;color:var(--navy)}
+.dropzone p{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 14px}
+.browse{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:10px 14px;border-radius:10px;
+    background:var(--brand);color:#fff;
+    font-size:13px;font-weight:800;cursor:pointer;
+}
+#fileInput{display:none}
+.help-card{
+    margin-top:14px;padding:15px;
+    border:1px solid var(--line);border-radius:16px;
+    background:#fff;
+}
+.help-card h4{margin:0 0 9px;font-size:13px}
+.help-card ul{padding-left:16px;margin:0}
+.help-card li{font-size:13px;color:var(--muted);line-height:1.8}
+.stats{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:8px;margin-top:10px;
+}
+.stat{
+    padding:11px;border:1px solid var(--line);
+    background:#fff;border-radius:13px;
+}
+.stat strong{display:block;color:var(--navy);font-size:15px}
+.stat span{font-size:15px;color:var(--muted)}
+
+/* Viewer */
+.viewer{
+    min-width:0;
+    padding:20px;
+    background:
+      linear-gradient(135deg,rgba(13,122,67,.025),transparent 30%),
+      #edf3ef;
+}
+.viewer-head{
+    display:flex;justify-content:space-between;align-items:center;
+    gap:10px;margin-bottom:14px;
+}
+.viewer-head h2{font-size:16px;margin:0;color:var(--navy)}
+.viewer-head p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.view-badge{font-size:13px;font-weight:800;padding:7px 9px;border-radius:9px;background:#fff;border:1px solid var(--line)}
+.results{min-height:510px}
+.empty{
+    min-height:500px;display:grid;place-items:center;text-align:center;
+    padding:40px;
+}
+.empty-inner{max-width:380px}
+.empty-icon{
+    width:86px;height:86px;margin:auto auto 15px;
+    display:grid;place-items:center;border-radius:25px;
+    background:#fff;color:#9aac9f;font-size:35px;
+    box-shadow:var(--shadow-sm);
+}
+.empty h3{font-size:16px;margin:0 0 7px;color:#405047}
+.empty p{font-size:14px;color:var(--muted);line-height:1.7;margin:0}
+
+/* PDF pages */
+.page{
+    position:relative;
+    margin:0 auto 22px;
+    max-width:900px;
+    background:#fff;
+    box-shadow:0 12px 35px rgba(0,0,0,.10);
+    border-radius:6px;
+    overflow:hidden;
+}
+.page canvas{display:block;width:100%;height:auto}
+.page-number{
+    position:absolute;left:12px;top:12px;
+    z-index:4;padding:6px 8px;border-radius:7px;
+    color:#fff;background:rgba(15,29,21,.78);
+    font-size:13px;font-weight:800;
+}
+.textLayer{
+    position:absolute;left:0;top:0;right:0;bottom:0;
+    overflow:hidden;opacity:1;
+    line-height:1;
+}
+.textLayer span,.textLayer br{
+    position:absolute;
+    color:transparent;
+    cursor:text;
+    transform-origin:0 0;
+    white-space:pre;
+}
+ .textLayer span::selection,
+    .textLayer br::selection{
+        background:rgba(25,164,91,.35);
+        color:#10251a;
+    }
+
+    mark.highlight{
+        background:rgba(255,232,106,.82)!important;
+        color:#10251a!important;
+        border-radius:3px;
+        padding:0 1px;
+        -webkit-box-decoration-break:clone;
+        box-decoration-break:clone;
+    }
+
+    mark.current{
+        background:rgba(255,159,67,.90)!important;
+        color:#10251a!important;
+        border-radius:3px;
+        padding:0 1px;
+        box-shadow:0 0 0 2px rgba(255,159,67,.35);
+        -webkit-box-decoration-break:clone;
+        box-decoration-break:clone;
+    }
+
+    mark.highlight::selection,
+    mark.current::selection{
+        background:rgba(13,122,67,.45);
+        color:#10251a;
+    }
+/* DOC content */
+#docContent{
+    max-width:900px;margin:auto;
+    background:#fff;color:#1f2923;
+    padding:48px 55px;
+    border-radius:10px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+    line-height:1.75;
+    font-size:14px;
+}
+#docContent img{max-width:100%;height:auto}
+#docContent table{max-width:100%;border-collapse:collapse}
+#docContent td,#docContent th{border:1px solid #dfe7e1;padding:7px}
+#docContent pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:15px;line-height:1.65}
+#docContent .highlight{background:#ffe86a;color:#111;border-radius:2px}
+#docContent .current{background:#ff9f43}
+
+/* Search result drawer */
+.search-summary{
+    display:none;margin:0 0 12px;
+    padding:13px 15px;background:#fff;
+    border:1px solid var(--line);border-radius:14px;
+}
+.search-summary.show{display:block}
+.search-summary strong{font-size:15px}
+.search-summary span{font-size:14px;color:var(--muted)}
+.match-list{display:grid;gap:7px;margin-top:10px}
+.match-item{
+    width:100%;text-align:left;border:1px solid var(--line);
+    background:#fbfdfc;border-radius:11px;padding:10px 12px;
+    transition:.2s;
+}
+.match-item:hover,.match-item.active{border-color:#b8dcc5;background:var(--brand-soft)}
+.match-item small{display:block;color:var(--brand);font-weight:800;font-size:15px;margin-bottom:3px}
+.match-item p{margin:0;font-size:13px;line-height:1.5;color:#556159}
+
+/* Toast */
+.toast{
+    position:fixed;left:50%;bottom:24px;z-index:3000;
+    transform:translate(-50%,20px);
+    opacity:0;pointer-events:none;
+    padding:12px 16px;border-radius:13px;
+    color:#fff;background:#173122;
+    box-shadow:0 15px 35px rgba(0,0,0,.20);
+    font-size:15px;font-weight:700;
+    transition:.25s;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.error{background:#a12620}
+
+/* Loading */
+.loading{
+    display:flex;align-items:center;justify-content:center;
+    gap:10px;color:var(--muted);padding:35px;
+    font-size:15px;
+}
+.spinner{
+    width:18px;height:18px;border:2px solid #b9d6c3;
+    border-top-color:var(--brand);border-radius:50%;
+    animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Footer */
+footer{
+    padding:35px 20px;background:#fff;
+    border-top:1px solid var(--line);
+    text-align:center;color:#78847c;font-size:14px;
+}
+footer strong{color:var(--brand)}
+
+/* Dark mode */
+body.dark{
+    --navy:#f1f7f3;--ink:#dbe7df;--muted:#9aa9a0;
+    --line:#2b3b32;--surface:#17231c;--surface-2:#132019;
+    --page:#0d1712;
+    background:#0d1712;color:var(--ink);
+}
+body.dark header,body.dark footer,body.dark .shell,body.dark .toolbar,
+body.dark .file-pill,body.dark .search-box,body.dark .control-group,
+body.dark .dropzone,body.dark .help-card,body.dark .stat,
+body.dark .search-summary,body.dark .match-item,body.dark .icon-btn,
+body.dark .text-btn,body.dark #docContent{
+    background:#17231c;color:var(--ink);border-color:var(--line);
+}
+body.dark .sidebar{background:#132019;border-color:var(--line)}
+body.dark .viewer{background:#0e1913}
+body.dark .empty-icon{background:#17231c}
+body.dark .page{box-shadow:0 15px 40px rgba(0,0,0,.35)}
+
+/* Responsive */
+@media(max-width:900px){
+    .toolbar{grid-template-columns:1fr}
+    .tool-actions{justify-content:flex-start}
+    .workspace{grid-template-columns:1fr}
+    .sidebar{border-right:0;border-bottom:1px solid var(--line)}
+    .dropzone{min-height:190px}
+}
+@media(max-width:680px){
+    .header-container{min-height:66px}
+    .hamburger{display:block}
+    .logo{flex:1;text-align:center}
+    .logo img{width:122px;margin:auto}
+    nav{
+        display:none;position:absolute;left:3%;right:3%;top:65px;
+        flex-direction:column;padding:9px;background:#fff;
+        border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow-sm)
+    }
+    nav.show{display:flex}
+    nav a{width:100%;text-align:center}
+    .hero{margin-top:32px}
+    .app{width:96%}
+    .shell{border-radius:20px}
+    .control-row{align-items:stretch}
+    .spacer{display:none}
+    .viewer{padding:12px}
+    #docContent{padding:28px 22px;font-size:15px}
+    .results{min-height:400px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="hamburger" onclick="toggleMenu()" aria-label="Open menu">☰</div>
+
+    <div class="logo">
+      <a href="index.html">
+        <img src="images/Frambuk-Logo.png" alt="Frambuk">
+      </a>
+    </div>
+
+    <nav id="menu">
+      <a href="index.html">Home</a>
+      <a class="active" href="index.html#apps">Free To Use Apps</a>
+    </nav>
+
+    <div class="header-icons">
+      <div onclick="safeOpenCart()" title="Cart">
+        🛒<span id="cartCount">0</span>
+      </div>
+      <div onclick="safeCheckout()" title="Checkout">💳</div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow"><i class="fa-solid fa-magnifying-glass"></i> FRAMBUK SMART DOCUMENT TOOL</div>
+  <h1>Find Anything Inside Your <span>Documents</span></h1>
+  <p>
+    Search PDFs, Word documents, text files and EPUBs in one beautiful workspace.
+    Highlight every match, jump between results, copy what you need and export your findings —
+    all directly in your browser.
+  </p>
+</section>
+
+<main class="app">
+  <section class="shell">
+
+    <div class="toolbar">
+      <div class="file-pill" id="filePill">
+        <i class="fa-regular fa-file-lines"></i>
+        <div>
+          <strong id="fileLabel">No document loaded</strong>
+          <small id="fileMeta">PDF • DOCX • TXT • EPUB</small>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="searchInput" type="search"
+               placeholder="Search a word, phrase or sentence…"
+               autocomplete="off">
+      </div>
+
+      <div class="tool-actions">
+        <button class="text-btn primary" id="searchBtn">
+          <i class="fa-solid fa-search"></i> Search
+        </button>
+        <button class="text-btn" id="clearBtn">
+          <i class="fa-solid fa-eraser"></i> Clear
+        </button>
+        <button class="text-btn" id="exportBtn" disabled>
+          <i class="fa-solid fa-file-export"></i> Export
+        </button>
+      </div>
+    </div>
+
+    <div class="control-row">
+
+      <div class="control-group">
+        <span class="control-label">MATCHES</span>
+        <button class="compact" id="prevBtn" disabled title="Previous match">↑</button>
+        <span class="counter" id="counter">0 / 0</span>
+        <button class="compact" id="nextBtn" disabled title="Next match">↓</button>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">VIEW</span>
+        <button class="compact" id="zoomOut" title="Zoom out">−</button>
+        <span class="counter" id="zoomValue">100%</span>
+        <button class="compact" id="zoomIn" title="Zoom in">+</button>
+        <button class="compact" id="zoomReset">Reset</button>
+      </div>
+
+      <button class="compact" id="printBtn" title="Print document">
+        <i class="fa-solid fa-print"></i> Print
+      </button>
+
+      <button class="compact" id="copyBtn" title="Copy current match" disabled>
+        <i class="fa-regular fa-copy"></i> Copy Match
+      </button>
+
+      <div class="spacer"></div>
+
+      <span class="status-chip" id="statusChip">Ready</span>
+      <button class="compact" id="themeBtn" title="Toggle dark mode">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
+
+    <div class="workspace">
+
+      <aside class="sidebar">
+
+        <div class="dropzone" id="dropZone">
+          <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <h3>Drop a document here</h3>
+          <p>
+            Search inside PDF, DOCX, TXT or EPUB files.
+            Nothing is uploaded to a server.
+          </p>
+
+          <label class="browse" for="fileInput">
+            <i class="fa-solid fa-folder-open"></i> Choose Document
+          </label>
+
+          <input id="fileInput" type="file"
+                 accept=".pdf,.docx,.txt,.epub,application/pdf">
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <strong id="pageStat">0</strong>
+            <span>PAGES / VIEWS</span>
+          </div>
+          <div class="stat">
+            <strong id="wordStat">0</strong>
+            <span>WORDS</span>
+          </div>
+        </div>
+
+        <div class="help-card">
+          <h4><i class="fa-solid fa-wand-magic-sparkles"></i> Quick tips</h4>
+          <ul>
+            <li>Press <b>Enter</b> to search.</li>
+            <li>Use ↑ / ↓ to move through matches.</li>
+            <li>Double-click a result to jump to it.</li>
+            <li>Export creates a clean TXT file of matches.</li>
+            <li>PDF text remains selectable.</li>
+          </ul>
+        </div>
+
+        <div class="help-card">
+          <h4><i class="fa-solid fa-shield-halved"></i> Privacy first</h4>
+          <ul>
+            <li>Your document is processed in your browser.</li>
+            <li>No document upload is required.</li>
+            <li>Only external libraries are loaded from CDNs.</li>
+          </ul>
+        </div>
+
+      </aside>
+
+      <section class="viewer">
+
+        <div class="viewer-head">
+          <div>
+            <h2 id="viewerTitle">Document Preview</h2>
+            <p id="viewerSub">Load a file to begin searching.</p>
+          </div>
+          <span class="view-badge" id="typeBadge">WAITING</span>
+        </div>
+
+        <div class="search-summary" id="searchSummary">
+          <strong id="summaryTitle">Search results</strong>
+          <span id="summaryText"></span>
+          <div class="match-list" id="matchList"></div>
+        </div>
+
+        <div id="results" class="results">
+          <div class="empty">
+            <div class="empty-inner">
+              <div class="empty-icon">
+                <i class="fa-regular fa-file-lines"></i>
+              </div>
+              <h3>Your document will appear here</h3>
+              <p>
+                Choose a PDF, DOCX, TXT or EPUB file.
+                Once loaded, use the search box to instantly find text.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="docContent" style="display:none"></div>
+
+      </section>
+
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  © 2026 <strong>Frambuk International Ventures</strong> · Smart tools for everyday work
+</footer>
+
+<script>
+/* ============================================================
+   FRAMBUK DOCUMENT SEARCHER — ENHANCED VERSION
+   PDF • DOCX • TXT • EPUB
+   ============================================================ */
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const $ = id => document.getElementById(id);
+
+const fileInput = $("fileInput");
+const dropZone = $("dropZone");
+const searchInput = $("searchInput");
+const searchBtn = $("searchBtn");
+const clearBtn = $("clearBtn");
+const exportBtn = $("exportBtn");
+const prevBtn = $("prevBtn");
+const nextBtn = $("nextBtn");
+const copyBtn = $("copyBtn");
+const printBtn = $("printBtn");
+const results = $("results");
+const docContent = $("docContent");
+const counter = $("counter");
+const statusChip = $("statusChip");
+const toast = $("toast");
+
+let fileType = "";
+let loadedFile = null;
+let originalHTML = "";
+let pdfPages = [];
+let textLayers = [];
+let matches = [];
+let currentIndex = -1;
+let currentZoom = 1;
+let currentPdfScale = 1.5;
+let currentQuery = "";
+let matchData = [];
+let plainText = "";
+let searchTimer = null;
+
+/* ---------- UI ---------- */
+
+function showToast(message, isError=false){
+  toast.textContent = message;
+  toast.className = "toast show" + (isError ? " error" : "");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.className = "toast", 2600);
+}
+
+function setStatus(text, type="ready"){
+  statusChip.textContent = text;
+  statusChip.className = "status-chip" +
+    (type === "warn" ? " warn" : type === "error" ? " error" : "");
+}
+
+function setLoading(text){
+  setStatus(text);
+  results.innerHTML =
+    `<div class="loading"><span class="spinner"></span>${escapeHTML(text)}</div>`;
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[ch]));
+}
+
+function sleep(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/* ---------- File handling ---------- */
+
+fileInput.addEventListener("change", e => {
+  const file = e.target.files?.[0];
+  if(file) loadFile(file);
+});
+
+["dragenter","dragover"].forEach(eventName => {
+  dropZone.addEventListener(eventName, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.add("drag");
+  });
+});
+
+["dragleave","drop"].forEach(eventName => {
+  dropZone.addEventListener(eventName, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    if(eventName === "dragleave") dropZone.classList.remove("drag");
+  });
+});
+
+dropZone.addEventListener("drop", e => {
+  dropZone.classList.remove("drag");
+  const file = e.dataTransfer.files?.[0];
+  if(file) loadFile(file);
+});
+
+async function loadFile(file){
+  const ext = file.name.split(".").pop().toLowerCase();
+
+  if(!["pdf","docx","txt","epub"].includes(ext)){
+    showToast("Unsupported file. Please use PDF, DOCX, TXT or EPUB.", true);
+    return;
+  }
+
+  loadedFile = file;
+  fileType = ext;
+  currentQuery = "";
+  matches = [];
+  matchData = [];
+  currentIndex = -1;
+  originalHTML = "";
+  plainText = "";
+  pdfPages = [];
+  textLayers = [];
+  currentZoom = 1;
+  updateZoom();
+
+  searchInput.value = "";
+  exportBtn.disabled = true;
+  copyBtn.disabled = true;
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
+  $("searchSummary").classList.remove("show");
+
+  $("fileLabel").textContent = file.name;
+  $("fileMeta").textContent =
+    `${ext.toUpperCase()} • ${formatBytes(file.size)}`;
+
+  $("typeBadge").textContent = ext.toUpperCase();
+  $("viewerTitle").textContent = file.name;
+  $("viewerSub").textContent = `Loading ${ext.toUpperCase()} document…`;
+
+  if(ext === "pdf") await loadPDF(file);
+  else if(ext === "docx") await loadDOCX(file);
+  else if(ext === "txt") await loadTXT(file);
+  else if(ext === "epub") await loadEPUB(file);
+}
+
+function formatBytes(bytes){
+  if(!bytes) return "0 B";
+  const units = ["B","KB","MB","GB"];
+  const i = Math.min(Math.floor(Math.log(bytes)/Math.log(1024)), units.length-1);
+  return `${(bytes/Math.pow(1024,i)).toFixed(i ? 1 : 0)} ${units[i]}`;
+}
+
+/* ---------- PDF ---------- */
+
+async function loadPDF(file){
+  try{
+    setLoading("Reading PDF…");
+
+    const buffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data:new Uint8Array(buffer)}).promise;
+
+    results.innerHTML = "";
+    docContent.style.display = "none";
+    results.style.display = "block";
+
+    pdfPages = [];
+    textLayers = [];
+    let totalWords = 0;
+
+    for(let i=1; i<=pdf.numPages; i++){
+      setStatus(`Rendering ${i}/${pdf.numPages}`);
+
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({scale:currentPdfScale});
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "page";
+      wrapper.dataset.page = i;
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d", {willReadFrequently:false});
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+
+      await page.render({canvasContext:ctx, viewport}).promise;
+
+      const number = document.createElement("div");
+      number.className = "page-number";
+      number.textContent = `PAGE ${i}`;
+
+      const textLayer = document.createElement("div");
+      textLayer.className = "textLayer";
+
+      const textContent = await page.getTextContent();
+      totalWords += textContent.items.reduce((sum,item) =>
+        sum + countWords(item.str || ""), 0);
+
+      await pdfjsLib.renderTextLayer({
+        textContentSource: textContent,
+        container: textLayer,
+        viewport,
+        textDivs: []
+      }).promise;
+
+      wrapper.append(canvas, textLayer, number);
+      results.appendChild(wrapper);
+
+      pdfPages.push(wrapper);
+      textLayers.push(textLayer);
+
+      await sleep(0);
+    }
+
+    $("pageStat").textContent = pdf.numPages;
+    $("wordStat").textContent = formatNumber(totalWords);
+    $("viewerSub").textContent =
+      `${pdf.numPages} page${pdf.numPages===1?"":"s"} • ${formatNumber(totalWords)} words • Text selectable`;
+
+    setStatus("Ready");
+    showToast("PDF loaded successfully.");
+  }catch(err){
+    console.error(err);
+    showError("Could not read this PDF. It may be damaged or password protected.");
+  }
+}
+
+/* ---------- DOCX ---------- */
+
+async function loadDOCX(file){
+  try{
+    setLoading("Reading Word document…");
+
+    const buffer = await file.arrayBuffer();
+    const response = await mammoth.convertToHtml({arrayBuffer:buffer});
+
+    originalHTML = response.value || "<p>No readable text found.</p>";
+
+    results.style.display = "none";
+    docContent.style.display = "block";
+    docContent.innerHTML = originalHTML;
+
+    plainText = docContent.innerText || "";
+    $("pageStat").textContent = "1";
+    $("wordStat").textContent = formatNumber(countWords(plainText));
+    $("viewerSub").textContent =
+      `${formatNumber(countWords(plainText))} words • Word document`;
+
+    setStatus("Ready");
+    showToast("Word document loaded.");
+  }catch(err){
+    console.error(err);
+    showError("Could not read this Word document.");
+  }
+}
+
+/* ---------- TXT ---------- */
+
+async function loadTXT(file){
+  try{
+    setLoading("Reading text file…");
+
+    const text = await file.text();
+    plainText = text;
+
+    results.style.display = "none";
+    docContent.style.display = "block";
+    originalHTML =
+      `<pre>${escapeHTML(text)}</pre>`;
+    docContent.innerHTML = originalHTML;
+
+    $("pageStat").textContent = "1";
+    $("wordStat").textContent = formatNumber(countWords(text));
+    $("viewerSub").textContent =
+      `${formatNumber(countWords(text))} words • Plain text`;
+
+    setStatus("Ready");
+    showToast("Text file loaded.");
+  }catch(err){
+    console.error(err);
+    showError("Could not read this text file.");
+  }
+}
+
+/* ---------- EPUB ---------- */
+
+async function loadEPUB(file){
+  try{
+    setLoading("Reading EPUB package…");
+
+    const zip = await JSZip.loadAsync(file);
+    let orderedFiles = [];
+
+    /* Try to locate OPF and respect the book's reading order. */
+    const containerFile = zip.file("META-INF/container.xml");
+
+    if(containerFile){
+      const containerXML = await containerFile.async("text");
+      const containerDoc = new DOMParser().parseFromString(containerXML,"application/xml");
+      const rootfile = containerDoc.querySelector("rootfile");
+
+      if(rootfile){
+        const opfPath = rootfile.getAttribute("full-path");
+        const opfFile = zip.file(opfPath);
+
+        if(opfFile){
+          const opfXML = await opfFile.async("text");
+          const opfDoc = new DOMParser().parseFromString(opfXML,"application/xml");
+          const manifest = {};
+          opfDoc.querySelectorAll("manifest > item").forEach(item => {
+            manifest[item.getAttribute("id")] = item.getAttribute("href");
+          });
+
+          const base = opfPath.substring(0, opfPath.lastIndexOf("/") + 1);
+
+          opfDoc.querySelectorAll("spine > itemref").forEach(ref => {
+            const href = manifest[ref.getAttribute("idref")];
+            if(href){
+              const normalized = resolveZipPath(base + href);
+              if(zip.file(normalized)) orderedFiles.push(normalized);
+            }
+          });
+        }
+      }
+    }
+
+    if(!orderedFiles.length){
+      orderedFiles = Object.keys(zip.files)
+        .filter(name => /\.(xhtml|html|htm)$/i.test(name))
+        .sort();
+    }
+
+    let combined = "";
+    for(const filename of orderedFiles){
+      const entry = zip.file(filename);
+      if(!entry) continue;
+      const source = await entry.async("text");
+      const parsed = new DOMParser().parseFromString(source,"text/html");
+      const body = parsed.body;
+      if(body) combined += body.innerHTML + "<hr>";
+    }
+
+    originalHTML = combined || "<p>No readable EPUB content found.</p>";
+
+    results.style.display = "none";
+    docContent.style.display = "block";
+    docContent.innerHTML = originalHTML;
+
+    plainText = docContent.innerText || "";
+    $("pageStat").textContent = orderedFiles.length || 1;
+    $("wordStat").textContent = formatNumber(countWords(plainText));
+    $("viewerSub").textContent =
+      `${formatNumber(countWords(plainText))} words • EPUB reading order preserved`;
+
+    setStatus("Ready");
+    showToast("EPUB loaded.");
+  }catch(err){
+    console.error(err);
+    showError("Could not read this EPUB file.");
+  }
+}
+
+function resolveZipPath(path){
+  const parts = [];
+  path.split("/").forEach(part => {
+    if(!part || part === ".") return;
+    if(part === "..") parts.pop();
+    else parts.push(part);
+  });
+  return parts.join("/");
+}
+
+/* ---------- Search ---------- */
+
+searchBtn.addEventListener("click", runSearch);
+
+searchInput.addEventListener("keydown", e => {
+  if(e.key === "Enter") runSearch();
+});
+
+searchInput.addEventListener("input", () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    if(searchInput.value.trim()) runSearch();
+  }, 250);
+});
+
+function runSearch(){
+  const q = searchInput.value.trim();
+
+  clearSearchVisuals();
+
+  matches = [];
+  matchData = [];
+  currentIndex = -1;
+  currentQuery = q;
+
+  if(!q){
+    counter.textContent = "0 / 0";
+    exportBtn.disabled = true;
+    copyBtn.disabled = true;
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    $("searchSummary").classList.remove("show");
+    setStatus("Ready");
+    return;
+  }
+
+  if(!loadedFile){
+    showToast("Choose a document first.", true);
+    return;
+  }
+
+  if(fileType === "pdf"){
+    searchPDF(q);
+  }else{
+    searchHTML(q);
+  }
+}
+
+function searchPDF(q){
+  /*
+    Highlight ONLY the exact searched word/phrase inside each PDF text span.
+    The original PDF.js span is preserved so its position and font metrics
+    remain intact. Normal PDF text stays transparent; only the matching
+    <mark> is made visible.
+  */
+  const regex = new RegExp(escapeRegex(q), "gi");
+
+  textLayers.forEach((layer,pageIndex) => {
+    const spans = Array.from(layer.querySelectorAll("span"));
+
+    spans.forEach(span => {
+      const text = span.textContent || "";
+      if(!text || !regex.test(text)){
+        regex.lastIndex = 0;
+        return;
+      }
+
+      regex.lastIndex = 0;
+
+      const fragment = document.createDocumentFragment();
+      let last = 0;
+
+      text.replace(regex,(match,offset) => {
+        if(offset > last){
+          fragment.appendChild(
+            document.createTextNode(text.slice(last,offset))
+          );
+        }
+
+        const mark = document.createElement("mark");
+        mark.className = "highlight";
+        mark.textContent = match;
+        fragment.appendChild(mark);
+
+        matches.push(mark);
+        matchData.push({
+          element:mark,
+          page:pageIndex + 1,
+          text:match,
+          context:getContext(text,offset,match.length)
+        });
+
+        last = offset + match.length;
+        return match;
+      });
+
+      if(last < text.length){
+        fragment.appendChild(
+          document.createTextNode(text.slice(last))
+        );
+      }
+
+      span.replaceChildren(fragment);
+    });
+  });
+
+  finishSearch();
+}
+
+function searchHTML(q){
+  docContent.innerHTML = originalHTML;
+
+  const regex = new RegExp(escapeRegex(q),"gi");
+  const walker = document.createTreeWalker(
+    docContent,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node){
+        if(!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        if(node.parentElement?.closest("script,style,mark")) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  const nodes = [];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach(node => {
+    const text = node.nodeValue;
+    let last = 0;
+    let found = false;
+    const fragment = document.createDocumentFragment();
+
+    text.replace(regex,(match, offset) => {
+      found = true;
+
+      fragment.appendChild(
+        document.createTextNode(text.slice(last,offset))
+      );
+
+      const mark = document.createElement("mark");
+      mark.className = "highlight";
+      mark.textContent = match;
+      fragment.appendChild(mark);
+
+      matches.push(mark);
+      matchData.push({
+        element:mark,
+        page:1,
+        text:match,
+        context:getContext(text,offset,match.length)
+      });
+
+      last = offset + match.length;
+      return match;
+    });
+
+    if(found){
+      fragment.appendChild(
+        document.createTextNode(text.slice(last))
+      );
+      node.parentNode.replaceChild(fragment,node);
+    }
+  });
+
+  finishSearch();
+}
+
+function finishSearch(){
+  if(matches.length){
+    currentIndex = 0;
+    exportBtn.disabled = false;
+    copyBtn.disabled = false;
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+
+    $("searchSummary").classList.add("show");
+    $("summaryTitle").textContent =
+      `${matches.length} match${matches.length===1?"":"es"} found`;
+
+    $("summaryText").textContent =
+      ` for “${currentQuery}”`;
+
+    buildMatchList();
+    goToMatch(false);
+
+    setStatus(`${matches.length} found`);
+    showToast(`${matches.length} match${matches.length===1?"":"es"} found.`);
+  }else{
+    counter.textContent = "0 / 0";
+    exportBtn.disabled = true;
+    copyBtn.disabled = true;
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    $("searchSummary").classList.add("show");
+    $("summaryTitle").textContent = "No matches found";
+    $("summaryText").textContent =
+      ` for “${currentQuery}”`;
+    $("matchList").innerHTML = "";
+    setStatus("No matches","warn");
+    showToast("No matches found.", true);
+  }
+}
+
+function buildMatchList(){
+  const list = $("matchList");
+  list.innerHTML = "";
+
+  matchData.slice(0,80).forEach((item,index) => {
+    const button = document.createElement("button");
+    button.className = "match-item";
+    button.innerHTML = `
+      <small>${fileType === "pdf" ? "PAGE " + item.page : "MATCH " + (index+1)}</small>
+      <p>${escapeHTML(item.context || item.text)}</p>
+    `;
+    button.addEventListener("click",() => {
+      currentIndex = index;
+      goToMatch();
+    });
+    list.appendChild(button);
+  });
+
+  if(matchData.length > 80){
+    const more = document.createElement("div");
+    more.style.cssText = "font-size:13px;color:#718078;padding:7px";
+    more.textContent = `Showing first 80 results. Export includes all ${matchData.length}.`;
+    list.appendChild(more);
+  }
+}
+
+function goToMatch(scroll=true){
+  if(!matches.length || currentIndex < 0) return;
+
+  matches.forEach(el => el.classList.remove("current"));
+  const current = matches[currentIndex];
+  current.classList.add("current");
+
+  counter.textContent =
+    `${currentIndex + 1} / ${matches.length}`;
+
+  document.querySelectorAll(".match-item").forEach((el,i) => {
+    el.classList.toggle("active",i === currentIndex);
+  });
+
+  if(scroll){
+    current.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+  }
+
+  copyBtn.disabled = false;
+}
+
+nextBtn.addEventListener("click",() => {
+  if(!matches.length) return;
+  currentIndex = (currentIndex + 1) % matches.length;
+  goToMatch();
+});
+
+prevBtn.addEventListener("click",() => {
+  if(!matches.length) return;
+  currentIndex = (currentIndex - 1 + matches.length) % matches.length;
+  goToMatch();
+});
+
+/* ---------- Clear ---------- */
+
+clearBtn.addEventListener("click",() => {
+  searchInput.value = "";
+  clearSearchVisuals();
+  matches = [];
+  matchData = [];
+  currentIndex = -1;
+  currentQuery = "";
+
+  if(fileType !== "pdf" && originalHTML){
+    docContent.innerHTML = originalHTML;
+  }
+
+  counter.textContent = "0 / 0";
+  exportBtn.disabled = true;
+  copyBtn.disabled = true;
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
+  $("searchSummary").classList.remove("show");
+  setStatus("Ready");
+});
+
+function clearSearchVisuals(){
+  if(fileType === "pdf"){
+    textLayers.forEach(layer => {
+      layer.querySelectorAll("mark.highlight").forEach(mark => {
+        const parent = mark.parentNode;
+        if(parent){
+          parent.replaceChild(
+            document.createTextNode(mark.textContent || ""),
+            mark
+          );
+        }
+      });
+
+      layer.querySelectorAll("span").forEach(span => {
+        span.normalize();
+      });
+    });
+  }else if(originalHTML){
+    docContent.innerHTML = originalHTML;
+  }
+}
+
+/* ---------- Export ---------- */
+
+exportBtn.addEventListener("click",() => {
+  if(!matchData.length) return;
+
+  const lines = [
+    "FRAMBUK DOCUMENT SEARCH RESULTS",
+    "================================",
+    `File: ${loadedFile?.name || "Document"}`,
+    `Search: ${currentQuery}`,
+    `Matches: ${matchData.length}`,
+    "",
+    ...matchData.map((item,i) =>
+      `${i+1}. ${fileType === "pdf" ? "Page " + item.page + " — " : ""}${item.context || item.text}`
+    )
+  ];
+
+  const blob = new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"});
+  downloadBlob(blob,"frambuk-search-results.txt");
+  showToast("Search results exported.");
+});
+
+/* ---------- Copy ---------- */
+
+copyBtn.addEventListener("click",async () => {
+  if(!matchData[currentIndex]) return;
+
+  const text =
+    matchData[currentIndex].context ||
+    matchData[currentIndex].text;
+
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast("Current match copied.");
+  }catch{
+    showToast("Clipboard permission was blocked.",true);
+  }
+});
+
+/* ---------- Zoom ---------- */
+
+$("zoomIn").addEventListener("click",() => {
+  currentZoom = Math.min(1.8,currentZoom + .1);
+  updateZoom();
+});
+
+$("zoomOut").addEventListener("click",() => {
+  currentZoom = Math.max(.6,currentZoom - .1);
+  updateZoom();
+});
+
+$("zoomReset").addEventListener("click",() => {
+  currentZoom = 1;
+  updateZoom();
+});
+
+function updateZoom(){
+  $("zoomValue").textContent = `${Math.round(currentZoom*100)}%`;
+  results.style.zoom = currentZoom;
+  if(docContent.style.display !== "none"){
+    docContent.style.transformOrigin = "top center";
+    docContent.style.transform = `scale(${currentZoom})`;
+    docContent.style.marginBottom =
+      currentZoom === 1 ? "0" : `${(currentZoom-1)*100}px`;
+  }
+}
+
+/* ---------- Print ---------- */
+
+printBtn.addEventListener("click",() => {
+  if(!loadedFile){
+    showToast("Load a document first.",true);
+    return;
+  }
+
+  const printWindow = window.open("","_blank");
+  if(!printWindow){
+    showToast("Please allow pop-ups to print.",true);
+    return;
+  }
+
+  let content = "";
+
+  if(fileType === "pdf"){
+    content = Array.from(results.querySelectorAll(".page"))
+      .map(page => page.outerHTML)
+      .join("");
+  }else{
+    content = docContent.innerHTML;
+  }
+
+  printWindow.document.write(`
+    <!doctype html>
+    <html>
+    <head>
+      <title>Print — ${escapeHTML(loadedFile.name)}</title>
+      <style>
+        body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#111}
+        .page{position:relative;page-break-after:always}
+        .page canvas{width:100%;display:block}
+        .textLayer{display:none}
+        img{max-width:100%}
+        #docContent{padding:35px;line-height:1.6}
+        mark.highlight,mark.current{background:yellow}
+      </style>
+    </head>
+    <body>${fileType==="pdf" ? content : `<div id="docContent">${content}</div>`}</body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  },500);
+});
+
+/* ---------- Keyboard shortcuts ---------- */
+
+document.addEventListener("keydown",e => {
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f"){
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+
+  if(e.key === "Escape"){
+    searchInput.value = "";
+    clearBtn.click();
+  }
+
+  if(e.altKey && e.key === "ArrowDown"){
+    e.preventDefault();
+    nextBtn.click();
+  }
+
+  if(e.altKey && e.key === "ArrowUp"){
+    e.preventDefault();
+    prevBtn.click();
+  }
+});
+
+/* ---------- Helpers ---------- */
+
+function escapeRegex(value){
+  return value.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+}
+
+function getContext(text,offset,length){
+  const start = Math.max(0,offset-75);
+  const end = Math.min(text.length,offset+length+100);
+  const prefix = start > 0 ? "…" : "";
+  const suffix = end < text.length ? "…" : "";
+  return prefix + text.slice(start,end).replace(/\s+/g," ").trim() + suffix;
+}
+
+function countWords(text){
+  const clean = String(text || "").trim();
+  return clean ? clean.split(/\s+/).length : 0;
+}
+
+function formatNumber(number){
+  return Number(number || 0).toLocaleString();
+}
+
+function downloadBlob(blob,filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+}
+
+function showError(message){
+  setStatus("Error","error");
+  results.innerHTML =
+    `<div class="empty">
+      <div class="empty-inner">
+        <div class="empty-icon" style="color:#b42318">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3>Something went wrong</h3>
+        <p>${escapeHTML(message)}</p>
+      </div>
+    </div>`;
+  showToast(message,true);
+}
+
+/* ---------- Theme ---------- */
+
+$("themeBtn").addEventListener("click",() => {
+  document.body.classList.toggle("dark");
+  const dark = document.body.classList.contains("dark");
+  $("themeBtn").innerHTML =
+    dark
+      ? '<i class="fa-solid fa-sun"></i>'
+      : '<i class="fa-solid fa-moon"></i>';
+
+  try{
+    localStorage.setItem("frambuk-doc-theme",dark ? "dark":"light");
+  }catch{}
+});
+
+try{
+  if(localStorage.getItem("frambuk-doc-theme") === "dark"){
+    document.body.classList.add("dark");
+    $("themeBtn").innerHTML = '<i class="fa-solid fa-sun"></i>';
+  }
+}catch{}
+
+/* ---------- Existing Frambuk integration ---------- */
+
+function toggleMenu(){
+  $("menu").classList.toggle("show");
+}
+
+function safeOpenCart(){
+  if(typeof window.openCart === "function") window.openCart();
+  else showToast("Cart is available from the main Frambuk page.");
+}
+
+function safeCheckout(){
+  if(typeof window.checkoutWhatsApp === "function") window.checkoutWhatsApp();
+  else showToast("Checkout is available from the main Frambuk page.");
+}
+
+/* Keep external Frambuk functions if supplied by script.js. */
+</script>
+
+<script src="script.js"></script>
+
+
+<footer>
+© 2026 Frambuk International Ventures <a href="🏷️ Frambuk_Product_Packaging_Prompts.html">•</a>
+</footer>
+
+<script src="script.js"></script>
+  <script>
+    function slideSection(id,direction){
+    let slider=document.getElementById(id);
+  slider.scrollLeft += direction * 350;
+  }
+
+</script>
+  </body>
+
+</html>
+

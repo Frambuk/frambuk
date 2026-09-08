@@ -1,0 +1,3694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Frambuk PDF & PowerPoint To Image Converter</title>
+
+<link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- JSZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- FileSaver -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<style>
+
+/* =========================================================
+   FRAMBUK VARIABLES
+========================================================= */
+
+:root {
+    --green: #187a3d;
+    --green-dark: #075c2c;
+    --green-light: #eaf8ef;
+
+    --blue: #1769d1;
+    --blue-light: #eaf3ff;
+
+    --orange: #f59e0b;
+    --red: #dc2626;
+
+    --dark: #152019;
+    --text: #25312a;
+    --muted: #6d7871;
+
+    --white: #ffffff;
+    --bg: #f5f8f6;
+
+    --border: #e3e9e5;
+
+    --shadow-sm:
+        0 5px 20px rgba(0,0,0,.06);
+
+    --shadow-md:
+        0 15px 40px rgba(0,0,0,.09);
+
+    --shadow-lg:
+        0 25px 70px rgba(0,0,0,.13);
+
+    --radius: 22px;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(24,122,61,.07),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(23,105,209,.06),
+            transparent 28%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: rgba(255,255,255,.94);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border-bottom: 1px solid rgba(0,0,0,.06);
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,.04);
+}
+
+.header-container {
+    width: min(1250px, 94%);
+
+    min-height: 76px;
+
+    margin: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 25px;
+}
+
+.logo img {
+    width: 145px;
+
+    max-width: 100%;
+
+    display: block;
+}
+
+nav {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+nav a {
+    text-decoration: none;
+
+    color: #39453e;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    padding: 11px 17px;
+
+    border-radius: 50px;
+
+    transition: .25s ease;
+}
+
+nav a:hover,
+nav a.active {
+    background: var(--green-light);
+
+    color: var(--green);
+}
+
+.header-icons {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.header-icons > div {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #f3f6f4;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+
+    position: relative;
+}
+
+.header-icons > div:hover {
+    background: var(--green-light);
+
+    transform: translateY(-2px);
+}
+
+#cartCount {
+    position: absolute;
+
+    top: -4px;
+    right: -3px;
+
+    min-width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+
+    background: var(--red);
+
+    color: white;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.hamburger {
+    display: none;
+
+    font-size: 25px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    width: min(1100px, 92%);
+
+    margin: 55px auto 28px;
+
+    text-align: center;
+}
+
+.hero-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    background: var(--green-light);
+
+    color: var(--green);
+
+    border: 1px solid #ccebd7;
+
+    padding: 8px 15px;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+.hero h1 {
+    font-family: "Playfair Display", serif;
+
+    font-size: clamp(34px, 5vw, 58px);
+
+    line-height: 1.08;
+
+    color: var(--dark);
+
+    margin-bottom: 15px;
+}
+
+.hero h1 span {
+    color: var(--green);
+}
+
+.hero p {
+    max-width: 720px;
+
+    margin: auto;
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.converter-wrapper {
+    width: min(1100px, 92%);
+
+    margin: 0 auto 70px;
+}
+
+.converter-card {
+    background: rgba(255,255,255,.97);
+
+    border: 1px solid rgba(0,0,0,.06);
+
+    border-radius: 28px;
+
+    box-shadow: var(--shadow-lg);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   MODE BUTTONS
+========================================================= */
+
+.mode-tabs {
+    padding: 10px;
+
+    background: #f5f8f6;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+}
+
+.mode-btn {
+    border: none;
+
+    background: transparent;
+
+    padding: 17px 20px;
+
+    border-radius: 17px;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #66736b;
+
+    cursor: pointer;
+
+    transition: .3s ease;
+}
+
+.mode-btn:hover {
+    color: var(--green);
+}
+
+.mode-btn.active {
+    background: white;
+
+    color: var(--green);
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.08);
+}
+
+.mode-btn .icon {
+    margin-right: 7px;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.app-content {
+    padding: clamp(25px, 5vw, 45px);
+}
+
+.mode-description {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.mode-description h2 {
+    font-size: 23px;
+
+    color: var(--dark);
+
+    margin-bottom: 7px;
+}
+
+.mode-description p {
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   DROPZONE
+========================================================= */
+
+.drop-zone {
+    position: relative;
+
+    border: 2px dashed #bfd1c4;
+
+    border-radius: 22px;
+
+    min-height: 230px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(24,122,61,.025),
+            rgba(23,105,209,.025)
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+    cursor: pointer;
+
+    transition: .3s ease;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+    border-color: var(--green);
+
+    background: var(--green-light);
+
+    transform: translateY(-2px);
+}
+
+.drop-content {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.upload-icon {
+    width: 72px;
+    height: 72px;
+
+    border-radius: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 32px;
+
+    margin-bottom: 16px;
+
+    background: white;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.drop-zone h3 {
+    color: var(--dark);
+
+    font-size: 17px;
+
+    margin-bottom: 6px;
+}
+
+.drop-zone p {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-bottom: 15px;
+}
+
+.browse-button {
+    display: inline-flex;
+
+    padding: 10px 17px;
+
+    background: var(--green);
+
+    color: white;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+#upload {
+    display: none;
+}
+
+
+/* =========================================================
+   FILE INFORMATION
+========================================================= */
+
+.file-info {
+    display: none;
+
+    margin-top: 15px;
+
+    padding: 14px 17px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    background: #fafcfb;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.file-info.show {
+    display: flex;
+}
+
+.file-details {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.file-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--green-light);
+
+    font-size: 20px;
+}
+
+.file-name {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.file-size {
+    font-size: 11px;
+
+    color: var(--muted);
+
+    margin-top: 2px;
+}
+
+.remove-file {
+    border: none;
+
+    background: #fff0f0;
+
+    color: var(--red);
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+
+.options {
+    display: grid;
+
+    grid-template-columns: repeat(2,1fr);
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+.option {
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 15px;
+
+    background: white;
+}
+
+.option label {
+    display: block;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #68736d;
+
+    margin-bottom: 8px;
+}
+
+.option select {
+    width: 100%;
+
+    border: 1px solid #dce4df;
+
+    border-radius: 10px;
+
+    padding: 11px;
+
+    background: #fafcfb;
+
+    color: var(--dark);
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    outline: none;
+}
+
+.option select:focus {
+    border-color: var(--green);
+}
+
+
+/* =========================================================
+   POWERPOINT API SETTINGS
+   IMPORTANT:
+   HIDDEN COMPLETELY IN PDF MODE
+========================================================= */
+
+.api-settings {
+    display: none;
+
+    margin-top: 15px;
+
+    border: 1px solid #f3dfb0;
+
+    background: #fffaf0;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+}
+
+.api-toggle {
+    width: 100%;
+
+    padding: 13px 15px;
+
+    border: none;
+
+    background: transparent;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: #855d08;
+}
+
+.api-settings-content {
+    display: none;
+
+    padding: 0 15px 15px;
+}
+
+.api-settings.open .api-settings-content {
+    display: block;
+}
+
+.api-settings input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ead7a8;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-family: monospace;
+
+    font-size: 12px;
+}
+
+.api-warning {
+    margin-top: 8px;
+
+    color: #806626;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.actions {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+button.action {
+    border: none;
+
+    min-height: 48px;
+
+    padding: 0 22px;
+
+    border-radius: 13px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    transition: .25s ease;
+}
+
+button.action:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+button.action:disabled {
+    opacity: .45;
+
+    cursor: not-allowed;
+}
+
+.primary-btn {
+    background: var(--green);
+
+    color: white;
+
+    box-shadow:
+        0 8px 20px rgba(24,122,61,.18);
+}
+
+.download-btn {
+    background: var(--blue);
+
+    color: white;
+
+    box-shadow:
+        0 8px 20px rgba(23,105,209,.18);
+}
+
+.clear-btn {
+    background: #f1f4f2;
+
+    color: #4d5952;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+    display: none;
+
+    margin-top: 22px;
+
+    border-radius: 14px;
+
+    padding: 14px 17px;
+
+    background: #f4f8ff;
+
+    color: #31557d;
+
+    font-size: 12px;
+
+    align-items: center;
+
+    gap: 11px;
+
+    text-align: left;
+}
+
+.status.show {
+    display: flex;
+}
+
+.status.success {
+    background: #effaf2;
+
+    color: #26723d;
+}
+
+.status.error {
+    background: #fff1f1;
+
+    color: #a12626;
+}
+
+.spinner {
+    width: 17px;
+    height: 17px;
+
+    border: 2px solid currentColor;
+
+    border-top-color: transparent;
+
+    border-radius: 50%;
+
+    animation: spin .8s linear infinite;
+
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.results-header {
+    display: none;
+
+    margin-top: 40px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid var(--border);
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.results-header.show {
+    display: flex;
+}
+
+.results-title h3 {
+    font-size: 18px;
+
+    color: var(--dark);
+}
+
+.results-title p {
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 3px;
+}
+
+.result-count {
+    background: var(--green-light);
+
+    color: var(--green);
+
+    padding: 7px 11px;
+
+    border-radius: 50px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PREVIEW GRID
+========================================================= */
+
+#preview {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 18px;
+
+    margin-top: 20px;
+}
+
+.preview-card {
+    background: #fafcfb;
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 9px;
+
+    overflow: hidden;
+
+    transition: .25s ease;
+}
+
+.preview-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.preview-image-wrapper {
+    position: relative;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    background: #e9eeeb;
+}
+
+.preview-image-wrapper canvas {
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    border-radius: 10px;
+}
+
+.page-label {
+    position: absolute;
+
+    top: 8px;
+
+    left: 8px;
+
+    background: rgba(0,0,0,.72);
+
+    color: white;
+
+    padding: 5px 8px;
+
+    border-radius: 7px;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+.individual-download {
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 9px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: var(--green);
+
+    border: 1px solid #d8e7dc;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    transition: .2s ease;
+}
+
+.individual-download:hover {
+    background: var(--green-light);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    padding: 40px 20px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+    font-size: 45px;
+
+    opacity: .4;
+
+    margin-bottom: 10px;
+}
+
+.empty-state h3 {
+    color: #4d5952;
+
+    font-size: 15px;
+}
+
+.empty-state p {
+    font-size: 11px;
+
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    text-align: center;
+
+    padding: 35px 20px;
+
+    border-top: 1px solid rgba(0,0,0,.06);
+
+    color: #7b857f;
+
+    font-size: 11px;
+
+    background: white;
+}
+
+footer strong {
+    color: var(--green);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .header-container {
+        min-height: 68px;
+    }
+
+    .hamburger {
+        display: block;
+
+        order: 1;
+    }
+
+    .logo {
+        order: 2;
+
+        flex: 1;
+
+        text-align: center;
+    }
+
+    .logo img {
+        width: 125px;
+
+        margin: auto;
+    }
+
+    nav {
+        position: absolute;
+
+        top: 68px;
+
+        left: 3%;
+
+        right: 3%;
+
+        display: none;
+
+        flex-direction: column;
+
+        padding: 10px;
+
+        background: white;
+
+        border-radius: 15px;
+
+        box-shadow: var(--shadow-md);
+    }
+
+    nav.show {
+        display: flex;
+    }
+
+    nav a {
+        width: 100%;
+
+        text-align: center;
+    }
+
+    .header-icons {
+        order: 3;
+    }
+
+    .header-icons > div {
+        width: 37px;
+        height: 37px;
+
+        font-size: 14px;
+    }
+
+    .hero {
+        margin-top: 35px;
+    }
+
+    #preview {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 550px) {
+
+    .mode-tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .app-content {
+        padding: 22px 16px 28px;
+    }
+
+    .drop-zone {
+        min-height: 205px;
+
+        padding: 20px;
+    }
+
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+    #preview {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    button.action {
+        width: 100%;
+    }
+
+    .file-info {
+        align-items: flex-start;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+    <div class="header-container">
+
+        <div
+            class="hamburger"
+            onclick="toggleFrambukMenu()">
+
+            ☰
+
+        </div>
+
+
+        <div class="logo">
+
+            <a href="index.html">
+
+                <img
+                    src="images/Frambuk-Logo.png"
+                    alt="Frambuk">
+
+            </a>
+
+        </div>
+
+
+        <nav id="menu">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a
+                class="active"
+                href="index.html#apps">
+
+                Free To Use Apps
+
+            </a>
+
+        </nav>
+
+
+        <div class="header-icons">
+
+            <div
+                onclick="safeOpenCart()"
+                title="Cart">
+
+                🛒
+
+                <span id="cartCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                onclick="safeCheckout()"
+                title="Checkout">
+
+                💳
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-badge">
+
+        ✨ FRAMBUK FREE ONLINE TOOL
+
+    </div>
+
+
+    <h1>
+
+        PDF & PowerPoint
+
+        <span>
+            To Image Converter
+        </span>
+
+    </h1>
+
+
+    <p>
+
+        Convert PDF documents and PowerPoint
+        presentations into clear, high-quality
+        images. Preview your pages instantly
+        and download everything together.
+
+    </p>
+
+</section>
+
+
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<main class="converter-wrapper">
+
+    <div class="converter-card">
+
+
+        <!-- =================================================
+             MODE SWITCH
+        ================================================== -->
+
+        <div class="mode-tabs">
+
+            <button
+                class="mode-btn active"
+                id="pdfModeBtn"
+                onclick="switchMode('pdf')">
+
+                <span class="icon">
+                    📄
+                </span>
+
+                PDF → Images
+
+            </button>
+
+
+            <button
+                class="mode-btn"
+                id="pptModeBtn"
+                onclick="switchMode('ppt')">
+
+                <span class="icon">
+                    📊
+                </span>
+
+                PowerPoint → Images
+
+            </button>
+
+        </div>
+
+
+
+        <div class="app-content">
+
+
+            <!-- =================================================
+                 DESCRIPTION
+            ================================================== -->
+
+            <div class="mode-description">
+
+                <h2 id="modeTitle">
+                    PDF To Image Converter
+                </h2>
+
+                <p id="modeDescription">
+
+                    Convert every page of your PDF
+                    into high-quality images directly
+                    in your browser.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 UPLOAD
+            ================================================== -->
+
+            <div
+                class="drop-zone"
+                id="dropZone">
+
+
+                <input
+                    type="file"
+                    id="upload"
+                    accept=".pdf,application/pdf">
+
+
+                <div class="drop-content">
+
+                    <div
+                        class="upload-icon"
+                        id="uploadIcon">
+
+                        📄
+
+                    </div>
+
+
+                    <h3 id="dropTitle">
+
+                        Drop your PDF here
+
+                    </h3>
+
+
+                    <p id="dropDescription">
+
+                        Supports PDF documents
+
+                    </p>
+
+
+                    <label
+                        for="upload"
+                        class="browse-button">
+
+                        Choose File
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FILE INFO
+            ================================================== -->
+
+            <div
+                class="file-info"
+                id="fileInfo">
+
+                <div class="file-details">
+
+                    <div
+                        class="file-icon"
+                        id="fileIcon">
+
+                        📄
+
+                    </div>
+
+
+                    <div>
+
+                        <div
+                            class="file-name"
+                            id="fileName">
+                        </div>
+
+
+                        <div
+                            class="file-size"
+                            id="fileSize">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="remove-file"
+                    onclick="clearFile()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 OUTPUT OPTIONS
+            ================================================== -->
+
+            <div class="options">
+
+
+                <div class="option">
+
+                    <label for="imageFormat">
+
+                        OUTPUT IMAGE FORMAT
+
+                    </label>
+
+
+                    <select id="imageFormat">
+
+                        <option value="png">
+
+                            PNG — Best Quality
+
+                        </option>
+
+
+                        <option value="jpeg">
+
+                            JPEG — Smaller File Size
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="option">
+
+                    <label for="renderScale">
+
+                        IMAGE QUALITY / RESOLUTION
+
+                    </label>
+
+
+                    <select id="renderScale">
+
+                        <option value="1.5">
+
+                            Standard — 1.5×
+
+                        </option>
+
+
+                        <option
+                            value="2"
+                            selected>
+
+                            High — 2×
+
+                        </option>
+
+
+                        <option value="2.5">
+
+                            Very High — 2.5×
+
+                        </option>
+
+
+                        <option value="3">
+
+                            Ultra — 3×
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 POWERPOINT SETTINGS
+
+                 THIS IS INVISIBLE IN PDF MODE.
+            ================================================== -->
+
+            <div
+                class="api-settings"
+                id="apiSettings">
+
+                <button
+                    class="api-toggle"
+                    onclick="toggleApiSettings()">
+
+                    <span>
+                        ⚙️ PowerPoint Conversion Settings
+                    </span>
+
+                    <span id="apiArrow">
+                        +
+                    </span>
+
+                </button>
+
+
+                <div class="api-settings-content">
+
+                    <input
+                        type="password"
+                        id="cloudConvertKey"
+                        placeholder="Paste your CloudConvert API key">
+
+
+                    <div class="api-warning">
+
+                        PowerPoint conversion uses CloudConvert
+                        to first convert the presentation to PDF.
+                        The PDF is then rendered into images
+                        by PDF.js.
+
+                        <br><br>
+
+                        <strong>
+                            PDF conversion does not use an API key.
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
+
+            <div class="actions">
+
+
+                <button
+                    class="action primary-btn"
+                    id="convertBtn"
+                    disabled>
+
+                    ⚡
+
+                    <span id="convertText">
+
+                        Convert PDF
+
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="action download-btn"
+                    id="downloadBtn"
+                    disabled>
+
+                    📦
+
+                    Download ZIP
+
+                </button>
+
+
+                <button
+                    class="action clear-btn"
+                    id="clearBtn">
+
+                    ↻
+
+                    Clear
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 STATUS
+            ================================================== -->
+
+            <div
+                class="status"
+                id="status">
+
+                <span
+                    class="spinner"
+                    id="statusSpinner">
+                </span>
+
+
+                <span id="statusText">
+
+                    Preparing...
+
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RESULTS HEADER
+            ================================================== -->
+
+            <div
+                class="results-header"
+                id="resultsHeader">
+
+                <div class="results-title">
+
+                    <h3>
+                        Converted Images
+                    </h3>
+
+                    <p>
+                        Preview and download individual pages.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="result-count"
+                    id="resultCount">
+
+                    0 Images
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PREVIEW
+            ================================================== -->
+
+            <div id="preview">
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+
+                        🖼️
+
+                    </div>
+
+
+                    <h3>
+
+                        Your converted pages
+                        will appear here
+
+                    </h3>
+
+
+                    <p>
+
+                        Upload a file and click
+                        Convert to get started.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    © 2026
+
+    <strong>
+        Frambuk International Ventures
+    </strong>
+
+    . All Rights Reserved.
+
+</footer>
+
+
+
+<script>
+
+/* =========================================================
+   PDF.JS WORKER
+========================================================= */
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentMode = "pdf";
+
+let selectedFile = null;
+
+let images = [];
+
+let currentImageType = "png";
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const upload =
+document.getElementById("upload");
+
+const dropZone =
+document.getElementById("dropZone");
+
+const fileInfo =
+document.getElementById("fileInfo");
+
+const fileName =
+document.getElementById("fileName");
+
+const fileSize =
+document.getElementById("fileSize");
+
+const fileIcon =
+document.getElementById("fileIcon");
+
+const convertBtn =
+document.getElementById("convertBtn");
+
+const convertText =
+document.getElementById("convertText");
+
+const downloadBtn =
+document.getElementById("downloadBtn");
+
+const clearBtn =
+document.getElementById("clearBtn");
+
+const preview =
+document.getElementById("preview");
+
+const statusBox =
+document.getElementById("status");
+
+const statusText =
+document.getElementById("statusText");
+
+const statusSpinner =
+document.getElementById("statusSpinner");
+
+const resultsHeader =
+document.getElementById("resultsHeader");
+
+const resultCount =
+document.getElementById("resultCount");
+
+const imageFormat =
+document.getElementById("imageFormat");
+
+const renderScale =
+document.getElementById("renderScale");
+
+
+/* =========================================================
+   SWITCH MODE
+========================================================= */
+
+function switchMode(mode) {
+
+    currentMode = mode;
+
+    selectedFile = null;
+
+    images = [];
+
+    upload.value = "";
+
+    fileInfo.classList.remove("show");
+
+    convertBtn.disabled = true;
+
+    downloadBtn.disabled = true;
+
+    resultsHeader.classList.remove("show");
+
+    hideStatus();
+
+    showEmptyState();
+
+
+    const pdfButton =
+        document.getElementById("pdfModeBtn");
+
+    const pptButton =
+        document.getElementById("pptModeBtn");
+
+    const apiSettings =
+        document.getElementById("apiSettings");
+
+
+    if (mode === "pdf") {
+
+        /* =========================================
+           PDF MODE
+        ========================================= */
+
+        pdfButton.classList.add("active");
+
+        pptButton.classList.remove("active");
+
+
+        document.getElementById(
+            "modeTitle"
+        ).textContent =
+            "PDF To Image Converter";
+
+
+        document.getElementById(
+            "modeDescription"
+        ).textContent =
+            "Convert every page of your PDF into high-quality images directly in your browser.";
+
+
+        document.getElementById(
+            "dropTitle"
+        ).textContent =
+            "Drop your PDF here";
+
+
+        document.getElementById(
+            "dropDescription"
+        ).textContent =
+            "Supports PDF documents";
+
+
+        document.getElementById(
+            "uploadIcon"
+        ).textContent =
+            "📄";
+
+
+        upload.accept =
+            ".pdf,application/pdf";
+
+
+        convertText.textContent =
+            "Convert PDF";
+
+
+        /* VERY IMPORTANT:
+           HIDE ALL POWERPOINT/API CONTROLS */
+
+        apiSettings.style.display =
+            "none";
+
+
+    } else {
+
+        /* =========================================
+           POWERPOINT MODE
+        ========================================= */
+
+        pptButton.classList.add("active");
+
+        pdfButton.classList.remove("active");
+
+
+        document.getElementById(
+            "modeTitle"
+        ).textContent =
+            "PowerPoint To Image Converter";
+
+
+        document.getElementById(
+            "modeDescription"
+        ).textContent =
+            "Convert PowerPoint presentations into clear, high-quality images.";
+
+
+        document.getElementById(
+            "dropTitle"
+        ).textContent =
+            "Drop your PowerPoint here";
+
+
+        document.getElementById(
+            "dropDescription"
+        ).textContent =
+            "Supports PPT and PPTX presentations";
+
+
+        document.getElementById(
+            "uploadIcon"
+        ).textContent =
+            "📊";
+
+
+        upload.accept =
+            ".ppt,.pptx";
+
+
+        convertText.textContent =
+            "Convert PowerPoint";
+
+
+        /* ONLY SHOW API SETTINGS IN PPT MODE */
+
+        apiSettings.style.display =
+            "block";
+
+    }
+
+}
+
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+upload.addEventListener(
+    "change",
+    function() {
+
+        if (
+            this.files &&
+            this.files[0]
+        ) {
+
+            handleFile(
+                this.files[0]
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DRAG OVER
+========================================================= */
+
+dropZone.addEventListener(
+    "dragover",
+    function(event) {
+
+        event.preventDefault();
+
+        dropZone.classList.add(
+            "dragover"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   DRAG LEAVE
+========================================================= */
+
+dropZone.addEventListener(
+    "dragleave",
+    function() {
+
+        dropZone.classList.remove(
+            "dragover"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   DROP
+========================================================= */
+
+dropZone.addEventListener(
+    "drop",
+    function(event) {
+
+        event.preventDefault();
+
+        dropZone.classList.remove(
+            "dragover"
+        );
+
+        const file =
+            event.dataTransfer.files[0];
+
+        if (file) {
+
+            handleFile(file);
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   HANDLE FILE
+========================================================= */
+
+function handleFile(file) {
+
+    const name =
+        file.name.toLowerCase();
+
+
+    /* =========================================
+       PDF VALIDATION
+    ========================================= */
+
+    if (
+        currentMode === "pdf"
+    ) {
+
+        if (
+            file.type !==
+            "application/pdf" &&
+            !name.endsWith(".pdf")
+        ) {
+
+            showError(
+                "Please select a valid PDF file."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    /* =========================================
+       POWERPOINT VALIDATION
+    ========================================= */
+
+    else {
+
+        if (
+            !name.endsWith(".ppt") &&
+            !name.endsWith(".pptx")
+        ) {
+
+            showError(
+                "Please select a valid PowerPoint file (.ppt or .pptx)."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    selectedFile =
+        file;
+
+
+    fileName.textContent =
+        file.name;
+
+
+    fileSize.textContent =
+        formatFileSize(
+            file.size
+        );
+
+
+    fileIcon.textContent =
+        currentMode === "pdf"
+            ? "📄"
+            : "📊";
+
+
+    fileInfo.classList.add(
+        "show"
+    );
+
+
+    convertBtn.disabled =
+        false;
+
+
+    downloadBtn.disabled =
+        true;
+
+
+    images = [];
+
+    hideStatus();
+
+    showEmptyState();
+
+}
+
+
+/* =========================================================
+   FILE SIZE
+========================================================= */
+
+function formatFileSize(bytes) {
+
+    if (bytes === 0) {
+
+        return "0 Bytes";
+
+    }
+
+
+    const units = [
+        "Bytes",
+        "KB",
+        "MB",
+        "GB"
+    ];
+
+
+    const index =
+        Math.floor(
+            Math.log(bytes) /
+            Math.log(1024)
+        );
+
+
+    return (
+        parseFloat(
+            (
+                bytes /
+                Math.pow(
+                    1024,
+                    index
+                )
+            ).toFixed(2)
+        )
+        +
+        " "
+        +
+        units[index]
+    );
+
+}
+
+
+/* =========================================================
+   CONVERT BUTTON
+========================================================= */
+
+convertBtn.addEventListener(
+    "click",
+    async function() {
+
+        if (!selectedFile) {
+
+            showError(
+                currentMode === "pdf"
+                    ? "Please upload a PDF first."
+                    : "Please upload a PowerPoint file first."
+            );
+
+            return;
+
+        }
+
+
+        /* =====================================
+           PDF HAS NO API KEY REQUIREMENT
+        ===================================== */
+
+        if (
+            currentMode === "pdf"
+        ) {
+
+            await convertPDF(
+                selectedFile
+            );
+
+            return;
+
+        }
+
+
+        /* =====================================
+           POWERPOINT
+        ===================================== */
+
+        await convertPowerPoint(
+            selectedFile
+        );
+
+    }
+);
+
+
+/* =========================================================
+   PDF CONVERTER
+   THIS IS BASED ON YOUR ORIGINAL WORKING CODE
+========================================================= */
+
+async function convertPDF(file) {
+
+    try {
+
+        convertBtn.disabled =
+            true;
+
+        downloadBtn.disabled =
+            true;
+
+        images = [];
+
+        preview.innerHTML = "";
+
+
+        setLoading(
+            "Reading PDF..."
+        );
+
+
+        /*
+         * EXACTLY LIKE THE ORIGINAL:
+         * Read PDF locally.
+         */
+
+        const fileReader =
+            new FileReader();
+
+
+        fileReader.onload =
+            async function() {
+
+                try {
+
+                    const typedarray =
+                        new Uint8Array(
+                            this.result
+                        );
+
+
+                    /*
+                     * Load PDF with PDF.js
+                     */
+
+                    const pdf =
+                        await pdfjsLib
+                            .getDocument(
+                                typedarray
+                            )
+                            .promise;
+
+
+                    const scale =
+                        parseFloat(
+                            renderScale.value
+                        );
+
+
+                    currentImageType =
+                        imageFormat.value;
+
+
+                    /*
+                     * Convert every page
+                     */
+
+                    for (
+                        let i = 1;
+                        i <= pdf.numPages;
+                        i++
+                    ) {
+
+                        setLoading(
+                            `Converting page ${i} of ${pdf.numPages}...`
+                        );
+
+
+                        const page =
+                            await pdf.getPage(i);
+
+
+                        const viewport =
+                            page.getViewport({
+                                scale: scale
+                            });
+
+
+                        const canvas =
+                            document.createElement(
+                                "canvas"
+                            );
+
+
+                        const context =
+                            canvas.getContext(
+                                "2d"
+                            );
+
+
+                        canvas.height =
+                            viewport.height;
+
+
+                        canvas.width =
+                            viewport.width;
+
+
+                        /*
+                         * Render page
+                         */
+
+                        await page.render({
+
+                            canvasContext:
+                                context,
+
+                            viewport:
+                                viewport
+
+                        }).promise;
+
+
+                        /*
+                         * Convert canvas to image
+                         */
+
+                        let imageData;
+
+
+                        if (
+                            currentImageType ===
+                            "jpeg"
+                        ) {
+
+                            imageData =
+                                canvas.toDataURL(
+                                    "image/jpeg",
+                                    0.95
+                                );
+
+                        } else {
+
+                            imageData =
+                                canvas.toDataURL(
+                                    "image/png"
+                                );
+
+                        }
+
+
+                        images.push({
+
+                            data:
+                                imageData,
+
+                            name:
+                                `page_${i}.${currentImageType}`
+
+                        });
+
+
+                        /*
+                         * Add preview
+                         */
+
+                        addPreview(
+                            canvas,
+                            i,
+                            "Page"
+                        );
+
+                    }
+
+
+                    /*
+                     * Complete
+                     */
+
+                    finishConversion(
+                        pdf.numPages
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        error
+                    );
+
+
+                    showError(
+                        "Unable to convert this PDF. Please make sure the file is valid and try again."
+                    );
+
+
+                    convertBtn.disabled =
+                        false;
+
+                }
+
+            };
+
+
+        /*
+         * THIS IS THE KEY PART:
+         * PDF is read locally.
+         * NO API.
+         * NO SERVER.
+         * NO CLOUDCONVERT.
+         */
+
+        fileReader.readAsArrayBuffer(
+            file
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+        showError(
+            "Something went wrong while converting the PDF."
+        );
+
+        convertBtn.disabled =
+            false;
+
+    }
+
+}
+
+
+/* =========================================================
+   POWERPOINT CONVERTER
+   ========================================================= */
+
+async function convertPowerPoint(file) {
+
+    const apiKey =
+        document
+            .getElementById(
+                "cloudConvertKey"
+            )
+            .value
+            .trim();
+
+
+    if (!apiKey) {
+
+        showError(
+            "PowerPoint conversion requires a CloudConvert API key."
+        );
+
+        document
+            .getElementById(
+                "apiSettings"
+            )
+            .classList.add(
+                "open"
+            );
+
+        return;
+
+    }
+
+
+    try {
+
+        images = [];
+
+        preview.innerHTML = "";
+
+
+        setLoading(
+            "Creating PowerPoint conversion job..."
+        );
+
+
+        const jobResponse =
+            await fetch(
+                "https://api.cloudconvert.com/v2/jobs",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Authorization":
+                            "Bearer " +
+                            apiKey,
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            tasks: {
+
+                                upload: {
+
+                                    operation:
+                                        "import/upload"
+
+                                },
+
+                                convert: {
+
+                                    operation:
+                                        "convert",
+
+                                    input:
+                                        "upload",
+
+                                    output_format:
+                                        "pdf"
+
+                                },
+
+                                export: {
+
+                                    operation:
+                                        "export/url",
+
+                                    input:
+                                        "convert"
+
+                                }
+
+                            }
+
+                        })
+
+                }
+            );
+
+
+        if (!jobResponse.ok) {
+
+            throw new Error(
+                "Could not create the PowerPoint conversion job."
+            );
+
+        }
+
+
+        const job =
+            await jobResponse.json();
+
+
+        const uploadTask =
+            job.data.tasks.find(
+                task =>
+                    task.name ===
+                    "upload"
+            );
+
+
+        const formData =
+            new FormData();
+
+
+        Object.entries(
+            uploadTask.result.form.parameters
+        ).forEach(
+            ([key,value]) => {
+
+                formData.append(
+                    key,
+                    value
+                );
+
+            }
+        );
+
+
+        formData.append(
+            "file",
+            file
+        );
+
+
+        setLoading(
+            "Uploading PowerPoint..."
+        );
+
+
+        await fetch(
+            uploadTask.result.form.url,
+            {
+
+                method:
+                    "POST",
+
+                body:
+                    formData
+
+            }
+        );
+
+
+        let pdfURL = null;
+
+        let attempts = 0;
+
+
+        while (
+            !pdfURL &&
+            attempts < 180
+        ) {
+
+            attempts++;
+
+
+            setLoading(
+                "Converting PowerPoint..."
+            );
+
+
+            const response =
+                await fetch(
+                    `https://api.cloudconvert.com/v2/jobs/${job.data.id}`,
+                    {
+
+                        headers: {
+
+                            "Authorization":
+                                "Bearer " +
+                                apiKey
+
+                        }
+
+                    }
+                );
+
+
+            const status =
+                await response.json();
+
+
+            if (
+                status.data.status ===
+                "error"
+            ) {
+
+                throw new Error(
+                    "CloudConvert could not convert the PowerPoint."
+                );
+
+            }
+
+
+            const exportTask =
+                status.data.tasks.find(
+                    task =>
+                        task.name ===
+                        "export"
+                );
+
+
+            if (
+                exportTask &&
+                exportTask.status ===
+                "finished"
+            ) {
+
+                pdfURL =
+                    exportTask
+                        .result
+                        .files[0]
+                        .url;
+
+                break;
+
+            }
+
+
+            await sleep(
+                2000
+            );
+
+        }
+
+
+        if (!pdfURL) {
+
+            throw new Error(
+                "PowerPoint conversion timed out."
+            );
+
+        }
+
+
+        setLoading(
+            "Downloading converted presentation..."
+        );
+
+
+        const pdfResponse =
+            await fetch(
+                pdfURL
+            );
+
+
+        const buffer =
+            await pdfResponse.arrayBuffer();
+
+
+        /*
+         * Now render the converted PDF
+         * using the SAME PDF converter.
+         */
+
+        await renderPDFBuffer(
+            buffer,
+            "Slide"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+        showError(
+            error.message ||
+            "PowerPoint conversion failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER PDF BUFFER
+   Used by PowerPoint AFTER CloudConvert.
+========================================================= */
+
+async function renderPDFBuffer(
+    buffer,
+    label
+) {
+
+    const pdf =
+        await pdfjsLib
+            .getDocument(
+                new Uint8Array(
+                    buffer
+                )
+            )
+            .promise;
+
+
+    const scale =
+        parseFloat(
+            renderScale.value
+        );
+
+
+    currentImageType =
+        imageFormat.value;
+
+
+    preview.innerHTML = "";
+
+
+    for (
+        let i = 1;
+        i <= pdf.numPages;
+        i++
+    ) {
+
+        setLoading(
+            `Rendering ${label.toLowerCase()} ${i} of ${pdf.numPages}...`
+        );
+
+
+        const page =
+            await pdf.getPage(i);
+
+
+        const viewport =
+            page.getViewport({
+                scale: scale
+            });
+
+
+        const canvas =
+            document.createElement(
+                "canvas"
+            );
+
+
+        const context =
+            canvas.getContext(
+                "2d"
+            );
+
+
+        canvas.width =
+            viewport.width;
+
+
+        canvas.height =
+            viewport.height;
+
+
+        await page.render({
+
+            canvasContext:
+                context,
+
+            viewport:
+                viewport
+
+        }).promise;
+
+
+        let imageData;
+
+
+        if (
+            currentImageType ===
+            "jpeg"
+        ) {
+
+            imageData =
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.95
+                );
+
+        } else {
+
+            imageData =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+        }
+
+
+        images.push({
+
+            data:
+                imageData,
+
+            name:
+                `${label.toLowerCase()}_${i}.${currentImageType}`
+
+        });
+
+
+        addPreview(
+            canvas,
+            i,
+            label
+        );
+
+    }
+
+
+    finishConversion(
+        pdf.numPages
+    );
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function addPreview(
+    canvas,
+    number,
+    label
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "preview-card";
+
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    wrapper.className =
+        "preview-image-wrapper";
+
+
+    const previewCanvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    previewCanvas.width =
+        canvas.width;
+
+
+    previewCanvas.height =
+        canvas.height;
+
+
+    const context =
+        previewCanvas.getContext(
+            "2d"
+        );
+
+
+    context.drawImage(
+        canvas,
+        0,
+        0
+    );
+
+
+    const labelElement =
+        document.createElement(
+            "div"
+        );
+
+
+    labelElement.className =
+        "page-label";
+
+
+    labelElement.textContent =
+        `${label} ${number}`;
+
+
+    wrapper.appendChild(
+        previewCanvas
+    );
+
+
+    wrapper.appendChild(
+        labelElement
+    );
+
+
+    const download =
+        document.createElement(
+            "button"
+        );
+
+
+    download.className =
+        "individual-download";
+
+
+    download.textContent =
+        "↓ Download Image";
+
+
+    download.onclick =
+        function() {
+
+            downloadSingleImage(
+                images[number - 1]
+            );
+
+        };
+
+
+    card.appendChild(
+        wrapper
+    );
+
+
+    card.appendChild(
+        download
+    );
+
+
+    preview.appendChild(
+        card
+    );
+
+}
+
+
+/* =========================================================
+   DOWNLOAD INDIVIDUAL IMAGE
+========================================================= */
+
+function downloadSingleImage(
+    image
+) {
+
+    if (!image) return;
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        image.data;
+
+
+    link.download =
+        image.name;
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+}
+
+
+/* =========================================================
+   DOWNLOAD ZIP
+========================================================= */
+
+downloadBtn.addEventListener(
+    "click",
+    async function() {
+
+        if (!images.length) return;
+
+
+        try {
+
+            setLoading(
+                "Preparing ZIP file..."
+            );
+
+
+            const zip =
+                new JSZip();
+
+
+            images.forEach(
+                image => {
+
+                    zip.file(
+
+                        image.name,
+
+                        image.data
+                            .split(",")[1],
+
+                        {
+                            base64: true
+                        }
+
+                    );
+
+                }
+            );
+
+
+            const content =
+                await zip.generateAsync(
+
+                    {
+                        type:
+                            "blob"
+                    },
+
+                    metadata => {
+
+                        setLoading(
+                            `Creating ZIP... ${Math.round(metadata.percent)}%`
+                        );
+
+                    }
+
+                );
+
+
+            const filename =
+                currentMode === "pdf"
+                    ? "frambuk_pdf_images.zip"
+                    : "frambuk_powerpoint_images.zip";
+
+
+            saveAs(
+                content,
+                filename
+            );
+
+
+            showSuccess(
+                "ZIP file downloaded successfully."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            showError(
+                "Unable to create the ZIP file."
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+function finishConversion(
+    count
+) {
+
+    convertBtn.disabled =
+        false;
+
+
+    downloadBtn.disabled =
+        images.length === 0;
+
+
+    resultCount.textContent =
+        `${count} ${count === 1 ? "Image" : "Images"}`;
+
+
+    resultsHeader.classList.add(
+        "show"
+    );
+
+
+    showSuccess(
+        `${count} ${count === 1 ? "image" : "images"} converted successfully.`
+    );
+
+
+    setTimeout(
+        function() {
+
+            resultsHeader.scrollIntoView({
+                behavior:
+                    "smooth",
+
+                block:
+                    "start"
+
+            });
+
+        },
+        300
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+clearBtn.addEventListener(
+    "click",
+    clearAll
+);
+
+
+function clearAll() {
+
+    selectedFile =
+        null;
+
+
+    images =
+        [];
+
+
+    upload.value =
+        "";
+
+
+    fileInfo.classList.remove(
+        "show"
+    );
+
+
+    convertBtn.disabled =
+        true;
+
+
+    downloadBtn.disabled =
+        true;
+
+
+    resultsHeader.classList.remove(
+        "show"
+    );
+
+
+    hideStatus();
+
+
+    showEmptyState();
+
+}
+
+
+/* =========================================================
+   CLEAR FILE
+========================================================= */
+
+function clearFile() {
+
+    selectedFile =
+        null;
+
+
+    images =
+        [];
+
+
+    upload.value =
+        "";
+
+
+    fileInfo.classList.remove(
+        "show"
+    );
+
+
+    convertBtn.disabled =
+        true;
+
+
+    downloadBtn.disabled =
+        true;
+
+
+    resultsHeader.classList.remove(
+        "show"
+    );
+
+
+    hideStatus();
+
+
+    showEmptyState();
+
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+function showEmptyState() {
+
+    preview.innerHTML = `
+
+        <div class="empty-state">
+
+            <div class="empty-state-icon">
+                🖼️
+            </div>
+
+            <h3>
+                Your converted pages will appear here
+            </h3>
+
+            <p>
+                Upload a file and click Convert to get started.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setLoading(
+    message
+) {
+
+    statusBox.className =
+        "status show";
+
+
+    statusSpinner.style.display =
+        "block";
+
+
+    statusText.textContent =
+        message;
+
+}
+
+
+function showSuccess(
+    message
+) {
+
+    statusBox.className =
+        "status show success";
+
+
+    statusSpinner.style.display =
+        "none";
+
+
+    statusText.textContent =
+        message;
+
+}
+
+
+function showError(
+    message
+) {
+
+    statusBox.className =
+        "status show error";
+
+
+    statusSpinner.style.display =
+        "none";
+
+
+    statusText.textContent =
+        message;
+
+}
+
+
+function hideStatus() {
+
+    statusBox.className =
+        "status";
+
+}
+
+
+/* =========================================================
+   API SETTINGS
+========================================================= */
+
+function toggleApiSettings() {
+
+    const settings =
+        document.getElementById(
+            "apiSettings"
+        );
+
+
+    const arrow =
+        document.getElementById(
+            "apiArrow"
+        );
+
+
+    settings.classList.toggle(
+        "open"
+    );
+
+
+    arrow.textContent =
+        settings.classList.contains(
+            "open"
+        )
+            ? "−"
+            : "+";
+
+}
+
+
+/* =========================================================
+   SLEEP
+========================================================= */
+
+function sleep(
+    milliseconds
+) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                milliseconds
+            )
+    );
+
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function toggleFrambukMenu() {
+
+    document
+        .getElementById(
+            "menu"
+        )
+        .classList.toggle(
+            "show"
+        );
+
+}
+
+
+/* =========================================================
+   EXISTING FRAMBUK CART FUNCTIONS
+========================================================= */
+
+function safeOpenCart() {
+
+    if (
+        typeof window.openCart ===
+        "function"
+    ) {
+
+        window.openCart();
+
+    }
+
+}
+
+
+function safeCheckout() {
+
+    if (
+        typeof window.checkoutWhatsApp ===
+        "function"
+    ) {
+
+        window.checkoutWhatsApp();
+
+    }
+
+}
+
+
+/* =========================================================
+   IMPORTANT:
+   INITIALIZE THE PAGE IN PDF MODE.
+
+   This is what prevents the API-key section
+   from appearing when the page first loads.
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        switchMode(
+            "pdf"
+        );
+
+    }
+);
+
+</script>
+
+
+<!-- =========================================================
+     YOUR EXISTING FRAMBUK SITE SCRIPT
+========================================================= -->
+
+<script src="script.js"></script>
+
+
+<footer>
+© 2026 Frambuk International Ventures <a href="🏷️ Frambuk_Product_Packaging_Prompts.html">•</a>
+</footer>
+
+<script src="script.js"></script>
+  <script>
+    function slideSection(id,direction){
+    let slider=document.getElementById(id);
+  slider.scrollLeft += direction * 350;
+  }
+
+</script>
+  </body>
+
+</html>

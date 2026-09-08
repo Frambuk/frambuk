@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+    
+<title>Auto Tag Generator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+body{
+    background:#f4f7fb !important;
+
+    color:#222;
+}
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:#fff !important;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+h1{
+    text-align:center;
+    margin-bottom:10px;
+    color:#0f172a !important;
+}
+.subtitle{
+    text-align:center;
+    color:#555;
+    margin-bottom:30px;
+}
+textarea{
+    width:100%;
+    min-height:220px;
+    border:2px solid #ddd;
+    border-radius:15px;
+    padding:20px;
+    resize:vertical;
+    font-size:16px;
+    outline:none;
+}
+textarea:focus{
+    border-color:#2563eb;
+}
+.buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
+button{
+    border:none;
+    padding:15px 25px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+    transition:0.3s;
+}
+.generate{
+    background:#2563eb !important;
+    color:white;
+}
+.generate:hover{
+    background:#1d4ed8 !important;
+}
+.copy{
+    background:#16a34a;
+    color:white;
+}
+.copy:hover{
+    background:#15803d;
+}
+.clear{
+    background:#dc2626;
+    color:white;
+}
+.clear:hover{
+    background:#b91c1c;
+}
+.results{
+    margin-top:35px;
+}
+.tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:20px;
+}
+.tag{
+    background:#e0edff;
+    color:#1e3a8a;
+    padding:10px 16px;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:bold;
+}
+.info-box{
+    margin-top:30px;
+    background:#f8fafc;
+    color: #000000;
+    padding:20px;
+    border-radius:15px;
+    border-left:5px solid #2563eb;
+}
+.info-box h3{
+    margin-bottom:10px;
+}
+.footer{
+    text-align:center;
+    margin-top:40px;
+    color:#777;
+}
+@media(max-width:768px){
+    .buttons{
+        flex-direction:column;
+    }
+    button{
+        width:100%;
+    }
+}
+</style>
+</head>
+<body>
+
+
+<header>
+    <div class="header-container">
+    <div class="hamburger" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="logo">
+        <a href="index.html"><img src="images/Frambuk-Logo.png"></a>
+    </div>
+    <nav id="menu">
+        <a class="active" href="index.html">
+        Home
+        </a>
+
+        <a href="shop.html">
+        Shop
+        </a>
+
+        <a href="apps.html">
+        Free To Use Apps
+        </a>
+    </nav>
+
+        <div class="header-icons">
+            <div onclick="openCart()">
+                🛒
+                <span id="cartCount">
+                0
+                </span>
+            </div>
+            <div onclick="checkoutWhatsApp()">
+            💳
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+<div class="container">
+
+<h1><i class="fas fa-tags"></i>Auto Tag Generator</h1>
+<p class="subtitle">Generate SEO tags, hashtags and keywords automatically from your content.</p>
+
+<textarea id="contentInput" placeholder="Paste your article, product description, YouTube title, blog post, business idea or any content here..."></textarea>
+
+<div class="buttons">
+    <button class="generate" onclick="generateTags()">
+        <i class="fas fa-bolt"></i> Generate Tags
+    </button>
+
+    <button class="copy" onclick="copyTags()">
+        <i class="fas fa-copy"></i> Copy Tags
+    </button>
+
+    <button class="clear" onclick="clearAll()">
+        <i class="fas fa-trash"></i> Clear
+    </button>
+</div>
+
+<div class="results">
+    <h2><i class="fas fa-lightbulb"></i> Generated Tags</h2>
+    <div class="tags" id="tagsContainer"></div>
+</div>
+
+<div class="info-box">
+    <h3>How This Intelligent Tool Works</h3>
+    <p>
+        This Auto Tag Generator scans your content, removes unnecessary words,
+        detects important keywords, and intelligently converts them into SEO-friendly tags and hashtags.
+        It works great for YouTube videos, blogs, ecommerce products, food business listings,
+        social media content, affiliate products, and websites.
+    </p>
+</div>
+
+<div class="footer">
+    Developed for Smart Digital Content Optimization
+</div>
+
+</div>
+
+<script>
+const stopWords = [
+"the","is","a","an","and","or","but","if","then","this","that","to","of","for","in","on","with","as","by","at","from","it","be","are","was","were","your","you","our","their","them","his","her","its","have","has","had","can","will","would","should","could","about","into","how","what","when","where","why","who","which"
+];
+
+function generateTags(){
+    const input = document.getElementById('contentInput').value.toLowerCase();
+    const tagsContainer = document.getElementById('tagsContainer');
+
+    tagsContainer.innerHTML = '';
+
+    if(input.trim() === ''){
+        alert('Please enter some content first.');
+        return;
+    }
+
+    // Remove punctuation
+    let cleaned = input.replace(/[^a-zA-Z0-9\s]/g, '');
+
+    // Split words
+    let words = cleaned.split(/\s+/);
+
+    // Remove stop words
+    let filtered = words.filter(word =>
+        word.length > 2 && !stopWords.includes(word)
+    );
+
+    // Count frequencies
+    let frequency = {};
+
+    filtered.forEach(word => {
+        frequency[word] = (frequency[word] || 0) + 1;
+    });
+
+    // Sort keywords by frequency
+    let sorted = Object.keys(frequency).sort((a,b)=>frequency[b]-frequency[a]);
+
+    // Limit to top tags
+    let topTags = sorted.slice(0,30);
+
+    // Create tags
+    topTags.forEach(tag => {
+        let span = document.createElement('span');
+        span.className = 'tag';
+        span.innerText = '#' + tag;
+        tagsContainer.appendChild(span);
+    });
+
+    // Generate smart phrase tags
+    generatePhraseTags(filtered);
+}
+
+function generatePhraseTags(words){
+    const tagsContainer = document.getElementById('tagsContainer');
+
+    let phrases = [];
+
+    for(let i=0; i<words.length-1; i++){
+        let phrase = words[i] + ' ' + words[i+1];
+
+        if(words[i].length > 3 && words[i+1].length > 3){
+            phrases.push(phrase);
+        }
+    }
+
+    let uniquePhrases = [...new Set(phrases)].slice(0,10);
+
+    uniquePhrases.forEach(phrase => {
+        let span = document.createElement('span');
+        span.className = 'tag';
+        span.style.background = '#dcfce7';
+        span.style.color = '#166534';
+        span.innerText = '#' + phrase.replace(/\s+/g,'');
+        tagsContainer.appendChild(span);
+    });
+}
+
+function copyTags(){
+    const tags = [...document.querySelectorAll('.tag')]
+        .map(tag => tag.innerText)
+        .join(' ');
+
+    if(tags === ''){
+        alert('No tags generated yet.');
+        return;
+    }
+
+    navigator.clipboard.writeText(tags);
+    alert('Tags copied successfully!');
+}
+
+function clearAll(){
+    document.getElementById('contentInput').value = '';
+    document.getElementById('tagsContainer').innerHTML = '';
+}
+</script>
+
+</body>
+</html>

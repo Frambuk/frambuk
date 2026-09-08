@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="icon"
+      type="image/x-icon"
+      href="images/Frambuk-Icon.png">
+
+<title>Frambuk Cart</title>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="header-container">
+
+
+    <!-- HAMBURGER -->
+
+    <div class="hamburger"
+         onclick="toggleMenu()">
+
+        ☰
+
+    </div>
+
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <a href="index.html">
+
+            <img src="images/Frambuk-Logo.png"
+                 alt="Frambuk Logo">
+
+        </a>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav id="menu">
+
+        <a class="active"
+           href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#apps">
+
+            Free To Use Apps
+
+        </a>
+
+    </nav>
+
+
+    <!-- HEADER ICONS -->
+    <div class="header-icons">
+        <div onclick="openCart()" class="cart-icon">
+            🛒
+            <span id="cartCount">0</span>
+        </div>
+
+        <div onclick="checkoutWhatsApp()">
+            💳
+        </div>
+    </div>
+
+</div>
+
+</header>
+
+<!-- =========================
+     CART
+========================= -->
+
+<section class="products">
+
+<h2>
+
+    Your Cart
+
+</h2>
+
+
+<!-- CART ITEMS -->
+
+<div id="cartItems">
+
+</div>
+
+
+<!-- TOTAL -->
+
+<h2 id="cartTotal">
+
+    Total: ₦0
+
+</h2>
+
+
+<!-- CHECKOUT -->
+
+<button
+    type="button"
+    onclick="checkoutWhatsApp()"
+    class="checkout-btn">
+    Checkout On WhatsApp
+</button>
+
+
+<!-- HOME -->
+
+<button
+    type="button"
+    onclick="location.href='index.html'">
+
+    Home
+
+</button>
+
+
+</section>
+
+<!-- =========================
+     SHARED FULL-SCREEN
+     IMAGE / VIDEO VIEWER
+========================= -->
+
+<div id="videoModal"
+     class="video-modal"
+     aria-hidden="true">
+
+<div class="video-modal-content">
+
+
+    <!-- CLOSE -->
+
+    <button
+        type="button"
+        class="modal-close"
+        onclick="closeVideo()"
+        aria-label="Close viewer">
+
+        ✕
+
+    </button>
+
+
+    <!-- PREVIOUS -->
+
+    <button
+        type="button"
+        class="image-nav image-nav-prev"
+        id="imagePrev"
+        onclick="showPreviousImage()"
+        aria-label="Previous image">
+
+        ‹
+
+    </button>
+
+
+    <!-- VIDEO -->
+
+    <iframe
+        id="videoPlayer"
+        allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+
+
+    <!-- IMAGE -->
+
+    <div class="image-viewer-area">
+
+        <img
+            id="mediaImage"
+            alt="Image preview">
+
+    </div>
+
+
+    <!-- NEXT -->
+
+    <button
+        type="button"
+        class="image-nav image-nav-next"
+        id="imageNext"
+        onclick="showNextImage()"
+        aria-label="Next image">
+
+        ›
+
+    </button>
+
+
+    <!-- THUMBNAILS -->
+
+    <div
+        class="image-thumbnails"
+        id="imageThumbnails"
+        aria-label="Related images">
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+    <div class="video-modal-content bank-modal-content">
+        <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+        <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+        <div style="width:100%; max-width:500px; margin:20px auto;">
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">0464733563</p>
+                <button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+                <p style="font-weight:bold;">🏦 First Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">3133126775</p>
+                <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>            
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-top: 15px;">
+                <p style="font-weight:bold;">🏦 Whatsapp Checkout</p>
+                <p>Chat To Verify Before Purchase</p>
+                <p style="font-size:18px; font-weight:bold;">+2349067040308</p>
+                <button
+                    type="button"
+                    onclick="checkoutWhatsApp()"
+                    class="checkout-btn" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">
+                    Checkout On WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+© 2026 Frambuk International Ventures
+<a href="#" onclick="openBankDetails(); return false;">• 🏦 Make a Transfer 💵</a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  function slideSection(id, direction) {
+    const slider = document.getElementById(id);
+    if (!slider) return;
+    slider.scrollLeft += direction * 350;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    displayCart();
+  });
+</script>
+</body>
+</html>

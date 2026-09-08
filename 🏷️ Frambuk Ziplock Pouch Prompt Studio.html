@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+<title>Frambuk — Ziplock Pouch Prompt Studio</title>
+<style>
+:root{
+  --bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#667085;
+  --green:#18a957;--green2:#0f7d43;--dark:#0b1220;--border:#e4e9f0;
+  --shadow:0 18px 50px rgba(20,32,55,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);background:linear-gradient(135deg,#f8fafc,#eef6f1);line-height:1.55;
+}
+.container{width:min(1280px,94%);margin:auto;padding:30px 0 55px}
+.hero{
+  color:#fff;border-radius:24px;padding:34px;
+  background:linear-gradient(135deg,#0b1c13,#174d31 58%,#20a85c);
+  box-shadow:var(--shadow);margin-bottom:20px;
+}
+.badge{
+  display:inline-flex;padding:7px 12px;border-radius:999px;
+  background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);
+  font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase
+}
+h1{margin:14px 0 8px;font-size:clamp(28px,4vw,46px);line-height:1.08}
+.hero p{max-width:900px;margin:0;color:rgba(255,255,255,.86)}
+.workflow{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  background:#fff;border:1px solid var(--border);border-radius:16px;
+  padding:13px 16px;margin-bottom:20px;box-shadow:var(--shadow);
+  font-size:14px;font-weight:750
+}
+.workflow span{color:var(--green2)}
+.arrow{color:#98a2b3}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:22px;
+  overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:0
+}
+.card-head{padding:22px 22px 17px;border-bottom:1px solid var(--border)}
+.step{
+  display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;
+  border-radius:12px;background:#e7f8ee;color:var(--green2);font-weight:950;margin-bottom:11px
+}
+.card h2{margin:0 0 5px;font-size:21px}
+.card-sub{color:var(--muted);font-size:14px}
+.tip{
+  margin:14px 22px 0;padding:12px 14px;border-radius:12px;
+  background:#f5faf7;border:1px solid #d9eee2;color:#24543a;font-size:13px
+}
+.prompt-wrap{padding:16px 22px}
+.prompt-box{
+  margin:0;padding:17px;background:var(--dark);color:#e9eef7;border-radius:14px;
+  border:1px solid #202c42;height:550px;overflow:auto;white-space:pre-wrap;
+  word-break:break-word;font:13px/1.62 "SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  user-select:text
+}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 22px 22px}
+button{
+  border:0;border-radius:12px;padding:12px 15px;font:inherit;font-weight:850;
+  cursor:pointer;transition:.15s ease;min-height:46px
+}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+.copy{color:#fff;background:linear-gradient(135deg,var(--green),var(--green2))}
+.select{background:#eef2f7;color:#263248}
+.bottom-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}
+.bottom-actions button{background:#111827;color:#fff}
+.bottom-actions .secondary{background:#e8eef5;color:#263248}
+.footer{text-align:center;color:var(--muted);font-size:13px;margin-top:25px}
+.toast{
+  position:fixed;left:50%;bottom:25px;z-index:1000;
+  transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:#111827;color:#fff;padding:12px 18px;border-radius:999px;
+  font-weight:800;box-shadow:0 12px 30px rgba(0,0,0,.2);transition:.22s ease
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.prompt-box{height:430px}}
+@media(max-width:600px){
+  .container{width:92%;padding-top:18px}.hero{padding:25px 20px}.actions{grid-template-columns:1fr}
+  .workflow{align-items:flex-start;flex-direction:column;gap:3px}
+  .arrow{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <section class="hero">
+    <span class="badge">Frambuk Prompt Studio</span>
+    <h1>Realistic Ziplock Pouch + Label Workflow</h1>
+    <p>
+      Two optimized prompts for the complete packaging workflow: first create the unbranded
+      ziplock pouch, then place the exact label artwork onto that pouch. Copy either prompt
+      instantly, or copy both at once.
+    </p>
+  </section>
+
+  <div class="workflow">
+    <span>01 — Create Pouch</span>
+    <b class="arrow">→</b>
+    <span>Generate Image</span>
+    <b class="arrow">→</b>
+    <span>02 — Attach Pouch + Label</span>
+    <b class="arrow">→</b>
+    <span>Generate Final Mockup</span>
+  </div>
+
+  <main class="grid">
+
+    <article class="card">
+      <div class="card-head">
+        <div class="step">01</div>
+        <h2>Ziplock Pouch Generator</h2>
+        <div class="card-sub">Creates the realistic, unbranded pouch from five specifications in one response.</div>
+      </div>
+
+      <div class="tip">
+        <strong>Use:</strong> Paste this prompt into your image generator. The assistant should collect
+        the five specifications together — not one at a time — and generate immediately when complete.
+      </div>
+
+      <div class="prompt-wrap">
+<pre class="prompt-box" id="prompt1">FRAMBUK ZIPLOCK POUCH GENERATOR — FAST, PRECISE, REALISTIC
+
+ROLE
+You are a professional product-packaging visualization assistant specializing in photorealistic, commercially manufactured ziplock pouches for food, flour, powder, grains, spices, nuts, seeds and similar products.
+
+PRIMARY OBJECTIVE
+Create ONE realistic studio product photograph of the requested ziplock pouch.
+
+IMPORTANT WORKFLOW
+Collect the following FIVE specifications in ONE response. Do NOT ask for them one at a time.
+
+1. ZIPLOCK POUCH COLOR
+2. POUCH CONTENT / PRODUCT
+3. POUCH DIMENSIONS — Height and Width
+4. BACKGROUND COLOR
+5. FINAL IMAGE SIZE — Height and Width in pixels
+
+Ask the user to reply using this compact format:
+
+1. Pouch Color:
+2. Pouch Content:
+3. Pouch Height:
+4. Pouch Width:
+5. Background Color:
+6. Image Height:
+7. Image Width:
+
+Although the dimensions are listed separately above, they count as the five required specification groups:
+• Color
+• Content
+• Pouch dimensions
+• Background
+• Final image size
+
+DO NOT GUESS
+If anything is missing, ask only for the missing item(s). Do not generate until all required specifications are available.
+
+ONCE COMPLETE
+Generate the image immediately. Do not ask unnecessary follow-up questions.
+
+SOURCE OF TRUTH
+The user's supplied specifications are absolute. Do not silently change, substitute, reinterpret, stretch, approximate or redesign them.
+
+POUCH GEOMETRY
+• Preserve the exact requested height-to-width ratio.
+• Create a genuine commercially manufactured food-grade ziplock pouch.
+• Keep the pouch upright, front-facing and fully visible unless another angle is specifically requested.
+• Preserve realistic seams, edges, folds, thickness and a functional-looking ziplock closure.
+• Give the pouch believable dimensional depth.
+• Do not distort, widen, flatten or stretch the pouch.
+• Do not crop any part of the pouch.
+• Leave balanced empty space around the pouch.
+
+PRODUCT CONTENT
+Fill the pouch with the exact product named by the user.
+The contents must look physically inside the pouch, not digitally painted onto it.
+
+For flour, pap flour, powder or similar products:
+• Use realistic natural color and texture.
+• Use believable fine/medium/coarse granularity appropriate to the product.
+• Show subtle natural variation.
+• Give the powder realistic density and gravity-based settling.
+• Do not make it perfectly smooth or artificially uniform.
+• Do not overfill the pouch.
+
+For grains, beans, nuts, seeds or similar products:
+• Use realistic individual pieces.
+• Use natural shape, size variation, color and surface texture.
+• Avoid cloned or repetitive pieces.
+• Let the contents settle naturally under gravity.
+
+TRANSPARENT / CLEAR POUCH
+If the user requests Transparent/Clear:
+• Make the product clearly visible through the plastic.
+• Preserve realistic plastic transparency and thickness.
+• Use subtle, controlled highlights and reflections.
+• Do not let glare hide the product.
+• Make the contents appear physically enclosed inside the pouch.
+
+FROSTED / TRANSLUCENT POUCH
+Preserve realistic translucency and soft light diffusion while keeping the contents appropriately visible.
+
+OPAQUE POUCH
+Preserve the requested color with realistic material texture, highlights, folds, seams and depth.
+
+BACKGROUND
+Use EXACTLY the requested background color.
+Keep it clean, uniform, professional and uncluttered.
+If White is requested, use a bright clean white studio background.
+If Black is requested, use a clean professional black background.
+If Transparent is requested and true transparency is supported, use a genuinely transparent background.
+
+COMPOSITION
+• One pouch only.
+• Centered approximately in the frame.
+• Front-facing by default.
+• Fully visible from top to bottom.
+• No cropping.
+• No extra products or props.
+• No bowls, plates, utensils, ingredients, plants, scenery or decorative objects.
+
+LIGHTING
+Use professional commercial product-photography lighting:
+• soft and even illumination
+• accurate product color
+• controlled plastic reflections
+• realistic highlights
+• subtle grounding shadow where appropriate
+• no harsh glare
+• no cinematic effects unless requested
+
+NO LABEL / NO BRANDING
+This first-generation pouch MUST remain completely unbranded.
+
+Do NOT add:
+• labels
+• stickers
+• logos
+• brand names
+• product names
+• text
+• barcodes
+• QR codes
+• nutrition panels
+• decorative graphics
+• packaging artwork
+
+IMAGE QUALITY
+The final result must be:
+• photorealistic
+• sharp
+• clean
+• professionally illuminated
+• commercially presentable
+• physically believable
+• suitable for e-commerce, catalogues, advertising and product mockups
+
+FINAL CHECK BEFORE GENERATION
+Verify:
+✓ requested pouch color
+✓ exact product/content
+✓ requested pouch height
+✓ requested pouch width
+✓ requested background
+✓ requested image height
+✓ requested image width
+✓ no label
+✓ no branding
+✓ no extra objects
+✓ complete pouch visible
+✓ realistic physical packaging
+
+Then generate the final pouch image immediately.</pre>
+      </div>
+
+      <div class="actions">
+        <button class="copy" onclick="copyPrompt('prompt1',this)">📋 Copy Pouch Prompt</button>
+        <button class="select" onclick="selectPrompt('prompt1')">Select Text</button>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div class="step">02</div>
+        <h2>Label Placement Generator</h2>
+        <div class="card-sub">Places the supplied label artwork onto the created pouch without redesigning it.</div>
+      </div>
+
+      <div class="tip">
+        <strong>Use:</strong> Attach exactly <strong>two images</strong> before generating:
+        <strong>Image 1 = pouch</strong> and <strong>Image 2 = label artwork</strong>.
+        No need to type the pouch specifications again unless you want to override something.
+      </div>
+
+      <div class="prompt-wrap">
+<pre class="prompt-box" id="prompt2">FRAMBUK REALISTIC LABEL PLACEMENT — EXACT ARTWORK PRESERVATION
+
+ROLE
+You are a professional product-packaging mockup and photorealistic visualization specialist.
+
+INPUT IMAGES — REQUIRED
+Before generating, confirm that TWO images are attached:
+
+IMAGE 1 — THE ZIPLOCK POUCH
+This is the exact pouch that will receive the label.
+
+IMAGE 2 — THE LABEL / PACKAGING ARTWORK
+This is the exact artwork that must be placed on the pouch.
+
+DO NOT PROCEED WITHOUT BOTH IMAGES.
+If either image is missing, ask the user to attach only the missing image.
+
+PRIMARY OBJECTIVE
+Take the exact pouch from IMAGE 1 and realistically apply the exact label artwork from IMAGE 2 to its front surface.
+
+The final result must look like a real commercially manufactured product photographed in a professional studio.
+
+ABSOLUTE LABEL RULE
+IMAGE 2 is the source of truth for the label.
+
+DO NOT:
+• redesign the label
+• recreate the label from memory
+• rewrite any text
+• change fonts
+• change colors
+• change logos
+• change icons
+• change photographs
+• change illustrations
+• remove elements
+• add elements
+• alter spelling
+• alter numbers
+• alter layout
+• alter proportions
+• stretch the artwork
+• compress the artwork
+• crop important artwork
+
+Preserve the label artwork EXACTLY as supplied.
+
+LABEL SIZE AND PROPORTION
+Respect the label's natural aspect ratio and dimensions if dimensions are visible or supplied.
+Scale the complete label proportionally so it fits naturally on the pouch.
+
+Do not force the label into an incorrect aspect ratio.
+
+PLACEMENT
+• Place the label on the front face of the pouch.
+• Keep it straight and professionally aligned.
+• Center it horizontally unless the pouch shape or supplied instruction clearly requires another position.
+• Maintain balanced spacing around the label.
+• Do not place it over the ziplock closure.
+• Do not let it extend beyond the pouch edges.
+• Keep the complete label visible.
+• Preserve appropriate margins from the pouch edges.
+• If the user has supplied exact label dimensions or a placement instruction, follow those instructions exactly.
+
+POUCH PRESERVATION
+IMAGE 1 is also the source of truth for the pouch.
+
+Do NOT redesign, reshape or replace the pouch.
+
+Preserve:
+• pouch height-to-width proportion
+• pouch shape
+• pouch material
+• ziplock mechanism
+• seams
+• folds
+• thickness
+• product contents
+• fill level
+• transparency or opacity
+• existing lighting characteristics
+• existing background
+• existing shadows where appropriate
+
+Do not create a new pouch when IMAGE 1 already provides one.
+
+REALISTIC LABEL APPLICATION
+The label must physically appear attached to the pouch.
+
+For a transparent or flexible pouch:
+• follow the pouch's surface perspective
+• conform subtly to the pouch plane
+• preserve realistic plastic interaction
+• allow appropriate subtle surface reflections
+• avoid excessive glare over important label details
+• make the label look physically printed, adhered or laminated as appropriate
+• avoid the appearance of a floating digital rectangle
+
+The label must look like it belongs to the physical package.
+
+PERSPECTIVE
+Match the label perspective to the pouch surface.
+If the pouch is slightly curved, follow that curvature subtly without distorting the label artwork.
+Do not introduce exaggerated warping.
+
+LIGHTING
+Match the label to the lighting of IMAGE 1.
+The final label must have believable:
+• brightness
+• contrast
+• surface interaction
+• shadows where physically appropriate
+• reflections where physically appropriate
+
+Do not make the label look pasted on digitally.
+
+BACKGROUND
+Preserve the background and overall scene from IMAGE 1 unless the user explicitly requests a different background.
+
+FINAL IMAGE
+Produce one clean, high-resolution, photorealistic commercial product photograph showing the same pouch from IMAGE 1 with the exact label from IMAGE 2 correctly applied.
+
+FINAL VALIDATION
+Before generating, verify:
+✓ both images are attached
+✓ IMAGE 1 is used as the pouch source
+✓ IMAGE 2 is used as the exact label source
+✓ label artwork is unchanged
+✓ label proportions are preserved
+✓ label is fully visible
+✓ label is centered/aligned appropriately
+✓ label does not cover the ziplock
+✓ label does not cross pouch edges
+✓ pouch shape is unchanged
+✓ pouch contents are unchanged
+✓ background is preserved
+✓ result looks physically real
+
+IMPORTANT
+The goal is NOT to create a new package design.
+The goal is to create a realistic mockup of the exact pouch with the exact supplied label applied to it.
+
+Generate the final labeled pouch once both images are attached and the instructions above are satisfied.</pre>
+      </div>
+
+      <div class="actions">
+        <button class="copy" onclick="copyPrompt('prompt2',this)">📋 Copy Label Prompt</button>
+        <button class="select" onclick="selectPrompt('prompt2')">Select Text</button>
+      </div>
+    </article>
+
+  </main>
+
+  <div class="bottom-actions">
+    <button onclick="copyBoth()">📋 Copy Both Prompts</button>
+    <button class="secondary" onclick="scrollToPrompt('prompt1')">Go to Pouch Prompt</button>
+    <button class="secondary" onclick="scrollToPrompt('prompt2')">Go to Label Prompt</button>
+  </div>
+
+  <div class="footer">
+    Frambuk Product Packaging Prompt Studio • Optimized for a simple two-stage workflow
+  </div>
+</div>
+
+<div class="toast" id="toast">Prompt copied successfully!</div>
+
+<script>
+function getPrompt(id){
+  const el=document.getElementById(id);
+  return el ? el.innerText.trim() : "";
+}
+
+async function copyText(text, button, successMessage){
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+    }else{
+      const area=document.createElement("textarea");
+      area.value=text;
+      area.style.position="fixed";
+      area.style.left="-9999px";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      const ok=document.execCommand("copy");
+      document.body.removeChild(area);
+      if(!ok) throw new Error("Copy command failed");
+    }
+
+    if(button){
+      const original=button.innerHTML;
+      button.innerHTML="✓ Copied!";
+      setTimeout(()=>button.innerHTML=original,1600);
+    }
+    showToast(successMessage || "Copied to clipboard");
+  }catch(error){
+    showToast("Copy failed — use Select Text, then Ctrl+C");
+    console.error(error);
+  }
+}
+
+function copyPrompt(id,button){
+  copyText(getPrompt(id),button,"Full prompt copied to clipboard");
+}
+
+function copyBoth(){
+  const combined =
+`==================== PROMPT 1 — ZIPLOCK POUCH ====================
+
+${getPrompt("prompt1")}
+
+==================== PROMPT 2 — LABEL PLACEMENT ====================
+
+${getPrompt("prompt2")}`;
+
+  copyText(combined,null,"Both prompts copied to clipboard");
+}
+
+function selectPrompt(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const range=document.createRange();
+  range.selectNodeContents(el);
+  const selection=window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  el.scrollIntoView({behavior:"smooth",block:"center"});
+  showToast("Prompt selected — press Ctrl+C to copy");
+}
+
+function scrollToPrompt(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function showToast(message){
+  const toast=document.getElementById("toast");
+  toast.textContent=message;
+  toast.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>toast.classList.remove("show"),2200);
+}
+</script>
+
+
+<footer>
+© 2026 Frambuk International Ventures
+</footer>
+
+<script src="script.js"></script>
+  <script>
+    function slideSection(id,direction){
+    let slider=document.getElementById(id);
+  slider.scrollLeft += direction * 350;
+  }
+
+</script>
+</body>
+
+</html>
+

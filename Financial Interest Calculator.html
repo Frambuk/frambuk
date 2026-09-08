@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">    
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<!-- SEO ENGINE -->
+
+<title>
+Financial Investment Interest Calculator [For Treasury Bills, Mortgage Loans, Investment Returns, Savings Growth, Bonds and Financial Planning]
+</title>
+
+<meta name="title" content="Financial Interest Calculator">
+
+<meta name="description" content="Advanced Financial Interest Calculator for treasury bills, mortgage loans, compound interest, investment returns, savings growth, bond yields and financial planning.">
+
+<meta name="keywords" content="financial calculator, compound interest calculator, treasury bills calculator, mortgage calculator, investment returns calculator, savings growth calculator, bank savings interest calculator">
+
+<meta name="robots" content="index,follow">
+
+<meta property="og:title" content="Financial Interest Calculator">
+
+<meta property="og:description" content="Calculate mortgage loans, treasury bills, compound interest, savings growth and investment returns online.">
+
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="https://yourwebsite.com/financial-interest-calculator.jpg">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#000000,#203a43,#000000);
+min-height:100vh;
+}
+
+.calculator{
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 20px 40px rgba(0,0,0,.3);
+max-width:750px;
+margin:auto;
+}
+
+.title{
+text-align:center;
+font-size:30px;
+font-weight:700;
+color:#2c3344;
+margin-bottom:10px;
+}
+
+.description{
+text-align:center;
+font-size:14px;
+color:#555;
+line-height:1.7;
+margin-bottom:25px;
+}
+
+.input-group{
+margin-bottom:18px;
+}
+
+label{
+display:block;
+margin-bottom:7px;
+font-weight:600;
+color:#222;
+}
+
+input,select{
+width:100%;
+padding:13px;
+border-radius:8px;
+border:1px solid #ddd;
+font-size:15px;
+outline:none;
+}
+
+input:focus,select:focus{
+border-color:#2c5364;
+}
+
+button{
+width:100%;
+padding:15px;
+background:linear-gradient(135deg,#203a43,#000000);
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+font-weight:600;
+margin-top:10px;
+transition:.3s;
+}
+
+button:hover{
+opacity:.95;
+transform:translateY(-1px);
+}
+
+.clear-btn{
+background:#e74c3c;
+margin-top:15px;
+}
+
+.clear-btn:hover{
+background:#c0392b;
+}
+
+.result{
+margin-top:25px;
+background:#f4f6f8;
+padding:22px;
+border-radius:10px;
+display:none;
+}
+
+.result h3{
+margin-bottom:15px;
+color:#FAC400;
+}
+
+.result p{
+margin:10px 0;
+font-size:17px;
+line-height:1.6;
+}
+
+@media(max-width:600px){
+
+.calculator{
+padding:20px;
+margin-top: 3em !important;
+}
+
+.title{
+font-size:24px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+<header>
+    <div class="header-container">
+    <div class="hamburger" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="logo">
+        <a href="index.html"><img src="images/Frambuk-Logo.png"></a>
+    </div>
+    <nav id="menu">
+        <a class="active" href="index.html">
+        Home
+        </a>
+
+        <a href="index.html#apps">
+        Free To Use Apps
+        </a>
+    </nav>
+
+        <div class="header-icons">
+            <div onclick="openCart()">
+                🛒
+                <span id="cartCount">
+                0
+                </span>
+            </div>
+            <div onclick="checkoutWhatsApp()">
+            💳
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+<h1 style="display:none">
+🪙 Financial Interest Calculator 💰
+</h1>
+
+<h2 style="display:none">
+Treasury Bills, Mortgage Loans, Compound Interest, Savings Growth and Investment Returns Calculator
+</h2>
+
+<div class="calculator" id="calculator">
+
+<div class="title">
+🪙 Financial Interest Calculator 💰
+</div>
+
+<div class="description">
+<h4>
+Calculate Simple Interest, Compound Interest, Treasury Bills, Mortgage Loans, Savings Growth, Investment Returns, Bonds and Bank Savings Interest Rates
+</h4>
+</div>
+
+<!-- Currency -->
+
+<div class="input-group">
+
+<label>Currency</label>
+
+<select id="currency">
+
+<option value="$">USD ($)</option>
+<option value="€">EUR (€)</option>
+<option value="£">GBP (£)</option>
+
+<option value="₦">Nigeria ₦</option>
+<option value="R">South Africa</option>
+<option value="KSh">Kenya</option>
+<option value="GH₵">Ghana</option>
+<option value="UGX">Uganda</option>
+<option value="TZS">Tanzania</option>
+<option value="MAD">Morocco</option>
+<option value="EGP">Egypt</option>
+
+<option value="₹">India ₹</option>
+<option value="¥">Japan</option>
+
+</select>
+
+</div>
+
+<!-- Calculator Type -->
+
+<div class="input-group">
+
+<label>Calculator Type</label>
+
+<select id="calcType">
+
+<option value="simple">Simple Interest</option>
+
+<option value="compound">
+Compound Interest
+</option>
+
+<option value="treasury">
+Treasury Bills
+</option>
+
+<option value="mortgage">
+Mortgage Calculator
+</option>
+
+<option value="savingsRate">
+Savings Interest Rate
+</option>
+
+</select>
+
+</div>
+
+<!-- Principal -->
+
+<div class="input-group">
+
+<label>Principal Amount</label>
+
+<input type="number" id="principal">
+
+</div>
+
+<!-- Interest Rate -->
+
+<div class="input-group" id="rateBox">
+
+<label>Interest Rate (%)</label>
+
+<input type="number" id="rate">
+
+</div>
+
+<!-- Interest Earned -->
+
+<div class="input-group" id="earnedInterestBox" style="display:none">
+
+<label>Interest Earned</label>
+
+<input type="number" id="earnedInterest">
+
+</div>
+
+<!-- Time -->
+
+<div class="input-group" id="timeBox">
+
+<label>Time (Years)</label>
+
+<input type="number" id="time">
+
+</div>
+
+<!-- Compound Frequency -->
+
+<div class="input-group" id="compoundBox" style="display:none">
+
+<label>Compound Frequency</label>
+
+<select id="frequency">
+
+<option value="1">Yearly</option>
+<option value="2">Half Yearly</option>
+<option value="4">Quarterly</option>
+<option value="12">Monthly</option>
+
+</select>
+
+</div>
+
+<!-- Treasury Days -->
+
+<div class="input-group" id="treasuryBox" style="display:none">
+
+<label>Days</label>
+
+<select id="days">
+
+<option value="91">91 Days</option>
+<option value="182">182 Days</option>
+<option value="364">364 Days</option>
+
+</select>
+
+</div>
+
+<!-- Mortgage -->
+
+<div class="input-group" id="mortgageBox" style="display:none">
+
+<label>Loan Term (Years)</label>
+
+<input type="number" id="loanYears">
+
+</div>
+
+<!-- Calculate Button -->
+
+<button onclick="calculate()">
+Calculate
+</button>
+
+<!-- Results -->
+
+<div class="result" id="result">
+
+<h3>
+Results
+</h3>
+
+<p id="interest"></p>
+
+<p id="total"></p>
+
+<p id="monthly"></p>
+
+<button class="clear-btn" onclick="clearCalculator()">
+Clear Calculator
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const calcType=document.getElementById("calcType")
+
+calcType.addEventListener("change",function(){
+
+document.getElementById("compoundBox").style.display="none"
+
+document.getElementById("treasuryBox").style.display="none"
+
+document.getElementById("mortgageBox").style.display="none"
+
+document.getElementById("earnedInterestBox").style.display="none"
+
+document.getElementById("timeBox").style.display="block"
+
+document.getElementById("rateBox").style.display="block"
+
+if(this.value=="compound"){
+
+document.getElementById("compoundBox").style.display="block"
+
+}
+
+if(this.value=="treasury"){
+
+document.getElementById("treasuryBox").style.display="block"
+
+}
+
+if(this.value=="mortgage"){
+
+document.getElementById("mortgageBox").style.display="block"
+
+document.getElementById("timeBox").style.display="none"
+
+}
+
+if(this.value=="savingsRate"){
+
+document.getElementById("earnedInterestBox").style.display="block"
+
+document.getElementById("timeBox").style.display="none"
+
+document.getElementById("rateBox").style.display="none"
+
+}
+
+})
+
+function formatCurrency(amount,currency){
+
+let locale="en-US"
+
+if(currency==="₹"){
+locale="en-IN"
+}
+
+return new Intl.NumberFormat(locale,{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}).format(amount)
+
+}
+
+function calculate(){
+
+let currency=document.getElementById("currency").value
+
+let p=parseFloat(document.getElementById("principal").value)
+
+let r=parseFloat(document.getElementById("rate").value)
+
+let t=parseFloat(document.getElementById("time").value)
+
+let type=calcType.value
+
+let interest=0
+let total=0
+let monthly=0
+
+if(!p){
+
+alert("Please enter principal amount")
+
+return
+
+}
+
+<!-- SIMPLE INTEREST -->
+
+if(type=="simple"){
+
+if(!r || !t){
+
+alert("Please fill all required fields")
+
+return
+
+}
+
+interest=(p*r*t)/100
+
+total=p+interest
+
+}
+
+<!-- COMPOUND INTEREST -->
+
+if(type=="compound"){
+
+if(!r || !t){
+
+alert("Please fill all required fields")
+
+return
+
+}
+
+let n=document.getElementById("frequency").value
+
+total=p*Math.pow((1+(r/(100*n))),(n*t))
+
+interest=total-p
+
+}
+
+<!-- TREASURY BILLS -->
+
+if(type=="treasury"){
+
+if(!r){
+
+alert("Please enter interest rate")
+
+return
+
+}
+
+let days=document.getElementById("days").value
+
+interest=(p*r*days)/36500
+
+total=p+interest
+
+}
+
+<!-- MORTGAGE -->
+
+if(type=="mortgage"){
+
+let years=parseFloat(
+document.getElementById("loanYears").value
+)
+
+if(!years || !r){
+
+alert("Please fill all required fields")
+
+return
+
+}
+
+let monthlyRate=r/100/12
+
+let payments=years*12
+
+monthly=
+p*(monthlyRate*Math.pow(1+monthlyRate,payments))/
+(Math.pow(1+monthlyRate,payments)-1)
+
+total=monthly*payments
+
+interest=total-p
+
+}
+
+<!-- SAVINGS INTEREST RATE -->
+
+if(type=="savingsRate"){
+
+let earned=parseFloat(
+document.getElementById("earnedInterest").value
+)
+
+if(!earned){
+
+alert("Please enter interest earned")
+
+return
+
+}
+
+let rateCalculated=(earned/p)*100
+
+interest=earned
+
+total=p+earned
+
+document.getElementById("interest").innerHTML=
+"Interest Earned: "
++currency+" "
++formatCurrency(interest,currency)
+
+document.getElementById("total").innerHTML=
+"Operational Interest Rate: "
++rateCalculated.toFixed(2)+"%"
+
+document.getElementById("monthly").innerHTML=
+"Total Savings Balance: "
++currency+" "
++formatCurrency(total,currency)
+
+document.getElementById("result").style.display="block"
+
+document.getElementById("result").scrollIntoView({
+behavior:"smooth"
+})
+
+return
+
+}
+
+<!-- DISPLAY RESULTS -->
+
+document.getElementById("interest").innerHTML=
+"Total Interest: "
++currency+" "
++formatCurrency(interest,currency)
+
+document.getElementById("total").innerHTML=
+"Total Amount: "
++currency+" "
++formatCurrency(total,currency)
+
+document.getElementById("monthly").innerHTML=
+monthly
+?
+"Monthly Payment: "
++currency+" "
++formatCurrency(monthly,currency)
+:
+""
+
+document.getElementById("result").style.display="block"
+
+document.getElementById("result").scrollIntoView({
+behavior:"smooth"
+})
+
+}
+
+function clearCalculator(){
+
+document.querySelectorAll("input").forEach(input=>{
+
+input.value=""
+
+})
+
+document.getElementById("result").style.display="none"
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+})
+
+}
+
+</script>
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+    <div class="video-modal-content bank-modal-content">
+        <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+        <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+        <div style="width:100%; max-width:500px; margin:20px auto;">
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">0464733563</p>
+                <button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+                <p style="font-weight:bold;">🏦 First Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">3133126775</p>
+                <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+© 2026 Frambuk International Ventures
+<a href="#" onclick="openBankDetails(); return false;">• 🏦 Make a Transfer 💵</a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  function slideSection(id, direction) {
+    const slider = document.getElementById(id);
+    if (!slider) return;
+    slider.scrollLeft += direction * 350;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    displayCart();
+  });
+</script>
+</body>
+</html>

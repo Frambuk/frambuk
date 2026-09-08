@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<title>Profit & Sales Price Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">    
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    padding:20px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.h1{
+    text-align:center;
+    margin-bottom:10px;
+    color:#111827;
+}
+
+.subtitle{
+    text-align:center;
+    margin-bottom:30px;
+    color:#111827;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+label{
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#333;
+}
+
+input,select{
+    padding:15px;
+    border:2px solid #ddd;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:#2563eb;
+}
+
+.buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-top:30px;
+}
+
+button{
+    border:none;
+    padding:15px 25px;
+    border-radius:12px;
+    cursor:pointer;
+    color:white;
+    font-weight:bold;
+    font-size:15px;
+    transition:0.3s;
+}
+
+.calculate-btn{
+    background:#2563eb;
+}
+
+.reset-btn{
+    background:#dc2626;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+.results{
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.result-card{
+    background:#f8fafc;
+    border:2px solid #e5e7eb;
+    border-radius:15px;
+    padding:20px;
+}
+
+.result-card h3{
+    margin-bottom:20px;
+    color:#111827;
+}
+
+.result-item{
+    margin-bottom:15px;
+    font-size:17px;
+}
+
+.highlight{
+    color:#2563eb;
+    font-weight:bold;
+}
+
+.profit{
+    color:#16a34a;
+    font-weight:bold;
+}
+
+.loss{
+    color:#dc2626;
+    font-weight:bold;
+}
+
+.footer-note{
+    margin-top:30px;
+    background:#eff6ff;
+    padding:20px;
+    border-left:5px solid #2563eb;
+    border-radius:12px;
+    line-height:1.8;
+}
+
+@media(max-width:768px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .results{
+        grid-template-columns:1fr;
+    }
+
+    .buttons{
+        flex-direction:column;
+    }
+
+    button{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+    <div class="hamburger" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="logo">
+        <a href="index.html"><img src="images/Frambuk-Logo.png"></a>
+    </div>
+    <nav id="menu">
+        <a class="active" href="index.html">
+        Home
+        </a>
+
+        <a href="index.html#apps">
+        Free To Use Apps
+        </a>
+    </nav>
+
+        <div class="header-icons">
+            <div onclick="openCart()">
+                🛒
+                <span id="cartCount">
+                0
+                </span>
+            </div>
+            <div onclick="checkoutWhatsApp()">
+            💳
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+<div class="container">
+
+<h2 class="title" style="color: red;">
+<i class="fas fa-chart-line"></i>
+Business Profit Calculator Tool
+</h2>
+
+<p class="subtitle">
+Calculate Your <strong>Expected Business Profits</strong> (For both Products & Service) using this tool!
+</p>
+
+<div class="form-grid">
+
+<!-- REPLACE ONLY THE CURRENCY DROPDOWN WITH THIS FULL VERSION -->
+
+<div class="input-group">
+<label>Select Currency</label>
+
+<select id="currency">
+
+<option value="$">USD - United States Dollar ($)</option>
+<option value="€">EUR - Euro (€)</option>
+<option value="£">GBP - British Pound Sterling (£)</option>
+<option value="₦" selected>NGN - Nigerian Naira (₦)</option>
+<option value="₹">INR - Indian Rupee (₹)</option>
+<option value="¥">JPY - Japanese Yen (¥)</option>
+<option value="₩">KRW - South Korean Won (₩)</option>
+<option value="₽">RUB - Russian Ruble (₽)</option>
+<option value="₺">TRY - Turkish Lira (₺)</option>
+<option value="₴">UAH - Ukrainian Hryvnia (₴)</option>
+<option value="₫">VND - Vietnamese Dong (₫)</option>
+<option value="₱">PHP - Philippine Peso (₱)</option>
+<option value="฿">THB - Thai Baht (฿)</option>
+<option value="₡">CRC - Costa Rican Colón (₡)</option>
+<option value="₲">PYG - Paraguayan Guaraní (₲)</option>
+<option value="₪">ILS - Israeli New Shekel (₪)</option>
+<option value="₭">LAK - Lao Kip (₭)</option>
+<option value="₮">MNT - Mongolian Tögrög (₮)</option>
+<option value="₸">KZT - Kazakhstani Tenge (₸)</option>
+<option value="₼">AZN - Azerbaijani Manat (₼)</option>
+<option value="₾">GEL - Georgian Lari (₾)</option>
+<option value="₿">BTC - Bitcoin (₿)</option>
+
+<option value="A$">AUD - Australian Dollar (A$)</option>
+<option value="C$">CAD - Canadian Dollar (C$)</option>
+<option value="NZ$">NZD - New Zealand Dollar (NZ$)</option>
+<option value="S$">SGD - Singapore Dollar (S$)</option>
+<option value="HK$">HKD - Hong Kong Dollar (HK$)</option>
+<option value="NT$">TWD - Taiwan Dollar (NT$)</option>
+
+<option value="CHF">CHF - Swiss Franc (CHF)</option>
+<option value="kr">SEK - Swedish Krona (kr)</option>
+<option value="kr">NOK - Norwegian Krone (kr)</option>
+<option value="kr">DKK - Danish Krone (kr)</option>
+<option value="zł">PLN - Polish Złoty (zł)</option>
+<option value="Kč">CZK - Czech Koruna (Kč)</option>
+<option value="Ft">HUF - Hungarian Forint (Ft)</option>
+<option value="lei">RON - Romanian Leu (lei)</option>
+<option value="дин">RSD - Serbian Dinar (дин)</option>
+
+<option value="د.إ">AED - UAE Dirham (د.إ)</option>
+<option value="﷼">SAR - Saudi Riyal (﷼)</option>
+<option value="﷼">QAR - Qatari Riyal (﷼)</option>
+<option value="﷼">OMR - Omani Rial (﷼)</option>
+<option value="د.ك">KWD - Kuwaiti Dinar (د.ك)</option>
+<option value="ب.د">BHD - Bahraini Dinar (ب.د)</option>
+<option value="ر.ع.">YER - Yemeni Rial (ر.ع.)</option>
+<option value="ل.ل">LBP - Lebanese Pound (ل.ل)</option>
+<option value="£">EGP - Egyptian Pound (£)</option>
+<option value="د.م.">MAD - Moroccan Dirham (د.م.)</option>
+<option value="د.ت">TND - Tunisian Dinar (د.ت)</option>
+<option value="د.ج">DZD - Algerian Dinar (د.ج)</option>
+
+<option value="R">ZAR - South African Rand (R)</option>
+<option value="₵">GHS - Ghanaian Cedi (₵)</option>
+<option value="KSh">KES - Kenyan Shilling (KSh)</option>
+<option value="USh">UGX - Ugandan Shilling (USh)</option>
+<option value="TSh">TZS - Tanzanian Shilling (TSh)</option>
+<option value="FCFA">XAF - Central African CFA Franc (FCFA)</option>
+<option value="CFA">XOF - West African CFA Franc (CFA)</option>
+<option value="Br">ETB - Ethiopian Birr (Br)</option>
+<option value="RF">RWF - Rwandan Franc (RF)</option>
+<option value="FBu">BIF - Burundi Franc (FBu)</option>
+<option value="MK">MWK - Malawian Kwacha (MK)</option>
+<option value="ZK">ZMW - Zambian Kwacha (ZK)</option>
+<option value="P">BWP - Botswana Pula (P)</option>
+<option value="MT">MZN - Mozambican Metical (MT)</option>
+<option value="Db">STN - São Tomé & Príncipe Dobra (Db)</option>
+<option value="Le">SLL - Sierra Leone Leone (Le)</option>
+<option value="LD">LRD - Liberian Dollar (LD)</option>
+<option value="D">GMD - Gambian Dalasi (D)</option>
+<option value="FG">GNF - Guinean Franc (FG)</option>
+<option value="Esc">CVE - Cape Verde Escudo (Esc)</option>
+
+<option value="R$">BRL - Brazilian Real (R$)</option>
+<option value="$">ARS - Argentine Peso ($)</option>
+<option value="$">CLP - Chilean Peso ($)</option>
+<option value="$">COP - Colombian Peso ($)</option>
+<option value="S/">PEN - Peruvian Sol (S/)</option>
+<option value="$U">UYU - Uruguayan Peso ($U)</option>
+<option value="Bs">VES - Venezuelan Bolívar (Bs)</option>
+<option value="Gs">PYG - Paraguayan Guaraní (Gs)</option>
+<option value="₡">NIO - Nicaraguan Córdoba (₡)</option>
+<option value="Q">GTQ - Guatemalan Quetzal (Q)</option>
+<option value="L">HNL - Honduran Lempira (L)</option>
+<option value="RD$">DOP - Dominican Peso (RD$)</option>
+<option value="J$">JMD - Jamaican Dollar (J$)</option>
+<option value="TT$">TTD - Trinidad & Tobago Dollar (TT$)</option>
+
+<option value="RM">MYR - Malaysian Ringgit (RM)</option>
+<option value="Rp">IDR - Indonesian Rupiah (Rp)</option>
+<option value="₨">PKR - Pakistani Rupee (₨)</option>
+<option value="₨">LKR - Sri Lankan Rupee (₨)</option>
+<option value="₨">NPR - Nepalese Rupee (₨)</option>
+<option value="៛">KHR - Cambodian Riel (៛)</option>
+<option value="₭">LAK - Lao Kip (₭)</option>
+<option value="Ks">MMK - Myanmar Kyat (Ks)</option>
+<option value="Br">BYN - Belarusian Ruble (Br)</option>
+
+</select>
+</div>
+
+<div class="input-group">
+<label>Raw Product Cost</label>
+<input type="number" id="costPrice" placeholder="Enter Product Cost">
+</div>
+
+<div class="input-group">
+<label>Packaging Cost</label>
+<input type="number" id="packagingCost" placeholder="Packaging Expenses">
+</div>
+
+<div class="input-group">
+<label>Transportation Cost</label>
+<input type="number" id="transportCost" placeholder="Transport Expenses">
+</div>
+
+<div class="input-group">
+<label>Storage Cost</label>
+<input type="number" id="storageCost" placeholder="Storage Expenses">
+</div>
+
+<div class="input-group">
+<label>Staff Cost</label>
+<input type="number" id="staffCost" placeholder="Workers / Salary Cost">
+</div>
+
+<div class="input-group">
+<label>Electricity / Fuel Cost</label>
+<input type="number" id="fuelCost" placeholder="Fuel & Power">
+</div>
+
+<div class="input-group">
+<label>Miscellaneous Expenses</label>
+<input type="number" id="miscCost" placeholder="Hidden Expenses">
+</div>
+
+<div class="input-group">
+<label>Tax Percentage (%)</label>
+<input type="number" id="taxPercent" placeholder="Tax Percentage">
+</div>
+
+<div class="input-group">
+<label>Business Multiplier</label>
+
+<select id="multiplier">
+
+<option value="1.2">1.2x - Grocery</option>
+<option value="1.5">1.5x - Electronics</option>
+<option value="1.8">1.8x - Small Food Business</option>
+<option value="2">2x - Standard Business</option>
+<option value="2.2">2.2x - Medium Food Production</option>
+<option value="2.5">2.5x - Restaurant / Fast Food</option>
+<option value="3">3x - Premium Brand</option>
+<option value="4">4x - Luxury Business</option>
+<option value="5">5x - High-End Luxury</option>
+
+</select>
+</div>
+
+<div class="input-group">
+<label>Units Sold Daily</label>
+<input type="number" id="dailyUnits" placeholder="Daily Sales Volume">
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button class="calculate-btn"
+onclick="calculateBusiness()">
+
+<i class="fas fa-calculator"></i>
+Calculate
+
+</button>
+
+<button class="reset-btn"
+onclick="resetCalculator()">
+
+<i class="fas fa-trash"></i>
+Reset
+
+</button>
+
+</div>
+
+<div class="results">
+
+<div class="result-card">
+
+<h3>
+<i class="fas fa-money-bill-wave"></i>
+Pricing Analysis
+</h3>
+
+<div class="result-item">
+True Product Cost:
+<span class="highlight" id="trueCost"></span>
+</div>
+
+<div class="result-item">
+Tax Amount:
+<span class="highlight" id="taxAmount"></span>
+</div>
+
+<div class="result-item">
+Recommended Selling Price:
+<span class="highlight" id="recommendedPrice"></span>
+</div>
+
+<div class="result-item">
+Break-even Price:
+<span class="highlight" id="breakEven"></span>
+</div>
+
+<div class="result-item">
+Net Profit Per Unit:
+<span id="profitPerUnit"></span>
+</div>
+
+<div class="result-item">
+Profit Margin:
+<span class="highlight" id="profitMargin"></span>
+</div>
+
+</div>
+
+<div class="result-card">
+
+<h3>
+<i class="fas fa-chart-column"></i>
+Business Projection
+</h3>
+
+<div class="result-item">
+Daily Profit:
+<span class="highlight" id="dailyProfit"></span>
+</div>
+
+<div class="result-item">
+Weekly Profit:
+<span class="highlight" id="weeklyProfit"></span>
+</div>
+
+<div class="result-item">
+Monthly Profit:
+<span class="highlight" id="monthlyProfit"></span>
+</div>
+
+<div class="result-item">
+Yearly Profit:
+<span class="highlight" id="yearlyProfit"></span>
+</div>
+
+</div>
+
+</div>
+
+<div class="footer-note">
+
+<h3>
+<i class="fas fa-lightbulb"></i>
+Smart Business Insight
+</h3>
+
+<p id="businessInsight">
+
+Enter your business data and calculate.
+
+</p>
+
+</div>
+
+</div>
+
+<script>
+
+function getCurrency(){
+
+    return document.getElementById("currency").value;
+
+}
+
+function formatMoney(amount){
+
+    return getCurrency() +
+    Number(amount).toLocaleString(
+        undefined,
+        {
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }
+    );
+
+}
+
+function calculateBusiness(){
+
+    const costPrice =
+    parseFloat(document.getElementById("costPrice").value) || 0;
+
+    const packagingCost =
+    parseFloat(document.getElementById("packagingCost").value) || 0;
+
+    const transportCost =
+    parseFloat(document.getElementById("transportCost").value) || 0;
+
+    const storageCost =
+    parseFloat(document.getElementById("storageCost").value) || 0;
+
+    const staffCost =
+    parseFloat(document.getElementById("staffCost").value) || 0;
+
+    const fuelCost =
+    parseFloat(document.getElementById("fuelCost").value) || 0;
+
+    const miscCost =
+    parseFloat(document.getElementById("miscCost").value) || 0;
+
+    const taxPercent =
+    parseFloat(document.getElementById("taxPercent").value) || 0;
+
+    const multiplier =
+    parseFloat(document.getElementById("multiplier").value) || 1;
+
+    const dailyUnits =
+    parseFloat(document.getElementById("dailyUnits").value) || 0;
+
+
+    // TRUE COST
+
+    const trueCost =
+    costPrice +
+    packagingCost +
+    transportCost +
+    storageCost +
+    staffCost +
+    fuelCost +
+    miscCost;
+
+
+    // TAX
+
+    const taxAmount =
+    (trueCost * taxPercent) / 100;
+
+
+    // BREAK EVEN
+
+    const breakEven =
+    trueCost + taxAmount;
+
+
+    // RECOMMENDED SELLING PRICE
+
+    const recommendedPrice =
+    breakEven * multiplier;
+
+
+    // PROFITS
+
+    const profitPerUnit =
+    recommendedPrice - breakEven;
+
+    const profitMargin =
+    breakEven > 0
+    ? (profitPerUnit / breakEven) * 100
+    : 0;
+
+
+    // BUSINESS PROJECTIONS
+
+    const dailyProfit =
+    profitPerUnit * dailyUnits;
+
+    const weeklyProfit =
+    dailyProfit * 7;
+
+    const monthlyProfit =
+    dailyProfit * 30;
+
+    const yearlyProfit =
+    dailyProfit * 365;
+
+
+    // OUTPUTS
+
+    document.getElementById("trueCost")
+    .innerHTML =
+    formatMoney(trueCost);
+
+    document.getElementById("taxAmount")
+    .innerHTML =
+    formatMoney(taxAmount);
+
+    document.getElementById("recommendedPrice")
+    .innerHTML =
+    formatMoney(recommendedPrice);
+
+    document.getElementById("breakEven")
+    .innerHTML =
+    formatMoney(breakEven);
+
+    const profitPerUnitElement =
+    document.getElementById("profitPerUnit");
+
+    if(profitPerUnit >= 0){
+
+        profitPerUnitElement.className =
+        "profit";
+
+    }else{
+
+        profitPerUnitElement.className =
+        "loss";
+    }
+
+    profitPerUnitElement.innerHTML =
+    formatMoney(profitPerUnit);
+
+    document.getElementById("profitMargin")
+    .innerHTML =
+    profitMargin.toFixed(2) + "%";
+
+    document.getElementById("dailyProfit")
+    .innerHTML =
+    formatMoney(dailyProfit);
+
+    document.getElementById("weeklyProfit")
+    .innerHTML =
+    formatMoney(weeklyProfit);
+
+    document.getElementById("monthlyProfit")
+    .innerHTML =
+    formatMoney(monthlyProfit);
+
+    document.getElementById("yearlyProfit")
+    .innerHTML =
+    formatMoney(yearlyProfit);
+
+
+    // SMART INSIGHTS
+
+    let insight = "";
+
+    if(multiplier < 1.5){
+
+        insight =
+        "Your multiplier is low. Long-term profitability may be weak.";
+
+    }else if(multiplier >= 1.5 && multiplier < 2.5){
+
+        insight =
+        "Your pricing strategy is balanced and sustainable.";
+
+    }else if(multiplier >= 2.5){
+
+        insight =
+        "You are operating a high-margin business model.";
+    }
+
+    if(profitMargin >= 100){
+
+        insight +=
+        " Excellent profit margin.";
+    }
+
+    if(dailyProfit <= 0){
+
+        insight =
+        "Your business is currently unprofitable.";
+    }
+
+    document.getElementById("businessInsight")
+    .innerHTML =
+    insight;
+
+}
+
+function resetCalculator(){
+
+    document.querySelectorAll("input").forEach(input=>{
+        input.value = "";
+    });
+
+    document.getElementById("trueCost").innerHTML = "";
+    document.getElementById("taxAmount").innerHTML = "";
+    document.getElementById("recommendedPrice").innerHTML = "";
+    document.getElementById("breakEven").innerHTML = "";
+    document.getElementById("profitPerUnit").innerHTML = "";
+    document.getElementById("profitMargin").innerHTML = "";
+    document.getElementById("dailyProfit").innerHTML = "";
+    document.getElementById("weeklyProfit").innerHTML = "";
+    document.getElementById("monthlyProfit").innerHTML = "";
+    document.getElementById("yearlyProfit").innerHTML = "";
+
+    document.getElementById("businessInsight")
+    .innerHTML =
+    "Enter your business data and calculate.";
+
+}
+
+</script>
+
+
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+    <div class="video-modal-content bank-modal-content">
+        <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+        <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+        <div style="width:100%; max-width:500px; margin:20px auto;">
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">0464733563</p>
+                <button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+                <p style="font-weight:bold;">🏦 First Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">3133126775</p>
+                <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+© 2026 Frambuk International Ventures
+<a href="#" onclick="openBankDetails(); return false;">• 🏦 Make a Transfer 💵</a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  function slideSection(id, direction) {
+    const slider = document.getElementById(id);
+    if (!slider) return;
+    slider.scrollLeft += direction * 350;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    displayCart();
+  });
+</script>
+</body>
+</html>

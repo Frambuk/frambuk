@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">    
+<title>Video Thumbnail Extractor and Title Generator</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#000,#111);
+  color:#fff;
+  margin:0;
+  display:flex;
+  justify-content:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:900px;
+}
+
+h1, h4{
+  text-align:center;
+  margin-bottom:5px;
+  color:#fff !important;
+}
+
+.sub{
+  text-align:center;
+  color:#aaa;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  border:1px solid #222;
+}
+
+.section-title{
+  margin-top:0;
+  margin-bottom:10px;
+  color:#ff4d4d;
+}
+
+input,
+select,
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+}
+
+input,
+select{
+  background:#222;
+  color:#fff;
+}
+
+button{
+  background:#ff0000;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.2s ease;
+}
+
+button:hover{
+  background:#cc0000;
+}
+
+.result{
+  margin-top:10px;
+  background:#1a1a1a;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #2b2b2b;
+}
+
+.title{
+  font-weight:bold;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.score{
+  font-size:12px;
+  color:#00ff99;
+  margin-top:5px;
+}
+
+.small{
+  font-size:12px;
+  color:#aaa;
+}
+
+.input-row{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.input-row input{
+  flex:1;
+  margin-top:0;
+}
+
+.clear-btn{
+  width:120px;
+  background:#444;
+  margin-top:0;
+}
+
+.clear-btn:hover{
+  background:#666;
+}
+
+.copy-btn{
+  margin-top:8px;
+  background:#333;
+  color:#fff;
+  padding:8px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  border:none;
+}
+
+.copy-btn:hover{
+  background:#555;
+}
+
+.thumbnail-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+.thumb-card{
+  background:#1a1a1a;
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid #2b2b2b;
+}
+
+.thumb-card img{
+  width:100%;
+  display:block;
+}
+
+.thumb-actions{
+  padding:10px;
+}
+
+.download-btn{
+  background:#008000;
+}
+
+.download-btn:hover{
+  background:#006600;
+}
+
+.copy-link-btn{
+  background:#444;
+}
+
+.copy-link-btn:hover{
+  background:#666;
+}
+
+.note{
+  color:#aaa;
+  font-size:13px;
+  margin-top:10px;
+  line-height:1.5;
+}
+
+@media(max-width:600px){
+  .input-row{
+    flex-direction:column;
+  }
+
+  .clear-btn{
+    width:100%;
+  }
+}
+
+
+.header{
+  position:sticky;top:0;z-index:1000;border-bottom:1px solid var(--line);
+  background:rgba(5,11,20,.76);backdrop-filter:blur(18px);
+}
+.header-container{max-width:1400px;margin:auto;padding:14px 24px;display:flex;align-items:center;gap:28px}
+.logo img{height:42px;max-width:170px;object-fit:contain}
+.hamburger{display:none;font-size:24px;cursor:pointer}
+nav{display:flex;gap:10px;flex:1}
+nav a{color:#dbeafe;text-decoration:none;padding:10px 14px;border-radius:10px;transition:.25s}
+nav a:hover,nav a.active{background:rgba(250,196,0,.12);color:#fac400}
+.header-icons{display:flex;gap:14px;font-size:20px}.header-icons div{cursor:pointer}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+ <div class="header-container">
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+  <div class="logo"><a href="index.html"><img src="images/Frambuk-Logo.png" alt="Frambuk"></a></div>
+  <nav id="menu"><a class="active" href="index.html">Home</a><a href="index.html#apps">Free To Use Apps</a></nav>
+  <div class="header-icons"><div title="Cart">🛒 <span id="cartCount">0</span></div><div title="Checkout">💳</div></div>
+ </div>
+</header>
+
+
+<div class="container">
+
+<h1 id="mainTitle">🚀 Video Thumbnail Extractor and Title Generator 😊</h1>
+
+<div class="sub">
+High-CTR Title Generator + YouTube Thumbnail Downloader
+</div>
+
+<div class="card">
+
+<!-- THUMBNAIL DOWNLOADER -->
+<div class="card">
+
+<h3 class="section-title">🖼️ YouTube Thumbnail Downloader / Copier</h3>
+
+<input
+  type="text"
+  id="videoUrl"
+  placeholder="Paste YouTube Video URL here"
+/>
+
+<button onclick="getThumbnail()">
+  Get Thumbnail
+</button>
+
+<div class="note">
+Supports:
+<br>
+• youtube.com/watch?v=
+<br>
+• youtu.be/
+<br>
+• shorts URLs
+</div>
+
+<div id="thumbnailResults"></div>
+
+</div>
+
+</div>
+
+<div style="height: 2rem;"></div>
+
+<h3 class="section-title">🎯 Viral Video Title Generator</h3>
+
+<h4>
+Please put in 1 to 4 key words that describe your video Idea inorder to get a meaningful Video Title
+</h4>
+
+<div class="input-row">
+  <input id="idea" placeholder="Enter 1–4 word topic e.g. make money" />
+  <button class="clear-btn" onclick="clearInput()">Clear</button>
+</div>
+
+<select id="tone">
+  <option value="viral">Viral / Clickbait</option>
+  <option value="educational">Educational / Tutorial</option>
+  <option value="controversial">Controversial / Exposed</option>
+  <option value="beginner">Beginner Friendly</option>
+</select>
+
+<button onclick="generateTitles()">Generate Viral Titles</button>
+
+<div id="results"></div>
+
+</div>
+
+
+<script>
+function toTitleCase(str){
+  return str.toLowerCase().split(' ').map(w =>
+    w.charAt(0).toUpperCase() + w.slice(1)
+  ).join(' ');
+}
+
+function formatIdea(val){
+  let clean = val.trim().replace(/\s+/g,' ');
+  let capped = toTitleCase(clean);
+  return `"${capped}"`;
+}
+
+function ctrScore(title){
+  let score = 55;
+
+  if(/secret|shocking|insane|viral|truth|hack|exposed|ultimate/i.test(title)){
+    score += 20;
+  }
+
+  if(title.length > 40 && title.length < 70){
+    score += 15;
+  }
+
+  if(/how|why|best|guide|step/i.test(title)){
+    score += 10;
+  }
+
+  return Math.min(score,100);
+}
+
+const templates = {
+
+viral:[
+`INSANE {idea} Trick That Went Viral`,
+`How I Went Viral Using {idea}`,
+`{idea} Secrets Nobody Talks About`,
+`This {idea} Changed Everything`,
+`Why {idea} Is Exploding Right Now`,
+`{idea} Hack That Blew Up Online`,
+`I Tested {idea} For 7 Days`,
+`{idea} Is Breaking The Internet`,
+`The Truth About {idea}`,
+`Why Everyone Is Talking About {idea}`,
+`{idea} Is Going Crazy Viral`,
+`How To Make {idea} Go Viral`,
+`This {idea} Strategy Works Instantly`,
+`{idea} That Will Shock You`,
+`The Secret Behind {idea}`,
+`{idea} Nobody Expected This`,
+`You Won’t Believe {idea}`,
+`{idea} Is Taking Over`,
+`Hidden Power Of {idea}`,
+`{idea} Goes Wrong (Shocking)`,
+`This Is Why {idea} Works`,
+`{idea} Growth Hack Revealed`,
+`Most Dangerous {idea} Trend`,
+`Why {idea} Is Everywhere Now`,
+`{idea} Viral Formula Explained`
+],
+
+educational:[
+`How To Master {idea} Step By Step`,
+`{idea} Full Beginner Guide`,
+`Learn {idea} Fast`,
+`{idea} Explained Simply`,
+`Complete {idea} Tutorial`,
+`{idea} Course For Beginners`,
+`Step By Step {idea} Guide`,
+`{idea} Made Easy`,
+`Everything About {idea}`,
+`{idea} Crash Course`,
+`{idea} Full Breakdown`,
+`How Experts Use {idea}`,
+`{idea} Training Guide`,
+`Learn {idea} In 10 Minutes`,
+`{idea} From Scratch`,
+`{idea} Simplified`,
+`Beginner To Pro {idea}`,
+`{idea} Masterclass`,
+`{idea} Fundamentals Explained`,
+`How {idea} Really Works`,
+`Stepwise Guide To {idea}`,
+`{idea} Practical Guide`,
+`Understanding {idea} Deeply`,
+`{idea} For Absolute Beginners`,
+`Ultimate {idea} Guide`
+],
+
+controversial:[
+`The Truth About {idea}`,
+`{idea} Is Overrated`,
+`Stop Doing {idea} Wrong`,
+`Dark Side Of {idea}`,
+`Reality Of {idea}`,
+`{idea} Is A Scam?`,
+`Nobody Talks About {idea}`,
+`{idea} Exposed`,
+`What They Hide About {idea}`,
+`{idea} Lies Revealed`,
+`The Problem With {idea}`,
+`{idea} Is Dangerous`,
+`Shocking Truth About {idea}`,
+`{idea} Is Not What You Think`,
+`Exposing {idea} Secrets`,
+`{idea} Mistakes Everyone Makes`,
+`Hidden Truth Of {idea}`,
+`Why {idea} Fails People`,
+`{idea} Reality Check`,
+`What Nobody Tells You About {idea}`,
+`{idea} Is Broken System`,
+`Big Problem With {idea}`,
+`Truth Behind {idea}`,
+`Why {idea} Is Controversial`,
+`{idea} Explained Brutally`
+],
+
+beginner:[
+`{idea} For Beginners`,
+`Start {idea} Today`,
+`{idea} Made Easy`,
+`Simple {idea} Guide`,
+`Learn {idea} Fast`,
+`{idea} Basics Explained`,
+`No Experience {idea} Guide`,
+`{idea} Starter Pack`,
+`Quick {idea} Tutorial`,
+`{idea} Step By Step`,
+`Easy Introduction To {idea}`,
+`Beginner Friendly {idea}`,
+`First Steps In {idea}`,
+`{idea} From Zero`,
+`How To Start {idea}`,
+`{idea} Simplified`,
+`Absolute Beginner {idea}`,
+`Quick Start {idea}`,
+`{idea} Learning Path`,
+`{idea} Roadmap For Beginners`,
+`Master Basics Of {idea}`,
+`Simple Way To Learn {idea}`,
+`Start Learning {idea}`,
+`{idea} In Simple Terms`,
+`Easy Guide To {idea}`
+]
+
+};
+
+function clearInput(){
+  document.getElementById('idea').value = '';
+  document.getElementById('idea').focus();
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Copied Successfully!');
+  });
+}
+
+function generateTitles(){
+
+  let raw = document.getElementById('idea').value;
+
+  if(!raw || raw.split(' ').length > 4){
+    alert('Enter 1–4 words only');
+    return;
+  }
+
+  let idea = formatIdea(raw);
+
+  let tone = document.getElementById('tone').value;
+
+  let box = document.getElementById('results');
+
+  box.innerHTML = '';
+
+  templates[tone].slice(0,25).forEach((t) => {
+
+    let title = t.replaceAll('{idea}',idea);
+
+    let score = ctrScore(title);
+
+    let div = document.createElement('div');
+
+    div.className = 'result';
+
+    let safeTitle = title.replace(/"/g,'');
+
+    div.innerHTML = `
+      <div class='title'>${title}</div>
+      <div class='score'>CTR Score: ${score}%</div>
+      <button class='copy-btn'
+        onclick="copyText(this.getAttribute('data-title'))"
+        data-title="${safeTitle}">
+        Copy
+      </button>
+    `;
+
+    box.appendChild(div);
+
+  });
+
+  document.getElementById('mainTitle').innerText =
+    '🚀 YouTube Viral Title Engine 😁';
+}
+
+/* =========================
+   YOUTUBE THUMBNAIL TOOL
+========================= */
+
+function extractVideoID(url){
+
+  let videoId = '';
+
+  try{
+
+    // Standard watch URL
+    if(url.includes('youtube.com/watch?v=')){
+      videoId = new URL(url).searchParams.get('v');
+    }
+
+    // Short youtu.be URL
+    else if(url.includes('youtu.be/')){
+      videoId = url.split('youtu.be/')[1].split(/[?&]/)[0];
+    }
+
+    // Shorts URL
+    else if(url.includes('youtube.com/shorts/')){
+      videoId = url.split('/shorts/')[1].split(/[?&]/)[0];
+    }
+
+    // Live URL
+    else if(url.includes('youtube.com/live/')){
+      videoId = url.split('/live/')[1].split(/[?&]/)[0];
+    }
+
+  }catch(e){
+    return null;
+  }
+
+  // Clean video ID
+  if(videoId){
+    videoId = videoId.trim();
+  }
+
+  return videoId;
+}
+
+async function getThumbnail(){
+
+  const url = document.getElementById('videoUrl').value.trim();
+
+  if(!url){
+    alert('Please paste a YouTube URL');
+    return;
+  }
+
+  const videoId = extractVideoID(url);
+
+  if(!videoId){
+    alert('Invalid YouTube URL');
+    return;
+  }
+
+  /* Convert all links to standard watch URL */
+  const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+  let videoTitle = 'YouTube Video';
+
+  try{
+
+    /* Fetch YouTube page */
+    const response = await fetch(
+      `https://noembed.com/embed?url=${encodeURIComponent(watchUrl)}`
+    );
+
+    const data = await response.json();
+
+    if(data.title){
+      videoTitle = data.title;
+    }
+
+  }catch(err){
+    console.log('Title fetch failed');
+  }
+
+  const qualities = [
+    {
+      name:'Max Resolution',
+      url:`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+    },
+    {
+      name:'High Quality',
+      url:`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+    },
+    {
+      name:'Medium Quality',
+      url:`https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+    },
+    {
+      name:'Standard Quality',
+      url:`https://img.youtube.com/vi/${videoId}/sddefault.jpg`
+    }
+  ];
+
+  let html = `
+
+    <div class="result">
+
+      <div class="title">
+        ${videoTitle}
+      </div>
+
+      <button
+        class="copy-btn"
+        onclick="copyText(this.getAttribute('data-title'))"
+        data-title="${videoTitle.replace(/"/g,'&quot;')}">
+        Copy Video Title
+      </button>
+
+    </div>
+
+    <div class="thumbnail-grid">
+  `;
+
+  qualities.forEach((thumb)=>{
+
+    html += `
+      <div class="thumb-card">
+
+        <img
+          src="${thumb.url}"
+          alt="${thumb.name}"
+        />
+
+        <div class="thumb-actions">
+
+          <div class="small">
+            ${thumb.name}
+          </div>
+
+          <button
+            class="copy-btn copy-link-btn"
+            onclick="copyText('${thumb.url}')">
+            Copy Thumbnail Link
+          </button>
+
+          <a
+            href="${thumb.url}"
+            download
+            target="_blank"
+            style="text-decoration:none;"
+          >
+            <button class="download-btn">
+              Download Thumbnail
+            </button>
+          </a>
+
+        </div>
+
+      </div>
+    `;
+
+  });
+
+  html += `</div>`;
+
+  document.getElementById('thumbnailResults').innerHTML = html;
+}
+
+</script>
+
+
+<footer>
+© 2026 Frambuk International Ventures <a href="🏷️ Frambuk_Product_Packaging_Prompts.html">•</a>
+</footer>
+
+<script src="script.js"></script>
+  <script>
+    function slideSection(id,direction){
+    let slider=document.getElementById(id);
+  slider.scrollLeft += direction * 350;
+  }
+
+</script>
+  </body>
+
+</html>

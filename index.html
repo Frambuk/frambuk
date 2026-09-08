@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Frambuk International</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+  	<link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+
+</head>
+
+<body>
+
+<header>
+	<div class="header-container">
+	<div class="hamburger" onclick="toggleMenu()">
+		☰
+	</div>
+
+	<div class="logo">
+		<a href="index.html"><img src="images/Frambuk-Logo.png"></a>
+	</div>
+	<nav id="menu">
+		<a class="active" href="index.html">
+		Home
+		</a>
+
+		<a href="#apps">
+		Free To Use Apps
+		</a>
+	</nav>
+
+		<div class="header-icons">
+			<div onclick="openCart()">
+				🛒
+				<span id="cartCount">
+				0
+				</span>
+			</div>
+			<div onclick="checkoutWhatsApp()">
+			💳
+			</div>
+
+		</div>
+
+	</div>
+</header>
+
+<section class="hero">
+	<h1>
+	Get Things Done Here!
+	</h1>
+	<p>
+	Save Time With Our Products & Services...
+	</p>
+	
+	<div class="hero-content">
+	<div class="video-box">
+		<div class="phone">
+			<video 
+				src="Media/Frambuk%20Food%20Products.mp4" 
+				poster="images/Frambuk%20Foods%20Presentation.jpeg" 
+				autoplay
+				muted
+				loop
+				playsinline
+				controls
+			>
+				Your browser does not support the video tag.
+			</video>
+		</div>
+	</div>
+
+	<div class="tools">
+	<a href="#foods" class="tool-link">
+	Foods & Flours
+	</a>
+
+	<a href="frambuk-text-studio.html" class="tool-link">
+	Frambuk Text Studio
+	</a>
+
+	<a href="Financial Interest Calculator.html" class="tool-link">
+	Financial Interest Calculator
+	</a>
+
+	<a href="Business Profit Calculator Tool.html" class="tool-link">
+	Business Profit & Expense Calculator
+	</a>
+
+	<a href="Video Thumbnail and Title Generator.html" class="tool-link">
+	Video Thumbnail & Title Generator
+	</a>
+
+	<a href="Pixel Length Converter.html" class="tool-link">
+	Pixel To Multiple Lengths Converter
+	</a>
+
+	<a href="Frambuk_Currency_Converter.html" class="tool-link">
+	Real Time Currency Converter
+	</a>
+
+	<a href="Video and Audio To Text Converter.html" class="tool-link">
+	Video To Audio Converter
+	</a>
+
+	<a href="Auto Tags Generator.html" class="tool-link">
+	Auto-Tags Generator
+	</a>
+
+	<a href="index.html#course-card" class="tool-link">
+	Videos
+	</a>
+
+	<a href="Enhanced_Document_Searcher.html" class="tool-link">
+	Enhanced Document Searcher
+	</a>
+
+	<a href="PDF & PowerPoint To Image Converter.html" class="tool-link">
+	PDF & PowerPoint To Image Converter
+	</a>
+	</div>
+
+	</div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="foods">
+<h2>
+Frambuk Food Flours & Oils
+</h2>
+
+<div class="slider-box" id="productSlider">
+
+<!-- First Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/100ml Frambuk Coconut Oil.png" alt="100ml Frambuk Coconut Oil">
+			<img class="img-back" src="images/products/100ml Frambuk Coconut Oil.png" alt="100ml Frambuk Coconut Oil, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		Coconut Oil (Small ~ 100ml)
+		</h3>
+			<p>
+		₦2,100
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('Coconut Oil (Small ~ 100ml)',2100)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('Coconut Oil (Small ~ 100ml)',2100)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Second Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/200ml Frambuk Coconut Oil.png" alt="200ml Frambuk Coconut Oil">
+			<img class="img-back" src="images/products/200ml Frambuk Coconut Oil.png" alt="200ml Frambuk Coconut Oil, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		Coconut Oil (Big ~ 200ml)
+		</h3>
+			<p>
+		₦4,200
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('Coconut Oil (Big ~ 200ml)',4200)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('Coconut Oil (Big ~ 200ml)',4200)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Third Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/80g Cocoyam Soup Thickener Pack 1.png" alt="Cocoyam Soup Thickener">
+			<!-- Replace pap-alt.jpg with a second photo of this product -->
+			<img class="img-back" src="images/products/80g Cocoyam Soup Thickener Pack 1.png" alt="Cocoyam Soup Thickener, alternate view">
+		</div>
+
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+
+		<h3>
+		Cocoyam Soup Thickener (Small ~ 80g)
+		</h3>
+
+		<p>
+		₦800
+		</p>
+
+		<div class="product-actions">
+		<button onclick="addCart('Cocoyam Soup Thickener (Small ~ 80g)',800)">
+		Add To Cart
+		</button>
+
+		<button onclick="buyNow('Cocoyam Soup Thickener (Small ~ 80g)',800)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Fourth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/270g Cocoyam Soup Thickener 1.png" alt="Cocoyam Soup Thickener">
+			<!-- Replace pap-alt.jpg with a second photo of this product -->
+			<img class="img-back" src="images/products/270g Cocoyam Soup Thickener 2.png" alt="Cocoyam Soup Thickener, alternate view">
+		</div>
+
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+
+		<h3>
+		Cocoyam Soup Thickener (Big ~ 270g)
+		</h3>
+
+		<p>
+		₦1,500
+		</p>
+
+		<div class="product-actions">
+		<button onclick="addCart('Cocoyam Soup Thickener (Big ~ 270g)',1500)">
+		Add To Cart
+		</button>
+
+		<button onclick="buyNow('Cocoyam Soup Thickener (Big ~ 270g)',1500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Fifth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/500g Beans Flour 1.png" alt="Beans Flour">
+			<!-- Replace feed-alt.jpg with a second photo of this product -->
+			<img class="img-back" src="images/products/500g Beans Flour 2.png" alt="Beans Flour, alternate view">
+		</div>
+
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+
+		<h3>
+		Beans Flour ~ 500g
+		</h3>
+		<p>
+		₦3,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('Beans Flour',3500)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('Beans Flour',3500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Twelveth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/250g Corn Pap 1.png" alt="250g Corn Pap">
+			<img class="img-back" src="images/products/250g Corn Pap 2.png" alt="250g Corn Pap, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		250g Corn Pap
+		</h3>
+		<p>
+		₦1,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('250g Corn Pap',1500)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('250g Corn Pap',1500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Twelveth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/500g Corn Pap 1.png" alt="500g Corn Pap">
+			<img class="img-back" src="images/products/500g Corn Pap 2.png" alt="500g Corn Pap, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		500g Corn Pap
+		</h3>
+		<p>
+		₦2,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('500g Corn Pap',2500)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('500g Corn Pap',2500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Twelveth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/250g Guinea Corn Pap 1.png" alt="250g Guinea Corn Pap">
+			<img class="img-back" src="images/products/250g Guinea Corn Pap 2.png" alt="250g Guinea Corn Pap, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		250g Guinea Corn Pap
+		</h3>
+			<p>
+		₦1,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('250g Guinea Corn Pap',2500)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('250g Guinea Corn Pap',2500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Twelveth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/500g Guinea Corn Pap 1.png" alt="500g Guinea Corn Pap">
+			<img class="img-back" src="images/products/500g Guinea Corn Pap 2.png" alt="500g Guinea Corn Pap, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		500g Guinea Corn Pap
+		</h3>
+			<p>
+		₦2,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('500g Guinea Corn Pap',2500)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('500g Guinea Corn Pap',2500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+<!-- Twelveth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/800g Okpa Flour Frambuk 17cm x 28cm 1.png" alt="Okpa Flour">
+			<!-- Replace guinea-alt.jpg with a second photo of Twelveth product -->
+			<img class="img-back" src="images/products/800g Okpa Flour Frambuk 17cm x 28cm 2.png" alt="Okpa Flour, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		Okpa Flour ~ 800g
+		</h3>
+			<p>
+		₦3,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('Okpa Flour',3500)">
+		Add To Cart
+		</button>
+		<button onclick="buyNow('Okpa Flour',3500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Twelveth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/1kg Unripe Plantain Poundo Flour 1.png" alt="Unripe Plantain Poundo Flour">
+			<img class="img-back" src="images/products/1kg Unripe Plantain Poundo Flour 2.png" alt="Unripe Plantain Poundo Flour, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		1kg Unripe Plantain Poundo Flour
+		</h3>
+			<p>
+		₦4,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('1kg Unripe Plantain Poundo Flour',4500)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('1kg Unripe Plantain Poundo Flour',4500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+<!-- Twelveth Product -->
+	<div class="product-card">
+		<div class="product-image-slider">
+			<img class="img-front" src="images/products/1kg Sweet Potato Poundo Flour 1.png" alt="Sweet Potato Poundo Flour">
+			<img class="img-back" src="images/products/1kg Sweet Potato Poundo Flour 2.png" alt="Sweet Potato Poundo Flour, alternate view">
+		</div>
+		<button type="button" class="image-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View product images">
+			<span aria-hidden="true">👁</span> View Images
+		</button>
+		<h3>
+		1kg Sweet Potato Poundo Flour
+		</h3>
+			<p>
+		₦4,500
+		</p>
+		<div class="product-actions">
+			<button onclick="addCart('1kg Sweet Potato Poundo Flour',4500)">
+		Add To Cart
+		</button>
+			<button onclick="buyNow('1kg Sweet Potato Poundo Flour',4500)">
+		Buy Now
+		</button>
+		</div>
+	</div>
+
+</div>
+
+	<div class="slider-buttons">
+		<button onclick="slideSection('productSlider',-1)">
+		⬅ Previous
+		</button>
+	
+		<button onclick="slideSection('productSlider',1)">
+		Next ➡
+		</button>
+	</div>
+
+</section>
+
+<!-- HORIZONTAL FREE APPS -->
+<section id="apps" class="products">
+	<h2>
+	📱 Free To Use Apps By Frambuk 🌍
+	</h2>
+	<div class="slider-box" id="appSlider">
+
+		<!-- First Product -->
+		<div class="product-card">
+			<img src="images/Financial_interest_calculator.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Calculates Financial Investment Interest of All Kinds
+			</p>
+			<h3>
+			Financial Interest Calculator.jpeg
+			</h3>
+			<button onclick="location.href='Financial Interest Calculator.html'">
+			Use This Free App
+			</button>
+		</div>
+
+		<!-- Second Product -->
+		<div class="product-card">
+			<img src="images/Real_time_currency_converter.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Converts Currencies In Realtime for Comparison
+			</p>
+			<h3>
+			Real Time Currency Converter
+			</h3>
+			<button onclick="location.href='Frambuk_Currency_Converter.html'">
+			Use This Free App
+			</button>
+		</div>
+		
+		<!-- Third Product -->
+		<div class="product-card">
+			<img src="images/Business_expense_and_profit_cal.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Business Profit and Expense Calculator
+			</p>
+			<h3>
+			Business Profit and Expense Calculator
+			</h3>
+			<button onclick="location.href='Business Profit and Expense Calculator.html'">
+			Use This Free App
+			</button>
+		</div>
+				
+		<!-- Fourth Product -->
+		<div class="product-card">
+			<img src="images/Pixel_to_length_conversion_banner.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Converts Length from Pixel To CM, Meter & Other Lengths
+			</p>
+			<h3>
+			Pixel To Multiple Lengths Converter
+			</h3>
+			<button onclick="location.href='Pixel Length Converter.html'">
+			Use This Free App
+			</button>
+		</div>
+						
+		<!-- Fifth Product -->
+		<div class="product-card">
+			<img src="images/video_thumbnail_and_title.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Video Thumbnail & Title Generator
+			</p>
+			<h3>
+			Video Thumbnail & Title Generator
+			</h3>
+			<button onclick="location.href='Video Thumbnail and Title Generator.html'">
+			Use This Free App
+			</button>
+		</div>
+								
+		<!-- Sixth Product -->
+		<div class="product-card">
+			<img src="images/Business_expense_and_profit_cal.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Business Profit and Expense Calculator
+			</p>
+			<h3>
+			Business Profit and Expense Calculator
+			</h3>
+			<button onclick="location.href='Business Profit and Expense Calculator.html'">
+			Use This Free App
+			</button>
+		</div>
+										
+		<!-- Seventh Product -->
+		<div class="product-card">
+			<img src="images/PDF_and_PowerPoint_Converter.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Converts Your PDF & PowerPoint To Images
+			</p>
+			<h3>
+			PDF & PowerPoint To Image Converter.html
+			</h3>
+			<button onclick="location.href='PDF & PowerPoint To Image Converter.html'">
+			Use This Free App
+			</button>
+		</div>
+												
+		<!-- Eight Product -->
+		<div class="product-card">
+			<img src="images/Document_searcher_website_banner.jpeg" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Use Enhanced Document Searcher to find anything withing your document that you need to find.
+			</p>
+			<h3>
+			Enhanced Document Searcher
+			</h3>
+			<button onclick="location.href='Enhanced_Document_Searcher.html'">
+			Use This Free App
+			</button>
+		</div>
+
+		<!-- Nineth Product -->
+		<div class="product-card">
+			<img src="images/Auto-tags_generator_website_banner.jpeg" alt="Auto Tags Generator">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			Generates Content Tags Based on Your Content Details
+			</p>
+			<h3>
+			Auto Tags Generator
+			</h3>
+			<button onclick="location.href='Auto Tags Generator.html'">
+			Use This Free App
+			</button>
+		</div>
+														
+		<!-- Tenth Product -->
+		<div class="product-card">
+			<img src="images/Product Packaging Generator.png" alt="App preview">
+			<button type="button" class="image-preview-btn simple-image-preview" onclick="openProductImages(this.closest('.product-card'))" aria-label="View app image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<p class="pretitle">
+			App Function:
+			🏷️ Frambuk Ziplock Pouch Prompt Studio.html
+			</p>
+			<h3>
+			Real Time Currency Converter
+			</h3>
+			<button onclick="location.href='🏷️ Frambuk Ziplock Pouch Prompt Studio.html'">
+			Use This Free App
+			</button>
+		</div>
+		
+	</div>
+
+	<div class="slider-buttons">
+	<button onclick="slideSection('appSlider',-1)">
+	⬅ Previous
+	</button>
+
+	<button onclick="slideSection('appSlider',1)">
+	Next ➡
+	</button>
+	</div>
+</section>
+
+<!-- GALLERY: mixed photos + videos, click to pop up and play -->
+<section class="products">
+	<h2>
+	<a href="https://youtube.com/playlist?list=PLb7w_Jt8hIe8">📺 Get Entertained</a>
+	</h2>
+
+	<div class="slider-box" id="gallerySlider">
+
+		<!-- Video card -->
+		<div class="product-card course-card gallery-card">
+			<a href="#" onclick="openVideo('https://youtu.be/7M_7XwWwgzU'); return false;">
+				<div class="media-thumb-wrapper">
+					<img src="https://img.youtube.com/vi/7M_7XwWwgzU/sddefault.jpg" alt="Frambuk Food Products">
+					<div class="play-button"></div>
+				</div>
+			</a>
+			<button type="button" class="image-preview-btn gallery-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View gallery image">
+				<span aria-hidden="true">👁</span> View Full Screen
+			</button>
+			<h3>Frambuk Food Products</h3>
+		</div>
+
+		<!-- Photo card -->
+		<div class="product-card course-card gallery-card">
+			<a href="https://public-files.gumroad.com/2m3lx1m7qjyuq82f5h0jq2oxvojt" onclick="openImage('https://public-files.gumroad.com/2m3lx1m7qjyuq82f5h0jq2oxvojt'); return false;">
+				<div class="media-thumb-wrapper">
+					<img src="https://public-files.gumroad.com/2m3lx1m7qjyuq82f5h0jq2oxvojt" alt="Our production facility">
+				</div>
+			</a>
+			<button type="button" class="image-preview-btn gallery-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View gallery image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<h3><a target="blank" href="https://public-files.gumroad.com/2m3lx1m7qjyuq82f5h0jq2oxvojt">Our Production Facility</a></h3>
+		</div>
+
+		<!-- Video card -->
+		<div class="product-card course-card gallery-card">
+			<a href="#" onclick="openVideo('https://youtu.be/p7Nuhx1hHQs'); return false;">
+				<div class="media-thumb-wrapper">
+					<img src="https://img.youtube.com/vi/p7Nuhx1hHQs/maxresdefault.jpg" alt="Customer testimonial">
+					<div class="play-button"></div>
+				</div>
+			</a>
+			<button type="button" class="image-preview-btn gallery-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View gallery image">
+				<span aria-hidden="true">👁</span> View Full Screen
+			</button>
+			<h3><a a target="_blank" href="https://youtu.be/p7Nuhx1hHQs">7 Unspoken Social Rules Everyone Should Know</a></h3>
+		</div>
+
+		<!-- Photo card -->
+		<div class="product-card course-card gallery-card">
+			<a href="https://frambuk.gumroad.com/l/45-days-hair-growth-System" onclick="openImage('https://public-files.gumroad.com/02jdr3k0pni21x4zwl5686gk0hee'); return false;">
+				<div class="media-thumb-wrapper">
+					<img src="https://public-files.gumroad.com/02jdr3k0pni21x4zwl5686gk0hee" alt="Freshly packaged products">
+				</div>
+			</a>
+			<button type="button" class="image-preview-btn gallery-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View gallery image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<h3><a target="_blank" href="https://frambuk.gumroad.com/l/45-days-hair-growth-System">Freshly Packaged Products</a></h3>
+		</div>
+
+		<!-- Video card -->
+		<div class="product-card course-card gallery-card">
+			<a href="#" onclick="openVideo('https://youtu.be/wn0A0Be71Ro'); return false;">
+				<div class="media-thumb-wrapper">
+					<img src="https://img.youtube.com/vi/wn0A0Be71Ro/sddefault.jpg" alt="Customer testimonial">
+					<div class="play-button"></div>
+				</div>
+			</a>
+			<button type="button" class="image-preview-btn gallery-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View gallery image">
+				<span aria-hidden="true">👁</span> View Full Screen
+			</button>
+			<h3><a href="https://frambuk.gumroad.com/l/prep-course">What Can We Learn From China's Innovation Strategy</a></h3>
+		</div>
+
+		<!-- Photo card -->
+		<div class="product-card course-card gallery-card">
+			<a href="#" onclick="openImage('https://public-files.gumroad.com/sxaq022lxks2m710z1gm9i4o47ka'); return false;">
+				<div class="media-thumb-wrapper">
+					<img src="https://public-files.gumroad.com/sxaq022lxks2m710z1gm9i4o47ka" alt="Freshly packaged products">
+				</div>
+			</a>
+			<button type="button" class="image-preview-btn gallery-preview-btn" onclick="openProductImages(this.closest('.product-card'))" aria-label="View gallery image">
+				<span aria-hidden="true">👁</span> View Image
+			</button>
+			<h3><a href="https://frambuk.gumroad.com/l/prep-course">Freshly Packaged Products</a></h3>
+		</div>
+
+	</div>
+
+	<div class="slider-buttons">
+		<button onclick="slideSection('gallerySlider',-1)">⬅ Previous</button>
+		<button onclick="slideSection('gallerySlider',1)">Next ➡</button>
+	</div>
+</section>
+
+<!-- SHARED FULL-SCREEN IMAGE / VIDEO VIEWER -->
+<div id="videoModal" class="video-modal" aria-hidden="true">
+	<div class="video-modal-content">
+		<button class="modal-close" onclick="closeVideo()" aria-label="Close viewer">✕</button>
+		<button class="image-nav image-nav-prev" id="imagePrev" onclick="showPreviousImage()" aria-label="Previous image">‹</button>
+		<iframe id="videoPlayer" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		<div class="image-viewer-area" id="imageViewerArea">
+			<img id="mediaImage" alt="Product preview">
+		</div>
+		<button class="image-nav image-nav-next" id="imageNext" onclick="showNextImage()" aria-label="Next image">›</button>
+		<div class="image-thumbnails" id="imageThumbnails" aria-label="Related images"></div>
+	</div>
+</div>
+
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+	<div class="video-modal-content bank-modal-content">
+		<button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+		<h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+		<p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+		<div style="width:100%; max-width:500px; margin:20px auto;">
+			<div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+				<p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+				<p>Frambuk International Ventures</p>
+				<p style="font-size:18px; font-weight:bold;">0464733563</p>
+				<button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+			</div>
+			<div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+				<p style="font-weight:bold;">🏦 First Bank</p>
+				<p>Frambuk International Ventures</p>
+				<p style="font-size:18px; font-weight:bold;">3133126775</p>
+				<button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer>
+© 2026 Frambuk International Ventures
+<a href="#" onclick="openBankDetails(); return false;">• 🏦 Make a Transfer 💵</a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  function slideSection(id, direction) {
+    const slider = document.getElementById(id);
+    if (!slider) return;
+    slider.scrollLeft += direction * 350;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    displayCart();
+  });
+</script>
+</body>
+</html>

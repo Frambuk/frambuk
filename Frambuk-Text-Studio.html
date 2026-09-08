@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frambuk Text Studio — Word Counter, Cleaner & Symbols</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07111f; --panel:rgba(255,255,255,.075); --panel2:rgba(255,255,255,.11);
+  --line:rgba(255,255,255,.13); --text:#f8fafc; --muted:#aab6c8;
+  --accent:#fac400; --accent2:#38bdf8; --green:#22c55e;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:Poppins,Arial,sans-serif;color:var(--text);min-height:100vh;overflow-x:hidden;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(56,189,248,.18),transparent 28%),
+    radial-gradient(circle at 90% 20%,rgba(250,196,0,.13),transparent 25%),
+    linear-gradient(135deg,#050b14,#0b1729 48%,#07111f);
+}
+body:before,body:after{
+  content:"";position:fixed;width:360px;height:360px;border-radius:50%;
+  filter:blur(70px);opacity:.18;z-index:-1;animation:float 12s ease-in-out infinite alternate;
+}
+body:before{background:#38bdf8;top:12%;left:-150px}
+body:after{background:#fac400;right:-150px;bottom:8%;animation-delay:-5s}
+@keyframes float{to{transform:translate(90px,60px) scale(1.15)}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(250,196,0,.08)}}
+
+.header{
+  position:sticky;top:0;z-index:1000;border-bottom:1px solid var(--line);
+  background:rgba(5,11,20,.76);backdrop-filter:blur(18px);
+}
+.header-container{max-width:1400px;margin:auto;padding:14px 24px;display:flex;align-items:center;gap:28px}
+.logo img{height:42px;max-width:170px;object-fit:contain}
+.hamburger{display:none;font-size:24px;cursor:pointer}
+nav{display:flex;gap:10px;flex:1}
+nav a{color:#dbeafe;text-decoration:none;padding:10px 14px;border-radius:10px;transition:.25s}
+nav a:hover,nav a.active{background:rgba(250,196,0,.12);color:#fac400}
+.header-icons{display:flex;gap:14px;font-size:20px}.header-icons div{cursor:pointer}
+
+.main-container{max-width:1400px;margin:auto;padding:30px 20px 70px}
+.hero{padding:34px 8px 25px;animation:rise .7s ease both}
+.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.hero h1{font-family:"Playfair Display",serif;font-size:clamp(34px,5vw,62px);line-height:1.02;margin:9px 0}
+.hero p{color:var(--muted);max-width:850px;font-size:15px}
+.hero p strong{color:#fff}
+
+.workspace{
+  display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.45fr);gap:18px;
+  animation:rise .8s .08s ease both;
+}
+.panel{
+  background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.045));
+  border:1px solid var(--line);border-radius:24px;padding:22px;
+  box-shadow:0 25px 80px rgba(0,0,0,.22);backdrop-filter:blur(18px);
+}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:15px}
+.panel h2{font-size:20px}.sub{font-size:12px;color:var(--muted)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+button{
+  border:0;border-radius:11px;padding:11px 15px;font:600 13px Poppins;cursor:pointer;
+  transition:.25s;display:inline-flex;align-items:center;gap:8px
+}
+button:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.btn-main{background:var(--accent);color:#111}.btn-dark{background:#16243a;color:#fff;border:1px solid var(--line)}
+.btn-green{background:var(--green);color:#06210e}.btn-blue{background:var(--accent2);color:#062033}
+textarea{
+  width:100%;height:370px;border:1px solid var(--line);border-radius:17px;outline:none;
+  padding:18px;background:rgba(3,9,18,.72);color:#f8fafc;font:15px Consolas,monospace;
+  line-height:1.65;resize:vertical;white-space:pre-wrap;overflow-wrap:anywhere;
+  transition:.25s;
+}
+textarea:focus{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 4px rgba(56,189,248,.08)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}
+.card{background:rgba(255,255,255,.06);border:1px solid var(--line);padding:14px;border-radius:15px;text-align:center}
+.card h3{font-size:23px}.card p{font-size:10px;color:var(--muted);margin-top:3px}
+.card.changed{animation:pulse .35s ease}
+
+.side-tools{display:grid;gap:12px}
+.tool-card{padding:16px;border-radius:17px;background:rgba(255,255,255,.055);border:1px solid var(--line)}
+.tool-card i{color:var(--accent);font-size:19px}.tool-card h3{font-size:14px;margin:8px 0 4px}.tool-card p{font-size:11px;color:var(--muted);line-height:1.6}
+.progress{height:6px;background:#1a293e;border-radius:99px;overflow:hidden;margin-top:10px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:.3s}
+
+.symbol-area{margin-top:34px;animation:rise .8s .18s ease both}
+.symbol-title{text-align:center;margin:10px auto 22px;max-width:900px}
+.symbol-title h2{font-size:clamp(24px,3vw,34px);font-family:"Playfair Display",serif}
+.symbol-title p{color:var(--muted);font-size:13px;margin-top:7px}
+.search-wrap{position:sticky;top:74px;z-index:50;margin-bottom:18px}
+.search{width:100%;padding:15px 18px;border-radius:15px;border:1px solid var(--line);background:rgba(8,17,31,.9);color:#fff;outline:none;font:14px Poppins;box-shadow:0 12px 30px rgba(0,0,0,.15)}
+.table-wrapper{overflow:auto;background:#fff;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.22);margin-bottom:28px}
+table{width:100%;border-collapse:collapse;min-width:850px;color:#111827}
+thead{background:#111827;color:#fff}
+th,td{padding:13px 10px;border-bottom:1px solid #e5e7eb;text-align:center}
+th{font-size:13px}td:first-child{text-align:left;font-weight:700;background:#fac400;color:#111}
+.symbol-group{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.symbol{
+  background:#eef2ff;padding:9px 12px;border-radius:10px;font-size:23px;cursor:pointer;
+  transition:.2s;border:2px solid transparent;min-width:52px;text-align:center;user-select:none;color:#111827;
+}
+.symbol:hover{background:#dbeafe;border-color:#2563eb;transform:translateY(-3px) scale(1.03)}
+.symbol.copied{background:#22c55e;color:#fff;border-color:#15803d;transform:scale(1.08)}
+.label{display:block;font-size:10px;margin-top:3px;color:#666}
+.section-title{font-size:22px;margin:26px 0 12px}
+
+.toast{position:fixed;right:22px;bottom:22px;background:#111827;color:#fff;padding:13px 17px;border-radius:12px;border:1px solid var(--line);opacity:0;transform:translateY(12px);pointer-events:none;transition:.3s;z-index:2000}
+.toast.show{opacity:1;transform:none}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:35px}
+@media(max-width:900px){.workspace{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){
+ .header-container{padding:12px 15px}.hamburger{display:block}.logo{flex:1}
+ nav{display:none;position:absolute;left:12px;right:12px;top:67px;background:#0b1729;padding:10px;border:1px solid var(--line);border-radius:14px;flex-direction:column}
+ nav.open{display:flex}.main-container{padding:20px 12px 50px}.panel{padding:15px;border-radius:18px}
+ .stats{grid-template-columns:repeat(2,1fr)}textarea{height:300px}.toolbar button{flex:1;justify-content:center}
+ .search-wrap{top:66px}.hero{padding-top:22px}
+}
+</style>
+</head>
+
+<body>
+  
+<header class="header">
+ <div class="header-container">
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+  <div class="logo"><a href="index.html"><img src="images/Frambuk-Logo.png" alt="Frambuk Logo"></a></div>
+  <nav id="menu"><a class="active" href="index.html">Home</a><a href="index.html#apps">Free To Use Apps</a></nav>
+  <div class="header-icons"><div title="Cart">🛒 <span id="cartCount">0</span></div><div title="Checkout">💳</div></div>
+ </div>
+</header>
+
+<main class="main-container" id="captureArea">
+ <section class="hero">
+  <div class="eyebrow">Frambuk Productivity Toolkit</div>
+  <h1>Write. Clean. Count. Copy.</h1>
+  <p>One beautiful workspace for <strong>word counting, text cleanup, vertical-space removal, exporting</strong> and instantly inserting useful scientific and Greek symbols.</p>
+ </section>
+
+ <section class="workspace">
+  <div class="panel">
+   <div class="panel-head">
+    <div><h2>📝 Text Studio</h2><div class="sub">Type or paste your text below.</div></div>
+    <div class="toolbar">
+     <button class="btn-main" onclick="cleanText()">🧹 Clean Text</button>
+     <button class="btn-dark" onclick="removeVerticalSpaces()">↕ Remove Blank Lines</button>
+     <button class="btn-green" onclick="copyText()">⧉ Copy</button>
+     <button class="btn-blue" onclick="exportPDF()">📄 PDF</button>
+     <button class="btn-dark" onclick="takeScreenshot()">📸 Screenshot</button>
+    </div>
+   </div>
+   <textarea id="textInput" placeholder="Start typing or paste your text here... Click any symbol below to insert it at the cursor position."></textarea>
+   <div class="stats">
+    <div class="card"><h3 id="words">0</h3><p>Words</p></div>
+    <div class="card"><h3 id="characters">0</h3><p>Characters</p></div>
+    <div class="card"><h3 id="sentences">0</h3><p>Sentences</p></div>
+    <div class="card"><h3 id="paragraphs">0</h3><p>Paragraphs</p></div>
+    <div class="card"><h3 id="readingTime">0</h3><p>Reading Time (min)</p></div>
+   </div>
+  </div>
+
+  <aside class="panel side-tools">
+   <div class="tool-card"><i class="fa-solid fa-wand-magic-sparkles"></i><h3>Smart cleanup</h3><p>Clean emojis/special non-ASCII characters and reduce excessive paragraph spacing.</p></div>
+   <div class="tool-card"><i class="fa-solid fa-arrows-up-down"></i><h3>Vertical-space remover</h3><p>Removes blank lines only while preserving the actual text on each non-empty line.</p></div>
+   <div class="tool-card"><i class="fa-solid fa-chart-simple"></i><h3>Live statistics</h3><p>Your counts update instantly as you type, paste, clean or insert symbols.</p><div class="progress"><span id="progressBar"></span></div></div>
+   <div class="tool-card"><i class="fa-solid fa-circle-info"></i><h3>Quick tip</h3><p>Click a symbol. It is copied to your clipboard and inserted wherever your cursor is in the editor.</p></div>
+  </aside>
+ </section>
+
+ <section class="symbol-area">
+  <div class="symbol-title">
+   <h2>Symbols at Your Fingertips</h2>
+   <p>Click any character to copy it and insert it directly into your text. Search below to find a symbol quickly.</p>
+  </div>
+  <div class="search-wrap"><input class="search" id="symbolSearch" placeholder="🔎 Search symbols or categories..."></div>
+
+<!-- ================= SCIENCE SYMBOLS ================= -->
+
+<h2 class="section-title">Physics, Chemistry & Mathematics Symbols</h2>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th>Category</th>
+<th>Symbols</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Fractions & Division Templates</td>
+
+<td>
+
+<div class="symbol-group">
+
+<div class="symbol">
+(□/□)
+<span class="label">Bracket Fraction</span>
+</div>
+
+<div class="symbol">
+□ ÷ □
+<span class="label">Division Format</span>
+</div>
+
+<div class="symbol">
+□⁄□
+<span class="label">Slash Fraction</span>
+</div>
+
+<div class="symbol">
+□/□ = □
+<span class="label">Fraction Equation</span>
+</div>
+
+<div class="symbol">
+x/□
+<span class="label">Variable Fraction</span>
+</div>
+
+<div class="symbol">
+□/(□ + □)
+<span class="label">Complex Fraction</span>
+</div>
+
+<div class="symbol">
+(□ + □)/□
+<span class="label">Addition Fraction</span>
+</div>
+
+<div class="symbol">
+√□/□
+<span class="label">Root Fraction</span>
+</div>
+
+<div class="symbol">
+□%/□
+<span class="label">Percentage Fraction</span>
+</div>
+
+<div class="symbol">
+a/b
+<span class="label">Algebra Fraction</span>
+</div>
+
+<div class="symbol">
+n/d
+<span class="label">Numerator & Denominator</span>
+</div>
+
+<div class="symbol">
+□ over □
+<span class="label">Word Fraction</span>
+</div>
+
+<div class="symbol">
+□ : □
+<span class="label">Ratio</span>
+</div>
+
+<div class="symbol">
+□/100
+<span class="label">Percentage Base</span>
+</div>
+
+<div class="symbol">
+1/□
+<span class="label">Unit Fraction</span>
+</div>
+
+<div class="symbol">
+□/π
+<span class="label">Pi Fraction</span>
+</div>
+
+<div class="symbol">
+□/∞
+<span class="label">Infinity Fraction</span>
+</div>
+
+<div class="symbol">
+(□)/(□)
+<span class="label">Large Fraction</span>
+</div>
+
+<div class="symbol">
+□
+―
+□
+<span class="label">Stacked Fraction</span>
+</div>
+
+</div>
+
+</td>
+</tr>
+
+<tr>
+<td>Roots & Powers</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">√ <span class="label">Square Root</span></div>
+
+<div class="symbol">∛ <span class="label">Cube Root</span></div>
+
+<div class="symbol">² <span class="label">Square</span></div>
+
+<div class="symbol">³ <span class="label">Cube</span></div>
+
+<div class="symbol">ⁿ <span class="label">Power n</span></div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Temperature</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">°C <span class="label">Celsius</span></div>
+
+<div class="symbol">°F <span class="label">Fahrenheit</span></div>
+
+<div class="symbol">K <span class="label">Kelvin</span></div>
+
+<div class="symbol">° <span class="label">Degree</span></div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Math Operators</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">±</div>
+<div class="symbol">×</div>
+<div class="symbol">÷</div>
+<div class="symbol">≈</div>
+<div class="symbol">≠</div>
+<div class="symbol">∞</div>
+<div class="symbol">∑</div>
+<div class="symbol">∏</div>
+<div class="symbol">∫</div>
+<div class="symbol">∂</div>
+<div class="symbol">∆</div>
+<div class="symbol">∇</div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Arrows</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">→</div>
+<div class="symbol">←</div>
+<div class="symbol">↑</div>
+<div class="symbol">↓</div>
+<div class="symbol">↔</div>
+<div class="symbol">⇒</div>
+<div class="symbol">⇌</div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Chemistry Symbols</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">⚗</div>
+<div class="symbol">⇌</div>
+<div class="symbol">Δ</div>
+<div class="symbol">ℓ</div>
+<div class="symbol">mol</div>
+<div class="symbol">aq</div>
+<div class="symbol">↑</div>
+<div class="symbol">↓</div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Units</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">µ</div>
+<div class="symbol">Ω</div>
+<div class="symbol">Å</div>
+<div class="symbol">λ</div>
+<div class="symbol">θ</div>
+<div class="symbol">π</div>
+<div class="symbol">ħ</div>
+<div class="symbol">ε</div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Subscripts</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">₀</div>
+<div class="symbol">₁</div>
+<div class="symbol">₂</div>
+<div class="symbol">₃</div>
+<div class="symbol">₄</div>
+<div class="symbol">₅</div>
+<div class="symbol">₆</div>
+<div class="symbol">₇</div>
+<div class="symbol">₈</div>
+<div class="symbol">₉</div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Superscripts</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">⁰</div>
+<div class="symbol">¹</div>
+<div class="symbol">²</div>
+<div class="symbol">³</div>
+<div class="symbol">⁴</div>
+<div class="symbol">⁵</div>
+<div class="symbol">⁶</div>
+<div class="symbol">⁷</div>
+<div class="symbol">⁸</div>
+<div class="symbol">⁹</div>
+
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Logic & Set Symbols</td>
+
+<td>
+<div class="symbol-group">
+
+<div class="symbol">∈</div>
+<div class="symbol">∉</div>
+<div class="symbol">⊂</div>
+<div class="symbol">⊆</div>
+<div class="symbol">∪</div>
+<div class="symbol">∩</div>
+<div class="symbol">∀</div>
+<div class="symbol">∃</div>
+
+</div>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+
+<!-- ================= GREEK TABLE ================= -->
+
+<h2 class="section-title">Greek Alphabet Symbols</h2>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+<th rowspan="2">Alphabet</th>
+<th colspan="2">Uppercase</th>
+<th colspan="2">Lowercase</th>
+</tr>
+
+<tr>
+<th>Sans-serif</th>
+<th>Serif</th>
+<th>Sans-serif</th>
+<th>Serif</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Alpha</td>
+<td><div class="symbol">Α</div></td>
+<td><div class="symbol">Α</div></td>
+<td><div class="symbol">α</div></td>
+<td><div class="symbol">α</div></td>
+</tr>
+
+<tr>
+<td>Beta</td>
+<td><div class="symbol">Β</div></td>
+<td><div class="symbol">Β</div></td>
+<td><div class="symbol">β</div></td>
+<td><div class="symbol">β</div></td>
+</tr>
+
+<tr>
+<td>Gamma</td>
+<td><div class="symbol">Γ</div></td>
+<td><div class="symbol">Γ</div></td>
+<td><div class="symbol">γ</div></td>
+<td><div class="symbol">γ</div></td>
+</tr>
+
+<tr>
+<td>Delta</td>
+<td><div class="symbol">Δ</div></td>
+<td><div class="symbol">Δ</div></td>
+<td><div class="symbol">δ</div></td>
+<td><div class="symbol">δ</div></td>
+</tr>
+
+<tr>
+<td>Epsilon</td>
+<td><div class="symbol">Ε</div></td>
+<td><div class="symbol">Ε</div></td>
+<td><div class="symbol">ε</div></td>
+<td><div class="symbol">ε</div></td>
+</tr>
+
+<tr>
+<td>Zeta</td>
+<td><div class="symbol">Ζ</div></td>
+<td><div class="symbol">Ζ</div></td>
+<td><div class="symbol">ζ</div></td>
+<td><div class="symbol">ζ</div></td>
+</tr>
+
+<tr>
+<td>Eta</td>
+<td><div class="symbol">Η</div></td>
+<td><div class="symbol">Η</div></td>
+<td><div class="symbol">η</div></td>
+<td><div class="symbol">η</div></td>
+</tr>
+
+<tr>
+<td>Theta</td>
+<td><div class="symbol">Θ</div></td>
+<td><div class="symbol">Θ</div></td>
+
+<td>
+<div class="symbol-group">
+<div class="symbol">θ</div>
+<div class="symbol">ϑ</div>
+</div>
+</td>
+
+<td>
+<div class="symbol-group">
+<div class="symbol">θ</div>
+<div class="symbol">ϑ</div>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Iota</td>
+<td><div class="symbol">Ι</div></td>
+<td><div class="symbol">Ι</div></td>
+<td><div class="symbol">ι</div></td>
+<td><div class="symbol">ι</div></td>
+</tr>
+
+<tr>
+<td>Kappa</td>
+<td><div class="symbol">Κ</div></td>
+<td><div class="symbol">Κ</div></td>
+<td><div class="symbol">κ</div></td>
+<td><div class="symbol">κ</div></td>
+</tr>
+
+<tr>
+<td>Lambda</td>
+<td><div class="symbol">Λ</div></td>
+<td><div class="symbol">Λ</div></td>
+<td><div class="symbol">λ</div></td>
+<td><div class="symbol">λ</div></td>
+</tr>
+
+<tr>
+<td>Mu</td>
+<td><div class="symbol">Μ</div></td>
+<td><div class="symbol">Μ</div></td>
+<td><div class="symbol">μ</div></td>
+<td><div class="symbol">μ</div></td>
+</tr>
+
+<tr>
+<td>Nu</td>
+<td><div class="symbol">Ν</div></td>
+<td><div class="symbol">Ν</div></td>
+<td><div class="symbol">ν</div></td>
+<td><div class="symbol">ν</div></td>
+</tr>
+
+<tr>
+<td>Xi</td>
+<td><div class="symbol">Ξ</div></td>
+<td><div class="symbol">Ξ</div></td>
+<td><div class="symbol">ξ</div></td>
+<td><div class="symbol">ξ</div></td>
+</tr>
+
+<tr>
+<td>Omicron</td>
+<td><div class="symbol">Ο</div></td>
+<td><div class="symbol">Ο</div></td>
+<td><div class="symbol">ο</div></td>
+<td><div class="symbol">ο</div></td>
+</tr>
+
+<tr>
+<td>Pi</td>
+<td><div class="symbol">Π</div></td>
+<td><div class="symbol">Π</div></td>
+<td><div class="symbol">π</div></td>
+<td><div class="symbol">π</div></td>
+</tr>
+
+<tr>
+<td>Rho</td>
+<td><div class="symbol">Ρ</div></td>
+<td><div class="symbol">Ρ</div></td>
+<td><div class="symbol">ρ</div></td>
+<td><div class="symbol">ρ</div></td>
+</tr>
+
+<tr>
+<td>Sigma</td>
+<td><div class="symbol">Σ</div></td>
+<td><div class="symbol">Σ</div></td>
+
+<td>
+<div class="symbol-group">
+<div class="symbol">σ</div>
+<div class="symbol">ς</div>
+</div>
+</td>
+
+<td>
+<div class="symbol-group">
+<div class="symbol">σ</div>
+<div class="symbol">ς</div>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Tau</td>
+<td><div class="symbol">Τ</div></td>
+<td><div class="symbol">Τ</div></td>
+<td><div class="symbol">τ</div></td>
+<td><div class="symbol">τ</div></td>
+</tr>
+
+<tr>
+<td>Upsilon</td>
+<td><div class="symbol">Υ</div></td>
+<td><div class="symbol">Υ</div></td>
+<td><div class="symbol">υ</div></td>
+<td><div class="symbol">υ</div></td>
+</tr>
+
+<tr>
+<td>Phi</td>
+<td><div class="symbol">Φ</div></td>
+<td><div class="symbol">Φ</div></td>
+<td><div class="symbol">φ</div></td>
+<td><div class="symbol">φ</div></td>
+</tr>
+
+<tr>
+<td>Chi</td>
+<td><div class="symbol">Χ</div></td>
+<td><div class="symbol">Χ</div></td>
+<td><div class="symbol">χ</div></td>
+<td><div class="symbol">χ</div></td>
+</tr>
+
+<tr>
+<td>Psi</td>
+<td><div class="symbol">Ψ</div></td>
+<td><div class="symbol">Ψ</div></td>
+<td><div class="symbol">ψ</div></td>
+<td><div class="symbol">ψ</div></td>
+</tr>
+
+<tr>
+<td>Omega</td>
+<td><div class="symbol">Ω</div></td>
+<td><div class="symbol">Ω</div></td>
+<td><div class="symbol">ω</div></td>
+<td><div class="symbol">ω</div></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+ </section>
+
+ <div class="footer">Frambuk Text Studio • Built for fast, clean writing</div>
+</main>
+
+<div class="toast" id="toast">Copied & inserted</div>
+
+<script>
+const textInput=document.getElementById("textInput");
+const toast=document.getElementById("toast");
+
+function updateCounts(){
+ const text=textInput.value;
+ const words=text.trim().match(/\S+/g);
+ const wordCount=words?words.length:0;
+ const values={
+  words:wordCount,characters:text.length,
+  sentences:text.split(/[.!?]+/).filter(s=>s.trim()).length,
+  paragraphs:text.split(/\n+/).filter(p=>p.trim()).length,
+  readingTime:wordCount?Math.ceil(wordCount/200):0
+ };
+ Object.entries(values).forEach(([id,val])=>{
+   const el=document.getElementById(id); if(!el)return;
+   if(el.textContent!=val){el.textContent=val;el.parentElement.classList.remove("changed");void el.parentElement.offsetWidth;el.parentElement.classList.add("changed")}
+ });
+ document.getElementById("progressBar").style.width=Math.min(100,(wordCount/500)*100)+"%";
+}
+textInput.addEventListener("input",updateCounts);
+
+function cleanText(){
+ let text=textInput.value;
+ text=text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDFFF])/g,'');
+ text=text.replace(/\n{3,}/g,'\n\n');
+ text=text.replace(/[^\x00-\x7F\n\r\t]+/g,'');
+ textInput.value=text;updateCounts();showToast("Text cleaned");
+}
+function removeVerticalSpaces(){
+ textInput.value=textInput.value.replace(/\r\n/g,"\n").split("\n").filter(line=>line.trim()!=="").join("\n");
+ updateCounts();showToast("Blank lines removed");
+}
+async function copyText(){
+ if(!textInput.value){showToast("Nothing to copy");return}
+ try{await navigator.clipboard.writeText(textInput.value);showToast("Text copied")}
+ catch(e){textInput.select();document.execCommand("copy");showToast("Text copied")}
+}
+function insertSymbol(symbol,el){
+ const start=textInput.selectionStart,end=textInput.selectionEnd;
+ textInput.value=textInput.value.slice(0,start)+symbol+textInput.value.slice(end);
+ textInput.focus();textInput.selectionStart=textInput.selectionEnd=start+symbol.length;
+ updateCounts();
+ navigator.clipboard?.writeText(symbol).catch(()=>{});
+ el.classList.add("copied");setTimeout(()=>el.classList.remove("copied"),700);
+ showToast('"'+symbol+'" copied & inserted');
+}
+document.querySelectorAll(".symbol").forEach(el=>{
+ el.addEventListener("click",()=>{
+   let node=el.childNodes[0], value=node?node.textContent.trim():"";
+   if(!value)return;
+   insertSymbol(value,el);
+ });
+});
+function showToast(msg){toast.textContent=msg;toast.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>toast.classList.remove("show"),1800)}
+
+async function exportPDF(){
+ const text=textInput.value;if(!text.trim()){showToast("Add some text first");return}
+ const {jsPDF}=window.jspdf,doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+ let count=Number(localStorage.getItem("frambukExportCount")||0)+1;localStorage.setItem("frambukExportCount",count);
+ const margin=15,w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();
+ const lines=doc.splitTextToSize(text,w-margin*2);let y=20;doc.setFont("helvetica");doc.setFontSize(12);
+ lines.forEach(line=>{if(y>h-20){doc.addPage();y=20}doc.text(line,margin,y);y+=7});
+ doc.save("Frambuk-Full-Text-"+count+".pdf");showToast("PDF exported");
+}
+async function takeScreenshot(){
+ const canvas=await html2canvas(document.getElementById("captureArea"),{scale:2,useCORS:true,backgroundColor:null});
+ const link=document.createElement("a");link.href=canvas.toDataURL("image/png");link.download="Frambuk-Text-Studio.png";link.click();showToast("Screenshot saved");
+}
+function toggleMenu(){document.getElementById("menu").classList.toggle("open")}
+
+document.getElementById("symbolSearch").addEventListener("input",function(){
+ const q=this.value.toLowerCase().trim();
+ document.querySelectorAll(".table-wrapper table tbody tr").forEach(row=>{
+   row.style.display=!q||row.textContent.toLowerCase().includes(q)?"":"none";
+ });
+});
+updateCounts();
+</script>
+
+<footer>
+© 2026 Frambuk International Ventures
+</footer>
+
+<script src="script.js"></script>
+  <script>
+    function slideSection(id,direction){
+    let slider=document.getElementById(id);
+  slider.scrollLeft += direction * 350;
+  }
+
+</script>
+</body>
+
+</html>
+

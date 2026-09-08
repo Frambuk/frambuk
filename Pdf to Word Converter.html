@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Frambuk Word Search Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+}
+
+/* TOP BAR */
+.search-container {
+    position:fixed;
+    top:0;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:10px;
+    z-index:9999;
+}
+
+.search-bar {
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    width:100%;
+    max-width:900px;
+    background:white;
+    padding:10px;
+    border-radius:30px;
+}
+
+.search-bar input {
+    flex:1;
+    padding:10px;
+    border-radius:20px;
+    border:1px solid #ccc;
+}
+
+.search-bar button {
+    padding:10px;
+    border:none;
+    border-radius:20px;
+    background:#222;
+    color:white;
+    cursor:pointer;
+}
+
+#counter {
+    color:black;
+    padding:10px;
+}
+
+/* CONTENT */
+.container {
+    max-width:900px;
+    margin:auto;
+    padding:100px 20px;
+}
+
+/* DOCUMENT VIEW */
+#content {
+    background:white;
+    color:black;
+    padding:20px;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+/* FIX WRAP */
+#content * {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* HIGHLIGHT */
+.highlight {
+    background:yellow;
+}
+
+.current {
+    background:orange;
+}
+</style>
+</head>
+
+<body>
+<header>
+
+    <div class="header-container">
+
+        <div
+            class="hamburger"
+            onclick="toggleFrambukMenu()">
+
+            ☰
+
+        </div>
+
+
+        <div class="logo">
+
+            <a href="index.html">
+
+                <img
+                    src="images/Frambuk-Logo.png"
+                    alt="Frambuk">
+
+            </a>
+
+        </div>
+
+
+        <nav id="menu">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a
+                class="active"
+                href="index.html#apps">
+
+                Free To Use Apps
+
+            </a>
+
+        </nav>
+
+
+        <div class="header-icons">
+
+            <div
+                onclick="safeOpenCart()"
+                title="Cart">
+
+                🛒
+
+                <span id="cartCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                onclick="safeCheckout()"
+                title="Checkout">
+
+                💳
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<div class="search-container">
+<div class="search-bar">
+    <input type="file" id="fileInput" accept=".docx">
+    <input type="text" id="searchInput" placeholder="Search document...">
+
+    <button id="searchBtn">Search</button>
+    <button id="clearBtn">Clear</button>
+
+    <button id="prevBtn">⬆</button>
+    <span id="counter">0</span>
+    <button id="nextBtn">⬇</button>
+</div>
+</div>
+
+<div class="container">
+    <div id="content">Upload a Word document...</div>
+</div>
+
+<script>
+let originalHTML = "";
+let matches = [];
+let currentIndex = -1;
+
+/* LOAD DOCX */
+document.getElementById("fileInput").addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        mammoth.convertToHtml({ arrayBuffer: event.target.result })
+            .then(result => {
+                originalHTML = result.value;
+                document.getElementById("content").innerHTML = originalHTML;
+            });
+    };
+
+    reader.readAsArrayBuffer(file);
+});
+
+/* SEARCH */
+document.getElementById("searchBtn").onclick = function(){
+    const query = document.getElementById("searchInput").value.trim();
+    if (!query) return;
+
+    const container = document.getElementById("content");
+
+    // restore original layout first
+    container.innerHTML = originalHTML;
+
+    const regex = new RegExp(query, "gi");
+
+    highlightText(container, regex);
+
+    matches = document.querySelectorAll(".highlight");
+    currentIndex = 0;
+
+    updateCounter();
+    scrollToMatch();
+};
+
+/* HIGHLIGHT WITHOUT BREAKING STRUCTURE */
+function highlightText(node, regex) {
+    if (node.nodeType === 3) { // text node
+        const text = node.nodeValue;
+        const span = document.createElement("span");
+
+        if (regex.test(text)) {
+            span.innerHTML = text.replace(regex, m => `<mark class="highlight">${m}</mark>`);
+            node.replaceWith(span);
+        }
+    } else {
+        node.childNodes.forEach(child => highlightText(child, regex));
+    }
+}
+
+/* NAVIGATION */
+function scrollToMatch(){
+    if (matches.length === 0) return;
+
+    matches.forEach(m => m.classList.remove("current"));
+
+    const el = matches[currentIndex];
+    el.classList.add("current");
+
+    el.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
+}
+
+document.getElementById("nextBtn").onclick = function(){
+    if (matches.length === 0) return;
+
+    currentIndex = (currentIndex + 1) % matches.length;
+    updateCounter();
+    scrollToMatch();
+};
+
+document.getElementById("prevBtn").onclick = function(){
+    if (matches.length === 0) return;
+
+    currentIndex = (currentIndex - 1 + matches.length) % matches.length;
+    updateCounter();
+    scrollToMatch();
+};
+
+/* CLEAR */
+document.getElementById("clearBtn").onclick = function(){
+    document.getElementById("content").innerHTML = originalHTML;
+    matches = [];
+    currentIndex = -1;
+    document.getElementById("counter").innerText = "0";
+};
+
+/* COUNTER */
+function updateCounter(){
+    if (matches.length === 0) {
+        document.getElementById("counter").innerText = "0";
+    } else {
+        document.getElementById("counter").innerText =
+            (currentIndex + 1) + " / " + matches.length;
+    }
+}
+</script>
+
+
+<footer>
+© 2026 Frambuk International Ventures <a href="🏷️ Frambuk_Product_Packaging_Prompts.html">•</a>
+</footer>
+
+<script src="script.js"></script>
+  <script>
+    function slideSection(id,direction){
+    let slider=document.getElementById(id);
+  slider.scrollLeft += direction * 350;
+  }
+
+</script>
+  </body>
+
+</html>
