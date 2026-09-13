@@ -5,7 +5,7 @@
    Includes:
    1. Hamburger menu
    2. Mobile menu auto-close
-   3. Cart system (REWRITTEN – fixed)
+   3. Cart system
    4. Cart count badge
    5. Add to cart
    6. Buy now
@@ -15,12 +15,14 @@
    10. WhatsApp checkout
    11. Course slider
    12. Offline app payment link
-   13. Product image viewer (modal)
+   13. Product image viewer
    14. YouTube / Google Drive video viewer
-   15. Product image tap loop
-   16. Keyboard image controls
-   17. ESC close
-   18. Right-click deterrent
+   15. YouTube Shorts vertical popup
+   16. Product image tap loop
+   17. Keyboard image controls
+   18. ESC close
+   19. Right-click deterrent
+   20. Bank details modal
 ========================================================= */
 
 
@@ -30,64 +32,115 @@
 
 function toggleMenu() {
   const menu = document.getElementById("menu");
-  if (menu) menu.classList.toggle("show");
+
+  if (menu) {
+    menu.classList.toggle("show");
+  }
 }
 
+
 document.addEventListener("DOMContentLoaded", function () {
+
   const menu = document.getElementById("menu");
-  if (!menu) return;
+
+  if (!menu) {
+    return;
+  }
 
   menu.querySelectorAll("a").forEach(function (link) {
+
     link.addEventListener("click", function () {
+
       menu.classList.remove("show");
+
     });
+
   });
+
 });
 
 
 /* =========================================================
-   CART SYSTEM – REWRITTEN (FIXED)
+   CART SYSTEM
 ========================================================= */
 
 const STORAGE_KEY = "frambukCart";
 
 
-// Load cart from localStorage, always returns an array
+/* ---------------------------------------------------------
+   LOAD CART
+--------------------------------------------------------- */
+
 function loadCart() {
+
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+
+    const saved =
+      localStorage.getItem(STORAGE_KEY);
 
     if (saved) {
-      const parsed = JSON.parse(saved);
+
+      const parsed =
+        JSON.parse(saved);
 
       if (Array.isArray(parsed)) {
-        return parsed;
+
+        return normalizeCart(parsed);
+
       }
+
     }
 
   } catch (e) {
-    console.error("Failed to load cart:", e);
+
+    console.error(
+      "Failed to load cart:",
+      e
+    );
+
   }
 
   return [];
+
 }
 
 
-// Save cart to localStorage
+/* ---------------------------------------------------------
+   SAVE CART
+--------------------------------------------------------- */
+
 function saveCart(cart) {
+
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(
+        normalizeCart(cart)
+      )
+    );
 
   } catch (e) {
-    console.error("Failed to save cart:", e);
+
+    console.error(
+      "Failed to save cart:",
+      e
+    );
+
   }
+
 }
 
 
-// Normalize a cart array: clean names, ensure numbers, remove invalid entries
+/* ---------------------------------------------------------
+   NORMALIZE CART
+--------------------------------------------------------- */
+
 function normalizeCart(cart) {
 
-  if (!Array.isArray(cart)) return [];
+  if (!Array.isArray(cart)) {
+    return [];
+  }
 
   return cart
     .filter(function (item) {
@@ -102,41 +155,83 @@ function normalizeCart(cart) {
     .map(function (item) {
 
       return {
-        name: item.name.trim(),
-        price: Math.max(0, Number(item.price) || 0),
-        quantity: Math.max(1, parseInt(item.quantity, 10) || 1)
+
+        name:
+          item.name.trim(),
+
+        price:
+          Math.max(
+            0,
+            Number(item.price) || 0
+          ),
+
+        quantity:
+          Math.max(
+            1,
+            parseInt(
+              item.quantity,
+              10
+            ) || 1
+          )
+
       };
 
     });
+
 }
 
 
-// Update the cart count badge
+/* ---------------------------------------------------------
+   UPDATE CART COUNT
+--------------------------------------------------------- */
+
 function updateCartCount() {
 
-  const cart = loadCart();
+  const cart =
+    loadCart();
 
-  const total = cart.reduce(function (sum, item) {
+  const total =
+    cart.reduce(
+      function (sum, item) {
 
-    return sum + (item.quantity || 0);
+        return (
+          sum +
+          (item.quantity || 0)
+        );
 
-  }, 0);
+      },
+      0
+    );
 
 
-  const counter = document.getElementById("cartCount");
+  const counter =
+    document.getElementById(
+      "cartCount"
+    );
+
 
   if (counter) {
 
-    counter.textContent = total;
+    counter.textContent =
+      total;
 
     counter.setAttribute(
       "aria-label",
-      total + " item" + (total === 1 ? "" : "s") + " in cart"
+      total +
+      " item" +
+      (
+        total === 1
+          ? ""
+          : "s"
+      ) +
+      " in cart"
     );
 
   }
 
+
   return total;
+
 }
 
 
@@ -146,71 +241,104 @@ function updateCartCount() {
 
 function addCart(name, price) {
 
-  if (!name || String(name).trim() === "") {
+  if (
+    !name ||
+    String(name).trim() === ""
+  ) {
 
-    console.error("addCart(): Product name is missing.");
+    console.error(
+      "addCart(): Product name is missing."
+    );
 
     return;
+
   }
 
 
-  const cleanName = String(name).trim();
-
-  const cleanPrice = Math.max(
-    0,
-    Number(price) || 0
-  );
+  const cleanName =
+    String(name).trim();
 
 
-  // Load the current cart
-  let cart = loadCart();
+  const cleanPrice =
+    Math.max(
+      0,
+      Number(price) || 0
+    );
 
 
-  // Find existing item
-  const existing = cart.find(function (item) {
+  let cart =
+    loadCart();
 
-    return item.name === cleanName;
 
-  });
+  const existing =
+    cart.find(
+      function (item) {
+
+        return (
+          item.name ===
+          cleanName
+        );
+
+      }
+    );
 
 
   if (existing) {
 
     existing.quantity =
-      (existing.quantity || 0) + 1;
+      (existing.quantity || 0) +
+      1;
 
   } else {
 
     cart.push({
-      name: cleanName,
-      price: cleanPrice,
-      quantity: 1
+
+      name:
+        cleanName,
+
+      price:
+        cleanPrice,
+
+      quantity:
+        1
+
     });
 
   }
 
 
-  // Normalize and save
-  cart = normalizeCart(cart);
+  cart =
+    normalizeCart(cart);
+
 
   saveCart(cart);
 
 
-  // Update UI
   updateCartCount();
 
 
-  // Only refresh cart page if we are on cart.html
-  if (document.getElementById("cartItems")) {
+  if (
+    document.getElementById(
+      "cartItems"
+    )
+  ) {
 
     displayCart();
 
   }
 
 
-  alert(cleanName + " added to cart");
+  alert(
+    cleanName +
+    " added to cart"
+  );
 
-  console.log("Cart after add:", cart);
+
+  console.log(
+    "Cart after add:",
+    cart
+  );
+
 }
 
 
@@ -220,7 +348,10 @@ function addCart(name, price) {
 
 function buyNow(name, price) {
 
-  addCart(name, price);
+  addCart(
+    name,
+    price
+  );
 
   checkoutWhatsApp();
 
@@ -233,7 +364,8 @@ function buyNow(name, price) {
 
 function openCart() {
 
-  window.location.href = "cart.html";
+  window.location.href =
+    "cart.html";
 
 }
 
@@ -244,43 +376,56 @@ function openCart() {
 
 function checkoutWhatsApp() {
 
-  const cart = loadCart();
+  const cart =
+    loadCart();
 
 
   if (cart.length === 0) {
 
-    alert("Your cart is empty.");
+    alert(
+      "Your cart is empty."
+    );
 
     return;
+
   }
 
 
   let message =
     "Hello Frambuk, I want to order:\n\n";
 
-  let total = 0;
+
+  let total =
+    0;
 
 
-  cart.forEach(function (item) {
+  cart.forEach(
+    function (item) {
 
-    const qty = item.quantity || 0;
+      const qty =
+        item.quantity || 0;
 
-    const price = item.price || 0;
+      const price =
+        item.price || 0;
 
-    const subtotal = price * qty;
+      const subtotal =
+        price * qty;
 
-    total += subtotal;
+
+      total +=
+        subtotal;
 
 
-    message +=
-      item.name +
-      " x " +
-      qty +
-      " = ₦" +
-      subtotal.toLocaleString() +
-      "\n";
+      message +=
+        item.name +
+        " x " +
+        qty +
+        " = ₦" +
+        subtotal.toLocaleString() +
+        "\n";
 
-  });
+    }
+  );
 
 
   message +=
@@ -297,167 +442,234 @@ function checkoutWhatsApp() {
     "https://wa.me/" +
     whatsappNumber +
     "?text=" +
-    encodeURIComponent(message);
+    encodeURIComponent(
+      message
+    );
 
 
-  window.open(url, "_blank");
+  window.open(
+    url,
+    "_blank"
+  );
 
 }
 
 
 /* =========================================================
-   DISPLAY CART (for cart.html)
+   DISPLAY CART
 ========================================================= */
 
 function displayCart() {
 
   const box =
-    document.getElementById("cartItems");
+    document.getElementById(
+      "cartItems"
+    );
 
 
-  if (!box) return;
+  if (!box) {
+    return;
+  }
 
 
-  const cart = loadCart();
+  const cart =
+    loadCart();
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   if (cart.length === 0) {
 
     box.innerHTML = `
       <div class="empty-cart">
-        <h3>Your cart is empty 🛒</h3>
-        <p>You have not added any products yet.</p>
-        <button type="button" onclick="location.href='shop.html'">
+
+        <h3>
+          Your cart is empty 🛒
+        </h3>
+
+        <p>
+          You have not added any products yet.
+        </p>
+
+        <button
+          type="button"
+          onclick="location.href='shop.html'"
+        >
           Continue Shopping
         </button>
+
       </div>
     `;
 
 
-    document.getElementById("cartTotal").textContent =
-      "Total: ₦0";
+    const totalElement =
+      document.getElementById(
+        "cartTotal"
+      );
+
+
+    if (totalElement) {
+
+      totalElement.textContent =
+        "Total: ₦0";
+
+    }
 
 
     updateCartCount();
 
     return;
+
   }
 
 
-  let total = 0;
+  let total =
+    0;
 
 
-  cart.forEach(function (item, index) {
+  cart.forEach(
+    function (item, index) {
 
-    const price = item.price || 0;
+      const price =
+        item.price || 0;
 
-    const qty = item.quantity || 1;
+      const qty =
+        item.quantity || 1;
 
-    const subtotal = price * qty;
-
-    total += subtotal;
-
-
-    const images =
-      getCartProductImages(item.name);
+      const subtotal =
+        price * qty;
 
 
-    const firstImage =
-      images[0] || "";
+      total +=
+        subtotal;
 
 
-    box.innerHTML += `
-      <div class="cart-row" data-cart-index="${index}">
+      const images =
+        getCartProductImages(
+          item.name
+        );
 
-        ${
-          firstImage
-            ? `
-          <div class="cart-product-media">
 
-            <img
-              src="${firstImage}"
-              alt="${item.name}"
-              loading="lazy"
-            >
+      const firstImage =
+        images[0] || "";
+
+
+      box.innerHTML += `
+
+        <div
+          class="cart-row"
+          data-cart-index="${index}"
+        >
+
+          ${
+            firstImage
+              ? `
+            <div class="cart-product-media">
+
+              <img
+                src="${firstImage}"
+                alt="${item.name}"
+                loading="lazy"
+              >
+
+              <button
+                type="button"
+                class="image-preview-btn cart-image-preview"
+                onclick="openCartProductImages(${index})"
+                aria-label="View images for ${item.name}"
+              >
+                <span aria-hidden="true">👁</span>
+                View Images
+              </button>
+
+            </div>
+            `
+              : ""
+          }
+
+
+          <h3>
+            ${item.name}
+          </h3>
+
+
+          <p>
+            Unit Price:
+
+            <strong>
+              ₦${price.toLocaleString()}
+            </strong>
+          </p>
+
+
+          <p>
+
+            Quantity:
 
             <button
               type="button"
-              class="image-preview-btn cart-image-preview"
-              onclick="openCartProductImages(${index})"
-              aria-label="View images for ${item.name}"
+              onclick="changeQty(${index}, -1)"
+              aria-label="Decrease quantity"
             >
-              <span aria-hidden="true">👁</span>
-              View Images
+              −
             </button>
 
-          </div>
-          `
-            : ""
-        }
+            <strong>
+              ${qty}
+            </strong>
+
+            <button
+              type="button"
+              onclick="changeQty(${index}, 1)"
+              aria-label="Increase quantity"
+            >
+              +
+            </button>
+
+          </p>
 
 
-        <h3>${item.name}</h3>
+          <p>
 
+            Subtotal:
 
-        <p>
-          Unit Price:
-          <strong>
-            ₦${price.toLocaleString()}
-          </strong>
-        </p>
+            <strong>
+              ₦${subtotal.toLocaleString()}
+            </strong>
 
+          </p>
 
-        <p>
-
-          Quantity:
 
           <button
             type="button"
-            onclick="changeQty(${index}, -1)"
-            aria-label="Decrease quantity"
+            onclick="removeItem(${index})"
           >
-            −
+            Remove
           </button>
 
-          <strong>${qty}</strong>
+        </div>
 
-          <button
-            type="button"
-            onclick="changeQty(${index}, 1)"
-            aria-label="Increase quantity"
-          >
-            +
-          </button>
+      `;
 
-        </p>
+    }
+  );
 
 
-        <p>
-          Subtotal:
-          <strong>
-            ₦${subtotal.toLocaleString()}
-          </strong>
-        </p>
+  const totalElement =
+    document.getElementById(
+      "cartTotal"
+    );
 
 
-        <button
-          type="button"
-          onclick="removeItem(${index})"
-        >
-          Remove
-        </button>
+  if (totalElement) {
 
-      </div>
-    `;
-  });
+    totalElement.textContent =
+      "Total: ₦" +
+      total.toLocaleString();
 
-
-  document.getElementById("cartTotal").textContent =
-    "Total: ₦" +
-    total.toLocaleString();
+  }
 
 
   updateCartCount();
@@ -471,14 +683,17 @@ function displayCart() {
 
 function changeQty(index, delta) {
 
-  let cart = loadCart();
+  let cart =
+    loadCart();
 
 
   if (
     index < 0 ||
     index >= cart.length
   ) {
+
     return;
+
   }
 
 
@@ -489,7 +704,10 @@ function changeQty(index, delta) {
 
   if (newQty <= 0) {
 
-    cart.splice(index, 1);
+    cart.splice(
+      index,
+      1
+    );
 
   } else {
 
@@ -519,14 +737,17 @@ function changeQty(index, delta) {
 
 function removeItem(index) {
 
-  let cart = loadCart();
+  let cart =
+    loadCart();
 
 
   if (
     index < 0 ||
     index >= cart.length
   ) {
+
     return;
+
   }
 
 
@@ -534,7 +755,10 @@ function removeItem(index) {
     cart[index].name;
 
 
-  cart.splice(index, 1);
+  cart.splice(
+    index,
+    1
+  );
 
 
   cart =
@@ -570,66 +794,55 @@ function getCartProductImages(name) {
       "images/products/100ml Frambuk Coconut Oil.png"
     ],
 
-
     "Coconut Oil (Big ~ 200ml)": [
       "images/products/200ml Frambuk Coconut Oil.png",
       "images/products/200ml Frambuk Coconut Oil.png"
     ],
-
 
     "Cocoyam Soup Thickener (Small ~ 80g)": [
       "images/products/80g Cocoyam Soup Thickener Pack 1.png",
       "images/products/80g Cocoyam Soup Thickener Pack 2.png"
     ],
 
-
     "Cocoyam Soup Thickener (Big ~ 270g)": [
       "images/products/270g Cocoyam Soup Thickener 1.png",
       "images/products/270g Cocoyam Soup Thickener 2.png"
     ],
-
 
     "250g Corn Pap": [
       "images/products/250g Corn Pap 1.png",
       "images/products/250g Corn Pap 2.png"
     ],
 
-
     "500g Corn Pap": [
       "images/products/500g Corn Pap 1.png",
       "images/products/500g Corn Pap 2.png"
     ],
-
 
     "250g Guinea Corn Pap": [
       "images/products/250g Guinea Corn Pap 1.png",
       "images/products/250g Guinea Corn Pap 2.png"
     ],
 
-
     "500g Guinea Corn Pap": [
       "images/products/500g Guinea Corn Pap 1.png",
       "images/products/500g Guinea Corn Pap 2.png"
     ],
-
 
     "Beans Flour": [
       "images/products/500g Beans Flour 1.png",
       "images/products/500g Beans Flour 2.png"
     ],
 
-
     "Okpa Flour": [
       "images/products/800g Okpa Flour Frambuk 17cm x 28cm 1.png",
       "images/products/800g Okpa Flour Frambuk 17cm x 28cm 2.png"
     ],
 
-
     "1kg Unripe Plantain Poundo Flour": [
       "images/products/1kg Unripe Plantain Poundo Flour 1.png",
       "images/products/1kg Unripe Plantain Poundo Flour 2.png"
     ],
-
 
     "1kg Sweet Potato Poundo Flour": [
       "images/products/1kg Sweet Potato Poundo Flour 1.png",
@@ -650,14 +863,17 @@ function getCartProductImages(name) {
 
 function openCartProductImages(index) {
 
-  const cart = loadCart();
+  const cart =
+    loadCart();
 
 
   const item =
     cart[index];
 
 
-  if (!item) return;
+  if (!item) {
+    return;
+  }
 
 
   const images =
@@ -666,35 +882,66 @@ function openCartProductImages(index) {
     );
 
 
-  if (!images.length) return;
+  if (!images.length) {
+    return;
+  }
 
 
   ensureFrambukViewer();
 
 
   frambukImageSet =
-    images.map(function (src, i) {
+    images.map(
+      function (src, i) {
 
-      return {
-        src: src,
-        alt:
-          item.name +
-          " image " +
-          (i + 1)
-      };
+        return {
 
-    });
+          src:
+            src,
+
+          alt:
+            item.name +
+            " image " +
+            (i + 1)
+
+        };
+
+      }
+    );
 
 
-  frambukImageIndex = 0;
+  frambukImageIndex =
+    0;
 
+
+  /* -------------------------------------------------------
+     STOP ANY VIDEO
+  ------------------------------------------------------- */
 
   if (frambukPlayer) {
 
     frambukPlayer.style.display =
       "none";
 
-    frambukPlayer.src = "";
+    frambukPlayer.src =
+      "";
+
+  }
+
+
+  /* -------------------------------------------------------
+     RESET VIDEO CLASSES
+  ------------------------------------------------------- */
+
+  if (frambukModal) {
+
+    frambukModal.classList.remove(
+      "vertical"
+    );
+
+    frambukModal.classList.remove(
+      "video-playing"
+    );
 
   }
 
@@ -735,7 +982,7 @@ function openCartProductImages(index) {
 
 
 /* =========================================================
-   COURSE SLIDER & GENERIC SLIDER
+   COURSE SLIDER
 ========================================================= */
 
 function slideCourses(direction) {
@@ -746,11 +993,14 @@ function slideCourses(direction) {
     );
 
 
-  if (!slider) return;
+  if (!slider) {
+    return;
+  }
 
 
   slider.scrollLeft +=
-    Number(direction) * 350;
+    Number(direction) *
+    350;
 
 }
 
@@ -761,11 +1011,14 @@ function slideSection(id, direction) {
     document.getElementById(id);
 
 
-  if (!slider) return;
+  if (!slider) {
+    return;
+  }
 
 
   slider.scrollLeft +=
-    Number(direction) * 350;
+    Number(direction) *
+    350;
 
 }
 
@@ -789,7 +1042,7 @@ function getOfflineVersion() {
 
 
 /* =========================================================
-   PRODUCT / GALLERY IMAGE VIEWER
+   FRAMBUK VIEWER VARIABLES
 ========================================================= */
 
 let frambukModal = null;
@@ -823,10 +1076,16 @@ function ensureFrambukViewer() {
     );
 
 
+  /* -------------------------------------------------------
+     CREATE VIEWER IF IT DOES NOT EXIST
+  ------------------------------------------------------- */
+
   if (!frambukModal) {
 
     const wrapper =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
 
     wrapper.innerHTML = `
@@ -838,7 +1097,6 @@ function ensureFrambukViewer() {
       >
 
         <div class="video-modal-content">
-
 
           <button
             type="button"
@@ -863,19 +1121,16 @@ function ensureFrambukViewer() {
 
           <iframe
             id="videoPlayer"
-            allow="
-              autoplay;
-              accelerometer;
-              clipboard-write;
-              encrypted-media;
-              gyroscope;
-              picture-in-picture
-            "
+            title="Frambuk video player"
+            allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
+            playsinline
           ></iframe>
 
 
-          <div class="image-viewer-area">
+          <div
+            class="image-viewer-area"
+          >
 
             <img
               id="mediaImage"
@@ -902,7 +1157,6 @@ function ensureFrambukViewer() {
             aria-label="Related images"
           ></div>
 
-
         </div>
 
       </div>
@@ -922,6 +1176,10 @@ function ensureFrambukViewer() {
 
   }
 
+
+  /* -------------------------------------------------------
+     CACHE VIEWER ELEMENTS
+  ------------------------------------------------------- */
 
   frambukPlayer =
     document.getElementById(
@@ -953,10 +1211,9 @@ function ensureFrambukViewer() {
     );
 
 
-  /*
-     Close viewer when clicking
-     the dark background.
-  */
+  /* -------------------------------------------------------
+     BACKGROUND CLICK TO CLOSE
+  ------------------------------------------------------- */
 
   if (
     frambukModal &&
@@ -972,7 +1229,8 @@ function ensureFrambukViewer() {
       function (e) {
 
         if (
-          e.target === frambukModal
+          e.target ===
+          frambukModal
         ) {
 
           closeVideo();
@@ -993,7 +1251,9 @@ function ensureFrambukViewer() {
 
 function getCardImages(card) {
 
-  if (!card) return [];
+  if (!card) {
+    return [];
+  }
 
 
   const images = [
@@ -1011,29 +1271,35 @@ function getCardImages(card) {
     )
 
   ]
-    .map(function (img) {
+    .map(
+      function (img) {
 
-      return {
-        src:
-          img.currentSrc ||
-          img.src,
+        return {
 
-        alt:
-          img.alt ||
-          "Image preview"
-      };
+          src:
+            img.currentSrc ||
+            img.src,
 
-    })
-    .filter(function (item) {
+          alt:
+            img.alt ||
+            "Image preview"
 
-      return item.src;
+        };
 
-    });
+      }
+    )
+    .filter(
+      function (item) {
+
+        return item.src;
+
+      }
+    );
 
 
-  /*
-     Remove duplicate images.
-  */
+  /* -------------------------------------------------------
+     REMOVE DUPLICATES
+  ------------------------------------------------------- */
 
   return images.filter(
     function (
@@ -1077,40 +1343,34 @@ function openProductImages(card) {
   if (
     !frambukImageSet.length
   ) {
+
     return;
+
   }
 
 
-  frambukImageIndex = 0;
+  frambukImageIndex =
+    0;
 
 
-  /*
-     Make sure any video is
-     completely stopped.
-  */
+  /* -------------------------------------------------------
+     STOP VIDEO COMPLETELY
+  ------------------------------------------------------- */
 
   if (frambukPlayer) {
 
     frambukPlayer.style.display =
       "none";
 
-    frambukPlayer.src = "";
+    frambukPlayer.src =
+      "";
 
   }
 
 
-  if (frambukImage) {
-
-    frambukImage.style.display =
-      "block";
-
-  }
-
-
-  /*
-     Make sure video-specific
-     styling is removed.
-  */
+  /* -------------------------------------------------------
+     RESET VIDEO-SPECIFIC CSS STATES
+  ------------------------------------------------------- */
 
   if (frambukModal) {
 
@@ -1125,15 +1385,26 @@ function openProductImages(card) {
   }
 
 
-  frambukModal.classList.add(
-    "active"
-  );
+  if (frambukImage) {
+
+    frambukImage.style.display =
+      "block";
+
+  }
 
 
-  frambukModal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
+  if (frambukModal) {
+
+    frambukModal.classList.add(
+      "active"
+    );
+
+    frambukModal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+  }
 
 
   frambukBodyOverflow =
@@ -1159,7 +1430,9 @@ function renderImageViewer() {
     !frambukImage ||
     !frambukImageSet.length
   ) {
+
     return;
+
   }
 
 
@@ -1169,7 +1442,9 @@ function renderImageViewer() {
     ];
 
 
-  if (!item) return;
+  if (!item) {
+    return;
+  }
 
 
   frambukImage.src =
@@ -1179,6 +1454,10 @@ function renderImageViewer() {
   frambukImage.alt =
     item.alt;
 
+
+  /* -------------------------------------------------------
+     THUMBNAILS
+  ------------------------------------------------------- */
 
   if (frambukThumbs) {
 
@@ -1268,15 +1547,26 @@ function renderImageViewer() {
     if (active) {
 
       active.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center"
+
+        behavior:
+          "smooth",
+
+        block:
+          "nearest",
+
+        inline:
+          "center"
+
       });
 
     }
 
   }
 
+
+  /* -------------------------------------------------------
+     IMAGE NAVIGATION
+  ------------------------------------------------------- */
 
   const multiple =
     frambukImageSet.length >
@@ -1315,7 +1605,9 @@ function showPreviousImage() {
     frambukImageSet.length <
     2
   ) {
+
     return;
+
   }
 
 
@@ -1343,7 +1635,9 @@ function showNextImage() {
     frambukImageSet.length <
     2
   ) {
+
     return;
+
   }
 
 
@@ -1363,8 +1657,6 @@ function showNextImage() {
 /* =========================================================
    YOUTUBE / GOOGLE DRIVE VIDEO CONVERTER
 
-   Based on the WordOfLife video popup behavior.
-
    Supports:
    - YouTube watch URLs
    - YouTube Shorts
@@ -1374,103 +1666,164 @@ function showNextImage() {
 
 function convertToEmbed(url) {
 
-  if (!url) return "";
+  if (!url) {
+    return "";
+  }
 
-
-  /*
-     WordOfLife autoplay parameters:
-       autoplay=1
-       rel=0
-       playsinline=1
-  */
 
   const autoplay =
     "?autoplay=1&rel=0&playsinline=1";
 
 
-  /*
-     NORMAL YOUTUBE
-  */
+  let parsedUrl;
 
-  if (
-    url.includes(
-      "youtube.com/watch?v="
-    )
-  ) {
 
-    const videoID =
+  try {
+
+    parsedUrl =
+      new URL(
+        url,
+        window.location.href
+      );
+
+  } catch (e) {
+
+    console.error(
+      "Invalid video URL:",
       url
-        .split("v=")[1]
-        .split("&")[0];
-
-
-    return (
-      "https://www.youtube.com/embed/" +
-      videoID +
-      autoplay
     );
+
+    return url;
 
   }
 
 
-  /*
-     YOUTUBE SHORTS
-  */
+  const hostname =
+    parsedUrl.hostname
+      .toLowerCase()
+      .replace(
+        /^www\./,
+        ""
+      );
+
+
+  /* -------------------------------------------------------
+     NORMAL YOUTUBE WATCH
+  ------------------------------------------------------- */
 
   if (
-    url.includes("/shorts/")
+    hostname ===
+      "youtube.com" ||
+    hostname ===
+      "m.youtube.com"
   ) {
 
-    const videoID =
-      url
-        .split("/shorts/")[1]
-        .split("?")[0];
+    if (
+      parsedUrl.pathname ===
+      "/watch"
+    ) {
+
+      const videoID =
+        parsedUrl.searchParams.get(
+          "v"
+        );
 
 
-    return (
-      "https://www.youtube.com/embed/" +
-      videoID +
-      autoplay
-    );
+      if (videoID) {
+
+        return (
+          "https://www.youtube.com/embed/" +
+          encodeURIComponent(
+            videoID
+          ) +
+          autoplay
+        );
+
+      }
+
+    }
+
+
+    /* -----------------------------------------------------
+       YOUTUBE SHORTS
+    ----------------------------------------------------- */
+
+    if (
+      parsedUrl.pathname.startsWith(
+        "/shorts/"
+      )
+    ) {
+
+      const videoID =
+        parsedUrl.pathname
+          .split("/shorts/")[1]
+          .split("/")[0];
+
+
+      if (videoID) {
+
+        return (
+          "https://www.youtube.com/embed/" +
+          encodeURIComponent(
+            videoID
+          ) +
+          autoplay
+        );
+
+      }
+
+    }
 
   }
 
 
-  /*
-     YOUTU.BE SHORT URL
-  */
+  /* -------------------------------------------------------
+     YOUTU.BE
+  ------------------------------------------------------- */
 
   if (
-    url.includes("youtu.be/")
+    hostname ===
+    "youtu.be"
   ) {
 
     const videoID =
-      url
-        .split("youtu.be/")[1]
-        .split("?")[0];
+      parsedUrl.pathname
+        .replace(
+          /^\/+/,
+          ""
+        )
+        .split("/")[0];
 
 
-    return (
-      "https://www.youtube.com/embed/" +
-      videoID +
-      autoplay
-    );
+    if (videoID) {
+
+      return (
+        "https://www.youtube.com/embed/" +
+        encodeURIComponent(
+          videoID
+        ) +
+        autoplay
+      );
+
+    }
 
   }
 
 
-  /*
+  /* -------------------------------------------------------
      GOOGLE DRIVE
-  */
+  ------------------------------------------------------- */
 
   if (
-    url.includes(
-      "drive.google.com"
+    hostname ===
+      "drive.google.com" ||
+    hostname.endsWith(
+      ".drive.google.com"
     )
   ) {
 
     const match =
-      url.match(
+      parsedUrl.pathname.match(
         /\/d\/([^/]+)/
       );
 
@@ -1479,7 +1832,9 @@ function convertToEmbed(url) {
 
       return (
         "https://drive.google.com/file/d/" +
-        match[1] +
+        encodeURIComponent(
+          match[1]
+        ) +
         "/preview"
       );
 
@@ -1488,10 +1843,9 @@ function convertToEmbed(url) {
   }
 
 
-  /*
-     If the URL isn't recognized,
-     return it unchanged.
-  */
+  /* -------------------------------------------------------
+     UNRECOGNIZED URL
+  ------------------------------------------------------- */
 
   return url;
 
@@ -1499,30 +1853,100 @@ function convertToEmbed(url) {
 
 
 /* =========================================================
+   DETECT YOUTUBE SHORT
+========================================================= */
+
+function isYouTubeShort(url) {
+
+  if (!url) {
+    return false;
+  }
+
+
+  try {
+
+    const parsedUrl =
+      new URL(
+        url,
+        window.location.href
+      );
+
+
+    const hostname =
+      parsedUrl.hostname
+        .toLowerCase()
+        .replace(
+          /^www\./,
+          ""
+        );
+
+
+    return (
+      (
+        hostname ===
+          "youtube.com" ||
+        hostname ===
+          "m.youtube.com"
+      ) &&
+      parsedUrl.pathname.startsWith(
+        "/shorts/"
+      )
+    );
+
+  } catch (e) {
+
+    /*
+       Fallback for unusual URLs.
+    */
+
+    return (
+      url.includes(
+        "youtube.com/shorts/"
+      ) ||
+      url.includes(
+        "www.youtube.com/shorts/"
+      )
+    );
+
+  }
+
+}
+
+
+/* =========================================================
    OPEN VIDEO POPUP
 
-   WordOfLife-style behavior:
-   - Converts YouTube URL to embed URL
+   Corrected WordOfLife-style behavior:
+   - YouTube URL conversion
    - Autoplay
-   - Removes related-video clutter
+   - Related videos reduced
    - Plays inline
-   - Opens inside popup
-   - Hides image viewer controls
-   - Locks page scrolling
-   - Supports Google Drive
+   - YouTube Shorts displayed vertically
+   - Google Drive support
+   - Image viewer hidden
+   - Image navigation hidden
+   - Video-playing class applied
+   - Page scrolling locked
 ========================================================= */
 
 function openVideo(url) {
 
-  if (!url) return;
+  if (!url) {
+    return;
+  }
 
 
   ensureFrambukViewer();
 
 
-  /*
-     Detect mobile devices.
-  */
+  if (!frambukModal) {
+    return;
+  }
+
+
+  /* -------------------------------------------------------
+     MOBILE DETECTION
+  ------------------------------------------------------- */
 
   const isMobile =
     /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
@@ -1531,10 +1955,11 @@ function openVideo(url) {
       );
 
 
-  /*
-     WordOfLife behavior for
-     Google Drive on mobile.
-  */
+  /* -------------------------------------------------------
+     GOOGLE DRIVE ON MOBILE
+
+     Preserve the WordOfLife behavior.
+  ------------------------------------------------------- */
 
   if (
     isMobile &&
@@ -1553,21 +1978,35 @@ function openVideo(url) {
   }
 
 
-  /*
-     Hide image viewer.
-  */
+  /* -------------------------------------------------------
+     DETERMINE VIDEO TYPE
+  ------------------------------------------------------- */
+
+  const isShort =
+    isYouTubeShort(url);
+
+
+  /* -------------------------------------------------------
+     CLEAR IMAGE VIEWER
+  ------------------------------------------------------- */
+
+  frambukImageSet =
+    [];
+
+  frambukImageIndex =
+    0;
+
 
   if (frambukImage) {
+
+    frambukImage.src =
+      "";
 
     frambukImage.style.display =
       "none";
 
   }
 
-
-  /*
-     Remove image thumbnails.
-  */
 
   if (frambukThumbs) {
 
@@ -1577,9 +2016,9 @@ function openVideo(url) {
   }
 
 
-  /*
-     Hide image navigation.
-  */
+  /* -------------------------------------------------------
+     HIDE IMAGE NAVIGATION
+  ------------------------------------------------------- */
 
   if (frambukPrev) {
 
@@ -1599,59 +2038,81 @@ function openVideo(url) {
   }
 
 
-  /*
-     Determine whether the
-     video is a YouTube Short.
+  /* -------------------------------------------------------
+     APPLY VIDEO POPUP STATES
 
-     This allows the CSS to
-     display Shorts vertically.
-  */
+     .video-playing
+       Controls close-button positioning.
 
-  const isShort =
-    url.includes(
-      "youtube.com/shorts/"
-    );
+     .vertical
+       Changes the popup to 9:16 for Shorts.
+  ------------------------------------------------------- */
 
-
-  /*
-     Apply video-specific modal
-     classes.
-  */
-
-  if (frambukModal) {
-
-    frambukModal.classList.toggle(
-      "vertical",
-      isShort
-    );
-
-    frambukModal.classList.add(
-      "video-playing"
-    );
-
-  }
+  frambukModal.classList.add(
+    "video-playing"
+  );
 
 
-  /*
-     Show video player and
-     load converted URL.
-  */
+  frambukModal.classList.toggle(
+    "vertical",
+    isShort
+  );
+
+
+  /* -------------------------------------------------------
+     SHOW VIDEO PLAYER
+  ------------------------------------------------------- */
 
   if (frambukPlayer) {
+
+    /*
+       Clear the previous source first.
+       This prevents an old video from remaining active
+       while a new video is being loaded.
+    */
+
+    frambukPlayer.src =
+      "";
+
 
     frambukPlayer.style.display =
       "block";
 
 
-    frambukPlayer.src =
+    /*
+       Force the browser to recognize the new source
+       as a fresh video load.
+    */
+
+    const embedUrl =
       convertToEmbed(url);
+
+
+    setTimeout(
+      function () {
+
+        if (
+          frambukPlayer &&
+          frambukModal.classList.contains(
+            "active"
+          )
+        ) {
+
+          frambukPlayer.src =
+            embedUrl;
+
+        }
+
+      },
+      0
+    );
 
   }
 
 
-  /*
-     Open modal.
-  */
+  /* -------------------------------------------------------
+     OPEN MODAL
+  ------------------------------------------------------- */
 
   frambukModal.classList.add(
     "active"
@@ -1664,10 +2125,9 @@ function openVideo(url) {
   );
 
 
-  /*
-     Prevent page from scrolling
-     while popup is open.
-  */
+  /* -------------------------------------------------------
+     LOCK PAGE SCROLLING
+  ------------------------------------------------------- */
 
   frambukBodyOverflow =
     document.body.style.overflow;
@@ -1680,46 +2140,56 @@ function openVideo(url) {
 
 
 /* =========================================================
-   OPEN IMAGE
+   OPEN SINGLE IMAGE
 ========================================================= */
 
 function openImage(url) {
 
-  if (!url) return;
+  if (!url) {
+    return;
+  }
 
 
   ensureFrambukViewer();
 
 
   frambukImageSet = [
+
     {
-      src: url,
-      alt: "Gallery image"
+
+      src:
+        url,
+
+      alt:
+        "Gallery image"
+
     }
+
   ];
 
 
-  frambukImageIndex = 0;
+  frambukImageIndex =
+    0;
 
 
-  /*
-     Stop any video.
-  */
+  /* -------------------------------------------------------
+     STOP VIDEO
+  ------------------------------------------------------- */
 
   if (frambukPlayer) {
+
+    frambukPlayer.src =
+      "";
 
     frambukPlayer.style.display =
       "none";
 
-    frambukPlayer.src = "";
-
   }
 
 
-  /*
-     Remove video-specific
-     styling.
-  */
+  /* -------------------------------------------------------
+     REMOVE VIDEO STATES
+  ------------------------------------------------------- */
 
   if (frambukModal) {
 
@@ -1734,6 +2204,10 @@ function openImage(url) {
   }
 
 
+  /* -------------------------------------------------------
+     SHOW IMAGE
+  ------------------------------------------------------- */
+
   if (frambukImage) {
 
     frambukImage.style.display =
@@ -1741,6 +2215,10 @@ function openImage(url) {
 
   }
 
+
+  /* -------------------------------------------------------
+     OPEN MODAL
+  ------------------------------------------------------- */
 
   frambukModal.classList.add(
     "active"
@@ -1769,24 +2247,29 @@ function openImage(url) {
 /* =========================================================
    CLOSE VIDEO / IMAGE VIEWER
 
-   Important:
-   Setting iframe.src = ""
-   completely stops YouTube playback.
+   IMPORTANT:
+   Clearing iframe.src stops the video completely.
 ========================================================= */
 
 function closeVideo() {
 
-  if (!frambukModal) return;
+  if (!frambukModal) {
+    return;
+  }
 
 
-  /*
-     Hide modal.
-  */
+  /* -------------------------------------------------------
+     CLOSE MODAL
+  ------------------------------------------------------- */
 
   frambukModal.classList.remove(
     "active"
   );
 
+
+  /* -------------------------------------------------------
+     REMOVE VIDEO-SPECIFIC STATES
+  ------------------------------------------------------- */
 
   frambukModal.classList.remove(
     "vertical"
@@ -1804,9 +2287,9 @@ function closeVideo() {
   );
 
 
-  /*
-     STOP VIDEO PLAYBACK
-  */
+  /* -------------------------------------------------------
+     STOP VIDEO COMPLETELY
+  ------------------------------------------------------- */
 
   if (frambukPlayer) {
 
@@ -1819,21 +2302,24 @@ function closeVideo() {
   }
 
 
-  /*
-     Clear image.
-  */
+  /* -------------------------------------------------------
+     CLEAR IMAGE
+  ------------------------------------------------------- */
 
   if (frambukImage) {
 
     frambukImage.src =
       "";
 
+    frambukImage.style.display =
+      "none";
+
   }
 
 
-  /*
-     Clear thumbnails.
-  */
+  /* -------------------------------------------------------
+     CLEAR THUMBNAILS
+  ------------------------------------------------------- */
 
   if (frambukThumbs) {
 
@@ -1843,9 +2329,31 @@ function closeVideo() {
   }
 
 
-  /*
-     Reset image collection.
-  */
+  /* -------------------------------------------------------
+     HIDE IMAGE NAVIGATION
+  ------------------------------------------------------- */
+
+  if (frambukPrev) {
+
+    frambukPrev.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  if (frambukNext) {
+
+    frambukNext.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  /* -------------------------------------------------------
+     RESET IMAGE COLLECTION
+  ------------------------------------------------------- */
 
   frambukImageSet =
     [];
@@ -1855,12 +2363,12 @@ function closeVideo() {
     0;
 
 
-  /*
-     Restore page scrolling.
-  */
+  /* -------------------------------------------------------
+     RESTORE PAGE SCROLLING
+  ------------------------------------------------------- */
 
   document.body.style.overflow =
-    frambukBodyOverflow;
+    frambukBodyOverflow || "";
 
 }
 
@@ -1879,15 +2387,20 @@ document.addEventListener(
         "active"
       )
     ) {
+
       return;
+
     }
 
 
-    /*
-       ESC = close popup
-    */
+    /* -----------------------------------------------------
+       ESC = CLOSE
+    ----------------------------------------------------- */
 
-    if (e.key === "Escape") {
+    if (
+      e.key ===
+      "Escape"
+    ) {
 
       closeVideo();
 
@@ -1896,12 +2409,13 @@ document.addEventListener(
     }
 
 
-    /*
-       Arrow left = previous image
-    */
+    /* -----------------------------------------------------
+       LEFT ARROW = PREVIOUS IMAGE
+    ----------------------------------------------------- */
 
     if (
-      e.key === "ArrowLeft"
+      e.key ===
+      "ArrowLeft"
     ) {
 
       showPreviousImage();
@@ -1909,12 +2423,13 @@ document.addEventListener(
     }
 
 
-    /*
-       Arrow right = next image
-    */
+    /* -----------------------------------------------------
+       RIGHT ARROW = NEXT IMAGE
+    ----------------------------------------------------- */
 
     if (
-      e.key === "ArrowRight"
+      e.key ===
+      "ArrowRight"
     ) {
 
       showNextImage();
@@ -1950,7 +2465,9 @@ document.addEventListener(
             images.length <
             2
           ) {
+
             return;
+
           }
 
 
@@ -1958,9 +2475,9 @@ document.addEventListener(
             0;
 
 
-          /*
-             Position all images.
-          */
+          /* -------------------------------------------------
+             INITIAL IMAGE POSITIONS
+          ------------------------------------------------- */
 
           images.forEach(
             function (
@@ -1971,7 +2488,8 @@ document.addEventListener(
               img.style.transform =
                 "translateX(" +
                 (
-                  index * 100
+                  index *
+                  100
                 ) +
                 "%)";
 
@@ -1979,10 +2497,9 @@ document.addEventListener(
           );
 
 
-          /*
-             Tap/click image to
-             move to next image.
-          */
+          /* -------------------------------------------------
+             TAP/CLICK IMAGE TO NEXT IMAGE
+          ------------------------------------------------- */
 
           slider.addEventListener(
             "click",
@@ -1998,7 +2515,9 @@ document.addEventListener(
                   "button, a"
                 )
               ) {
+
                 return;
+
               }
 
 
@@ -2048,7 +2567,7 @@ document.addEventListener(
 
 /* =========================================================
    DISABLE RIGHT CLICK
-   Light deterrent
+   Light deterrent only.
 ========================================================= */
 
 document.addEventListener(
@@ -2067,9 +2586,9 @@ document.addEventListener(
 
 function openBankDetails() {
 
-  /*
-     Load cart and compute total.
-  */
+  /* -------------------------------------------------------
+     CALCULATE CART TOTAL
+  ------------------------------------------------------- */
 
   const cart =
     loadCart();
@@ -2090,9 +2609,9 @@ function openBankDetails() {
   );
 
 
-  /*
-     Update total display.
-  */
+  /* -------------------------------------------------------
+     UPDATE TOTAL
+  ------------------------------------------------------- */
 
   const totalEl =
     document.getElementById(
@@ -2109,9 +2628,9 @@ function openBankDetails() {
   }
 
 
-  /*
-     Show modal.
-  */
+  /* -------------------------------------------------------
+     SHOW BANK MODAL
+  ------------------------------------------------------- */
 
   const modal =
     document.getElementById(
@@ -2246,6 +2765,30 @@ document.addEventListener(
 
         }
       );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   INITIALIZE CART
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    updateCartCount();
+
+    if (
+      document.getElementById(
+        "cartItems"
+      )
+    ) {
+
+      displayCart();
 
     }
 
