@@ -26,6 +26,7 @@ body{
    min-height:100dvh;
    display:flex;
    flex-direction:column;
+   padding-top: 7rem;
 }
 
 header,
@@ -68,26 +69,26 @@ select{
    ========================================================= */
 
 header{
-   position:sticky;
+   position:fixed;
    top:0;
    z-index:1000;
-   background:#fff;
    border-bottom:1px solid #f1d26b;
+   margin-bottom: 3rem;
+   background: #ffffff;
 }
 
 .header-container{
    width:95%;
    max-width:1400px;
-   height:90px;
+   height:70px;
    margin:auto;
-
    display:flex;
    align-items:center;
    justify-content:space-between;
-
    position:relative;
    min-width:0;
 }
+
 
 .logo{
    position:absolute;
@@ -114,8 +115,9 @@ nav a{
 }
 
 nav .active{
-   background:#48ff00;
+   background:#48ff00bb;
    padding:18px;
+   border-radius: 5px;
 }
 
 .header-cart{
@@ -162,6 +164,7 @@ nav .active{
    display:none;
    font-size:28px;
    cursor:pointer;
+   color: #fac400;
 }
 
 
@@ -1722,14 +1725,11 @@ p.pretitle{
    ========================================================= */
 
 footer{
-   margin-top:auto;
-
+   margin-top: 3rem;
+   margin-bottom: 0px;
    background:#000;
-
    color:#fff;
-
    padding:30px;
-
    text-align:center;
 }
 
