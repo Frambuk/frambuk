@@ -48,70 +48,23 @@
 
 </head>
 
-<body>
-
+<body>  
+    
 <header>
-
-<div class="header-container">
-
-
-    <!-- HAMBURGER -->
-
-    <div class="hamburger"
-         onclick="toggleMenu()">
-
-        ☰
-
-    </div>
-
-
-    <!-- LOGO -->
-
-    <div class="logo">
-
-        <a href="index.html">
-
-            <img src="images/Frambuk-Logo.png"
-                 alt="Frambuk Logo">
-
-        </a>
-
-    </div>
-
-
-    <!-- NAVIGATION -->
-
-    <nav id="menu">
-
-        <a class="active"
-           href="index.html">
-            Home
-        </a>
-
-        <a href="index.html#apps">
-
-            Free To Use Apps
-
-        </a>
-
-    </nav>
-
-
-    <!-- HEADER ICONS -->
-    <div class="header-icons">
-        <div onclick="openCart()" class="cart-icon">
-            🛒
-            <span id="cartCount">0</span>
-        </div>
-
-        <div onclick="checkoutWhatsApp()">
-            💳
+    <div class="header-container">
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
+        <nav id="menu">
+            <a class="active" href="index.html">Home</a>
+            <a href="index.html#apps">Free To Use Apps</a>
+        </nav>
+        <div class="header-icons">
+            <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+            <div onclick="checkoutWhatsApp()">💳</div>
         </div>
     </div>
-
-</div>
-
 </header>
+
 
 <!-- =========================
      CART
@@ -290,7 +243,7 @@
 
 <footer>
 <a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
-<a href="#" onclick="openBankDetails(); return false;">• 🏦 Make a Transfer 💵</a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here To For Payments & Support 💵</span></a>
 </footer>
 
 <script src="script.js"></script>
