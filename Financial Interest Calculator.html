@@ -162,40 +162,23 @@ font-size:24px;
 </head>
 
 <body>
+    
 <header>
     <div class="header-container">
-    <div class="hamburger" onclick="toggleMenu()">
-        ☰
-    </div>
-
-    <div class="logo">
-        <a href="index.html"><img src="images/Frambuk-Logo.png"></a>
-    </div>
-    <nav id="menu">
-        <a class="active" href="index.html">
-        Home
-        </a>
-
-        <a href="index.html#apps">
-        Free To Use Apps
-        </a>
-    </nav>
-
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
+        <nav id="menu">
+            <a class="active" href="index.html">Home</a>
+            <a href="index.html#apps">Free To Use Apps</a>
+        </nav>
         <div class="header-icons">
-            <div onclick="openCart()">
-                🛒
-                <span id="cartCount">
-                0
-                </span>
-            </div>
-            <div onclick="checkoutWhatsApp()">
-            💳
-            </div>
-
+            <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+            <div onclick="checkoutWhatsApp()">💳</div>
         </div>
-
     </div>
 </header>
+
+
 
 <h1 style="display:none">
 🪙 Financial Interest Calculator 💰
@@ -657,6 +640,7 @@ behavior:"smooth"
 
 </script>
 
+
 <!-- ====== NEW BANK DETAILS MODAL ====== -->
 <div id="bankModal" class="video-modal" aria-hidden="true">
     <div class="video-modal-content bank-modal-content">
@@ -675,14 +659,25 @@ behavior:"smooth"
                 <p>Frambuk International Ventures</p>
                 <p style="font-size:18px; font-weight:bold;">3133126775</p>
                 <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>            
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-top: 15px;">
+                <p style="font-weight:bold;">🏦 Whatsapp Checkout</p>
+                <p>Chat To Verify Before Purchase</p>
+                <p style="font-size:18px; font-weight:bold;">+2349067040308</p>
+                <button
+                    type="button"
+                    onclick="checkoutWhatsApp()"
+                    class="checkout-btn" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">
+                    Checkout On WhatsApp
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <footer>
-© 2026 Frambuk International Ventures
-<a href="#" onclick="openBankDetails(); return false;">• 🏦 Make a Transfer 💵</a>
+<a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here To For Payments & Support 💵</span></a>
 </footer>
 
 <script src="script.js"></script>
