@@ -153,7 +153,7 @@ nav a {
 
     color: #39453e;
 
-    font-size: 14px;
+    font-size: 16px;
 
     font-weight: 600;
 
@@ -221,7 +221,7 @@ nav a.active {
 
     color: white;
 
-    font-size: 10px;
+    font-size: 16px;
 
     font-weight: 700;
 
@@ -356,7 +356,7 @@ nav a.active {
 
     font-family: inherit;
 
-    font-size: 14px;
+    font-size: 16px;
 
     font-weight: 700;
 
@@ -383,7 +383,7 @@ nav a.active {
 .mode-btn .icon {
     margin-right: 7px;
 
-    font-size: 18px;
+    font-size: 16px;
 }
 
 
@@ -598,7 +598,7 @@ nav a.active {
 }
 
 .file-size {
-    font-size: 11px;
+    font-size: 16px;
 
     color: var(--muted);
 
@@ -650,7 +650,7 @@ nav a.active {
 .option label {
     display: block;
 
-    font-size: 11px;
+    font-size: 16px;
 
     font-weight: 700;
 
@@ -761,7 +761,7 @@ nav a.active {
 
     color: #806626;
 
-    font-size: 10px;
+    font-size: 16px;
 
     line-height: 1.6;
 }
@@ -937,7 +937,7 @@ button.action:disabled {
 }
 
 .results-title h3 {
-    font-size: 18px;
+    font-size: 16px;
 
     color: var(--dark);
 }
@@ -945,7 +945,7 @@ button.action:disabled {
 .results-title p {
     color: var(--muted);
 
-    font-size: 11px;
+    font-size: 16px;
 
     margin-top: 3px;
 }
@@ -959,7 +959,7 @@ button.action:disabled {
 
     border-radius: 50px;
 
-    font-size: 11px;
+    font-size: 16px;
 
     font-weight: 700;
 }
@@ -1061,7 +1061,7 @@ button.action:disabled {
 
     font-family: inherit;
 
-    font-size: 10px;
+    font-size: 16px;
 
     font-weight: 700;
 
@@ -1088,7 +1088,7 @@ button.action:disabled {
 }
 
 .empty-state-icon {
-    font-size: 45px;
+    font-size: 40px;
 
     opacity: .4;
 
@@ -1102,7 +1102,7 @@ button.action:disabled {
 }
 
 .empty-state p {
-    font-size: 11px;
+    font-size: 16px;
 
     margin-top: 5px;
 }
@@ -1121,7 +1121,7 @@ footer {
 
     color: #7b857f;
 
-    font-size: 11px;
+    font-size: 16px;
 
     background: white;
 }
@@ -1201,7 +1201,7 @@ footer strong {
         width: 37px;
         height: 37px;
 
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .hero {
@@ -1258,7 +1258,7 @@ footer strong {
 }
 
 </style>
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
 
@@ -1268,79 +1268,21 @@ footer strong {
 <!-- =========================================================
      HEADER
 ========================================================= -->
-
+    
 <header>
-
     <div class="header-container">
-
-        <div
-            class="hamburger"
-            onclick="toggleFrambukMenu()">
-
-            ☰
-
-        </div>
-
-
-        <div class="logo">
-
-            <a href="index.html">
-
-                <img
-                    src="images/Frambuk-Logo.png"
-                    alt="Frambuk">
-
-            </a>
-
-        </div>
-
-
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
         <nav id="menu">
-
-            <a href="index.html">
-                Home
-            </a>
-
-            <a
-                class="active"
-                href="index.html#apps">
-
-                Free To Use Apps
-
-            </a>
-
+            <a class="active" href="index.html">Home</a>
+            <a href="index.html#apps">Free To Use Apps</a>
         </nav>
-
-
         <div class="header-icons">
-
-            <div
-                onclick="safeOpenCart()"
-                title="Cart">
-
-                🛒
-
-                <span id="cartCount">
-                    0
-                </span>
-
-            </div>
-
-
-            <div
-                onclick="safeCheckout()"
-                title="Checkout">
-
-                💳
-
-            </div>
-
+            <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+            <div onclick="checkoutWhatsApp()">💳</div>
         </div>
-
     </div>
-
 </header>
-
 
 
 <!-- =========================================================
@@ -1838,25 +1780,6 @@ footer strong {
     </div>
 
 </main>
-
-
-
-<!-- =========================================================
-     FOOTER
-========================================================= -->
-
-<footer>
-
-    © 2026
-
-    <strong>
-        Frambuk International Ventures
-    </strong>
-
-    . All Rights Reserved.
-
-</footer>
-
 
 
 <script>
@@ -3676,11 +3599,6 @@ document.addEventListener(
 
 <script src="script.js"></script>
 
-
-<footer>
-© 2026 Frambuk International Ventures <a href="🏷️ Frambuk_Product_Packaging_Prompts.html">•</a>
-</footer>
-
 <script src="script.js"></script>
   <script>
     function slideSection(id,direction){
@@ -3689,6 +3607,59 @@ document.addEventListener(
   }
 
 </script>
-  </body>
 
+
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+    <div class="video-modal-content bank-modal-content">
+        <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+        <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+        <div style="width:100%; max-width:500px; margin:20px auto;">
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">0464733563</p>
+                <button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+                <p style="font-weight:bold;">🏦 First Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">3133126775</p>
+                <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>            
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-top: 15px;">
+                <p style="font-weight:bold;">🏦 Whatsapp Checkout</p>
+                <p>Chat To Verify Before Purchase</p>
+                <p style="font-size:18px; font-weight:bold;">+2349067040308</p>
+                <button
+                    type="button"
+                    onclick="checkoutWhatsApp()"
+                    class="checkout-btn" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">
+                    Checkout On WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+<a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here To For Payments & Support 💵</span></a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  function slideSection(id, direction) {
+    const slider = document.getElementById(id);
+    if (!slider) return;
+    slider.scrollLeft += direction * 350;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    displayCart();
+  });
+</script>
+</body>
 </html>
