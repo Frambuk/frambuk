@@ -145,19 +145,33 @@ nav a{color:#dbeafe;text-decoration:none;padding:10px 14px;border-radius:10px;tr
 nav a:hover,nav a.active{background:rgba(250,196,0,.12);color:#fac400}
 .header-icons{display:flex;gap:14px;font-size:20px}.header-icons div{cursor:pointer}
 
+/*footer color*/
+.video-modal{
+    color: black;
+}
+header{
+    background: black;
+}
 </style>
 </head>
 
 <body>
-  
-<header class="header">
- <div class="header-container">
-  <div class="hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
-  <div class="logo"><a href="index.html"><img src="images/Frambuk-Logo.png" alt="Frambuk"></a></div>
-  <nav id="menu"><a class="active" href="index.html">Home</a><a href="index.html#apps">Free To Use Apps</a></nav>
-  <div class="header-icons"><div title="Cart">🛒 <span id="cartCount">0</span></div><div title="Checkout">💳</div></div>
- </div>
+    
+<header>
+    <div class="header-container">
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
+        <nav id="menu">
+            <a class="active" href="index.html">Home</a>
+            <a href="index.html#apps">Free To Use Apps</a>
+        </nav>
+        <div class="header-icons">
+            <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+            <div onclick="checkoutWhatsApp()">💳</div>
+        </div>
+    </div>
 </header>
+
 
 <div class="container">
 
@@ -332,18 +346,57 @@ setInterval(convertCurrencies, 60000);
 </script>
 
 
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+    <div class="video-modal-content bank-modal-content">
+        <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+        <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+        <div style="width:100%; max-width:500px; margin:20px auto;">
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">0464733563</p>
+                <button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+                <p style="font-weight:bold;">🏦 First Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">3133126775</p>
+                <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>            
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-top: 15px;">
+                <p style="font-weight:bold;">🏦 Whatsapp Checkout</p>
+                <p>Chat To Verify Before Purchase</p>
+                <p style="font-size:18px; font-weight:bold;">+2349067040308</p>
+                <button
+                    type="button"
+                    onclick="checkoutWhatsApp()"
+                    class="checkout-btn" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">
+                    Checkout On WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer>
-© 2026 Frambuk International Ventures <a href="🏷️ Frambuk_Product_Packaging_Prompts.html">•</a>
+<a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here To For Payments & Support 💵</span></a>
 </footer>
 
 <script src="script.js"></script>
-  <script>
-    function slideSection(id,direction){
-    let slider=document.getElementById(id);
-  slider.scrollLeft += direction * 350;
+<script>
+  function slideSection(id, direction) {
+    const slider = document.getElementById(id);
+    if (!slider) return;
+    slider.scrollLeft += direction * 350;
   }
-
+  document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    displayCart();
+  });
 </script>
-  </body>
-
+</body>
 </html>
