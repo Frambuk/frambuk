@@ -40,10 +40,6 @@
     <meta name="twitter:image:alt" content="Frambuk Food Products">
 
 
-    <!-- STYLESHEET -->
-    <link rel="stylesheet" href="style.css">
-
-
 <title>Frambuk International</title>
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="style.css">
@@ -55,36 +51,16 @@
 
 <header>
 	<div class="header-container">
-	<div class="hamburger" onclick="toggleMenu()">
-		☰
-	</div>
-
-	<div class="logo">
-		<a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a>
-	</div>
-	<nav id="menu">
-		<a class="active" href="index.html">
-		Home
-		</a>
-
-		<a href="#apps">
-		Free To Use Apps
-		</a>
-	</nav>
-
+		<div class="hamburger" onclick="toggleMenu()">☰</div>
+		<div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
+		<nav id="menu">
+			<a class="active" href="index.html">Home</a>
+			<a href="#apps">Free To Use Apps</a>
+		</nav>
 		<div class="header-icons">
-			<div onclick="openCart()">
-				🛒
-				<span id="cartCount">
-				0
-				</span>
-			</div>
-			<div onclick="checkoutWhatsApp()">
-			💳
-			</div>
-
+			<div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+			<div onclick="checkoutWhatsApp()">💳</div>
 		</div>
-
 	</div>
 </header>
 
@@ -848,7 +824,7 @@ Frambuk Food Flours & Oils
 <div id="bankModal" class="video-modal" aria-hidden="true">
     <div class="video-modal-content bank-modal-content">
         <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
-        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details [ For Payments or Support ]</h2>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
         <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
         <div style="width:100%; max-width:500px; margin:20px auto;">
             <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
@@ -880,7 +856,7 @@ Frambuk Food Flours & Oils
 
 <footer>
 <a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
-<a href="#" onclick="openBankDetails(); return false;">• 🏦 Make a Transfer 💵</a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here To For Payments & Support 💵</span></a>
 </footer>
 
 <script src="script.js"></script>
