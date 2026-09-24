@@ -163,15 +163,15 @@
             max-height: 200px; /* adjust as needed */
         }
 
-
 /*for the sticky menu*/
       .sticky {
-         position: sticky;
+         position: fixed;
          top: 0;
          width: 100%;
          background-color: white;
          z-index: 100;
          padding-top: 5px;
+         z-index: 2000;
       }
       .sticky + .content {
          padding-top: 80px;
@@ -771,31 +771,15 @@ div.search-containera{
 </style>
 </head>
 <body>
-    
-<header>
-    <div class="header-container">
-        <div class="hamburger" onclick="toggleMenu()">☰</div>
-        <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
-        <nav id="menu">
-            <a class="active" href="index.html">Home</a>
-            <a href="index.html#apps">Free To Use Apps</a>
-        </nav>
-        <div class="header-icons">
-            <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
-            <div onclick="checkoutWhatsApp()">💳</div>
-        </div>
-    </div>
-</header>
-
 
   <div class="containera">
     <div class="sticky">
   
   
-      <h4 style="text-align: center; color: #000000; margin: auto; background: ash;">
-        <a href="#morebooks" style="text-decoration: none;">⬇️</a> Get Access To <span id="book-count" style="color: #2ea100;"></span> 
+      <h3 style="text-align: center; color: #000000; margin: auto; background: ash;">
+        <a href="#morebooks" style="text-decoration: none;">⬇️</a> Thanks For Your Purchase Of <span id="book-count" style="color: #2ea100;"></span> 
         <span style="color: #2ea100; text-decoration: none;">Life-Changing AudioBooks</span> Now!
-      </h4> 
+      </h3> 
 
      
 <!-- 🔎 Search Box + Clear -->
@@ -1871,21 +1855,21 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus12">
           <label class="accordion-header" for="accordion-bus12">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/07/The-Quiet-Millionaire-Eliminate-Financial-Stress-and-Accumulate-Wealth-for-a-Lifetime-of-Security-and-Independence.jpeg"
-              alt="The Quiet Millionaire: Discreet Ways to Make and Manage Money">
-            <h3>The Quiet Millionaire: Discreet Ways to Make and Manage Money<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/81DTIG+ZBoL._SL1500_.jpg"
+              alt="Secrets of the Millionaire Mind by T. Harv Eker">
+            <h3>Secrets of the Millionaire Mind by T. Harv Eker<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>The Quiet Millionaire offers practical strategies for building and managing wealth discreetly. Through insightful advice and proven techniques, this book guides readers on how to achieve financial success without attracting unwanted attention, emphasizing smart, low-profile investments.</p>
-            <button class="download-button" data-url="https://youtu.be/uwHUwP1TrhY">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/uwHUwP1TrhY" target="_blank">Play Online</a></button>
+            <p>Secrets of the Millionaire Mind explores the beliefs and thought patterns that influence how people approach money, wealth, and financial success. T. Harv Eker discusses the idea of a personal “money blueprint” and offers principles intended to help readers recognize limiting financial habits and develop more productive attitudes toward earning, managing, and growing money.</p>
+            <button class="download-button" data-url="https://youtu.be/vLLTJiSg_1g">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/vLLTJiSg_1g" target="_blank">Play Online</a></button>
           </div>
         </li>
   
         <li>
           <input type="checkbox" id="accordion-bus13">
           <label class="accordion-header" for="accordion-bus13">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/07/How-To-Get-Rich-By-Felix-Dennis.jpg"
+            <img src="https://m.media-amazon.com/images/I/813HxYmh5WL._SL1500_.jpg"
               alt="How To Get Rich by Felix Dennis">
             <h3>How To Get Rich by Felix Dennis<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -1900,21 +1884,21 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus15">
           <label class="accordion-header" for="accordion-bus15">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/07/The-ABC-of-Money-by-Andrew-Carnegie.jpeg"
+            <img src="https://m.media-amazon.com/images/I/71Fvn1NivBL._SL1360_.jpg"
               alt="The ABC of Money by Andrew Carnegie">
             <h3>The ABC of Money by Andrew Carnegie<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
             <p>Andrew Carnegie's The ABC of Money offers timeless financial wisdom from one of the wealthiest men in history. This classic work provides foundational principles for managing money, investing wisely, and achieving financial independence, making it essential reading for anyone interested in wealth-building.</p>
-            <button class="download-button" data-url="https://youtu.be/lFcWsdnxh9I">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/lFcWsdnxh9I" target="_blank">Play Online</a></button>
+            <button class="download-button" data-url="https://youtu.be/7OVwVcOSdQs">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/7OVwVcOSdQs" target="_blank">Play Online</a></button>
           </div>
         </li>
   
         <li>
           <input type="checkbox" id="accordion-bus16">
           <label class="accordion-header" for="accordion-bus16">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/07/Commercial-Real-Estate-for-Beginners-The-Basics-of-Commercial-Real-Estate-Investing.jpeg"
+            <img src="https://m.media-amazon.com/images/I/81d8nsNZEhL._SL1500_.jpg"
               alt="Commercial Real Estate For Beginners by Peter Harris">
             <h3>Commercial Real Estate For Beginners by Peter Harris<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -1928,7 +1912,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus17">
           <label class="accordion-header" for="accordion-bus17">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/06/The-Richest-Man-in-Babylon-by-George.jpeg"
+            <img src="https://m.media-amazon.com/images/I/91Z+9CTjlzL._SL1500_.jpg"
               alt="The Richest Man in Babylon">
             <h3>The Richest Man in Babylon<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -1957,7 +1941,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus19">
           <label class="accordion-header" for="accordion-bus19">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/06/Think-and-Grow-Rich-by-Napoleon-Hill-Image.jpg"
+            <img src="https://m.media-amazon.com/images/I/61IxJuRI39L._SL1000_.jpg"
               alt="Think and Grow Rich by Napoleon Hill">
             <h3>Think and Grow Rich by Napoleon Hill<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -1973,7 +1957,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus20">
           <label class="accordion-header" for="accordion-bus20">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/06/Rich-Dad-Poor-Dad-by-Robert-Kiyosaki.jpg"
+            <img src="https://m.media-amazon.com/images/I/814XbqXAz-L._SL1500_.jpg"
               alt="Rich Dad Poor Dad by Robert Kiyosaki">
             <h3>Rich Dad Poor Dad by Robert Kiyosaki<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -2157,7 +2141,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus33">
           <label class="accordion-header" for="accordion-bus33">
-            <img src="https://booksandmoreng.com/cdn/shop/products/51r6sbCp8JL_jpg_600x.jpg"
+            <img src="https://m.media-amazon.com/images/I/91fgJDSub+L._SL1500_.jpg"
               alt="Unshakeable by Tony Robbins">
             <h3>Unshakeable by Tony Robbins<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -2280,19 +2264,19 @@ div.search-containera{
           </div>
         </li>
         
-        <li>
+<!--         <li>
           <input type="checkbox" id="accordion-bus42">
           <label class="accordion-header" for="accordion-bus42">
-            <img src="https://frambuklearn.com/wp-content/uploads/2025/10/The-Trader-Detox-by-Robert-K-Larry.png"
-              alt="The Trader Detox by Robert K. Larry">
-            <h3>The Trader Detox by Robert K. Larry<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/91gWSXWDVoL._SL1500_.jpg"
+              alt="The Way of the Superior Man: A Spiritual Guide to Mastering the Challenges of Women, Work, and Sexual Desire">
+            <h3>The Way of the Superior Man: A Spiritual Guide to Mastering the Challenges of Women, Work, and Sexual Desire<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>The Trader Detox by Robert K. Larry is a practical guide focused on helping traders break free from the psychological traps and bad habits that sabotage trading success. The book delves into emotional discipline, mindset correction, and strategies for regaining control after losses or burnout. Larry emphasizes mental clarity, risk management, and consistent execution as the foundation for profitable trading. By addressing the emotional side of trading, The Trader Detox aims to help both new and experienced traders reset their approach and build a sustainable, confident trading routine.</p>
-            <button class="download-button" data-url="https://youtu.be/vfqF1s9jz4E">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/vfqF1s9jz4E" target="_blank">Play Online</a></button>
+            <p>The Way of the Superior Man is a personal-development and spiritual guide focused on masculine purpose, intimate relationships, work, and sexual energy. David Deida explores how men can develop greater clarity, emotional presence, discipline, and purpose while navigating relationships and life’s challenges.</p>
+            <button class="download-button" data-url="https://youtu.be/xFPF0EQqIvI">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/xFPF0EQqIvI" target="_blank">Play Online</a></button>
           </div>
-        </li>
+        </li> -->
                 
         <li>
           <input type="checkbox" id="accordion-bus43">
@@ -2311,23 +2295,21 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus44">
           <label class="accordion-header" for="accordion-bus44">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/10/The-4-Hour-Workweek-by-Tim-Ferriss.jpg"
-              alt="The 4-Hour Workweek by Tim Ferriss">
-            <h3>The 4-Hour Workweek by Tim Ferriss<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/61WCPTj3hbL._SL1200_.jpg"
+              alt="A Random Walk Down Wall Street by Burton G. Malkiel">
+            <h3>A Random Walk Down Wall Street by Burton G. Malkiel<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>This book is considered one of the greatest of all inspirational works on the subject of thrift, financial
-              planning, and personal wealth.</p>
-            <button class="download-button" data-url="https://youtu.be/aNX7qrS3iSU">Download Audiobook 1</a></button>
-            <button class="listen-button"><a href="https://youtu.be/aNX7qrS3iSU" target="_blank">Play Online 1</a></button>          <button class="download-button" data-url="https://youtu.be/V-IXunEETxQ">Download Audiobook 2</a></button>
-            <button class="listen-button"><a href="https://youtu.be/V-IXunEETxQ" target="_blank">Play Online 2</a></button>
+            <p>A Random Walk Down Wall Street explains how financial markets work and presents a long-term approach to investing. Burton G. Malkiel examines investment strategies, market behavior, diversification, risk, and the challenges of trying to consistently outperform the market, offering practical principles for building and managing an investment portfolio.</p>
+            <button class="download-button" data-url="https://youtu.be/A6OlQsvCem">Download Audiobook 1</a></button>
+            <button class="listen-button"><a href="https://youtu.be/A6OlQsvCem" target="_blank">Play Online 1</a></button>
           </div>
         </li>
         
         <li>
           <input type="checkbox" id="accordion-bus45">
           <label class="accordion-header" for="accordion-bus45">
-            <img src="https://cdn.pdfdrive.com/assets/thumbs/412/41216574bd57726455c3b1b1379bc3bb.jpg"
+            <img src="https://m.media-amazon.com/images/I/81ee2XP1koL._SL1500_.jpg"
               alt="Getting To Yes: Negotiating Agreements without Giving In">
             <h3>Getting To Yes: Negotiating Agreements without Giving In<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -2412,14 +2394,14 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus51">
           <label class="accordion-header" for="accordion-bus51">
-            <img src="https://frambuklearn.com/wp-content/uploads/2025/10/Accounting-for-Beginners-Dummies-Fundamental-Principles-of-Financial-Management-by-Giovanni-Rigters.png"
-              alt="Accounting for Beginners & Dummies: Fundamental Principles of Financial Management by Giovanni Rigters">
-            <h3>Accounting for Beginners & Dummies: Fundamental Principles of Financial Management by Giovanni Rigters<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/81YjYC91QDL._SL1500_.jpg"
+              alt="Profit First: Transform Your Business from a Cash-Eating Monster to a Money-Making Machine by Mike Michalowicz">
+            <h3>Profit First: Transform Your Business from a Cash-Eating Monster to a Money-Making Machine by Mike Michalowicz<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
             <p>Accounting for Beginners & Dummies: Fundamental Principles of Financial Management by Giovanni Rigters is a clear and practical introduction to the basics of accounting and financial management. The book explains core concepts such as balance sheets, income statements, cash flow, budgeting, and financial analysis in simple, easy-to-understand language. It’s designed for beginners, entrepreneurs, and anyone looking to understand how money moves within a business. Rigters provides real-world examples to help readers grasp how to record, interpret, and use financial information to make smarter business decisions.</p>
-            <button class="download-button" data-url="https://youtu.be/yNcNDJJxFds">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/yNcNDJJxFds" target="_blank">Play Online</a></button>
+            <button class="download-button" data-url="https://youtu.be/1OB_Vtbpkkk">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/1OB_Vtbpkkk" target="_blank">Play Online</a></button>
           </div>
         </li>
                 
@@ -2777,14 +2759,14 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus79">
           <label class="accordion-header" for="accordion-bus79">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/11/The-Power-of-Presence-Commanding-Respect-Without-Saying-a-Word.png"
-              alt="The Power of Presence: Commanding Respect Without Saying a Word">
-            <h3>The Power of Presence: Commanding Respect Without Saying a Word<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/81JtoO-WuxL._SL1500_.jpg"
+              alt="The Art of Entrepreneurship by Jim Stovall & Dr. Kevin Schneider">
+            <h3>The Art of Entrepreneurship by Jim Stovall & Dr. Kevin Schneider<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>The Power of Presence: Commanding Respect Without Saying a Word teaches you how to harness body language, confidence, and energy to make a lasting impact. This audiobook provides tools to exude authority, connect with others, and build influence—without uttering a word. Perfect for anyone looking to elevate their personal and professional presence.</p>
-            <button class="download-button" data-url="https://youtu.be/X_mprcXTzic">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/X_mprcXTzic" target="_blank">Play Online</a></button>
+            <p>The Art of Entrepreneurship explores the principles, mindset, and practical strategies behind building and growing a successful business. Jim Stovall and Dr. Kevin Schneider discuss entrepreneurship, leadership, opportunity recognition, innovation, and the personal qualities needed to turn ideas into meaningful and sustainable ventures.</p>
+            <button class="download-button" data-url="https://youtu.be/8iHx-46TDmM">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/8iHx-46TDmM" target="_blank">Play Online</a></button>
           </div>
         </li>
         
@@ -2811,15 +2793,15 @@ div.search-containera{
           </label>
           <div class="accordion-content">
             <p>Blue Ocean Strategy by W. Chan Kim and Renée Mauborgne introduces a revolutionary approach to outpacing the competition by creating untapped market spaces, or "blue oceans." This audiobook provides strategies to make competition irrelevant, inspiring innovation and new growth opportunities. Ideal for entrepreneurs and leaders ready to break free from crowded markets and discover unique paths to success.</p>
-            <button class="download-button" data-url="https://youtu.be/LuEouGHnn34">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/LuEouGHnn34" target="_blank">Play Online</a></button>
+            <button class="download-button" data-url="https://youtu.be/fM9WrlZYoEQ">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/fM9WrlZYoEQ" target="_blank">Play Online</a></button>
           </div>
         </li>
         
         <li>
           <input type="checkbox" id="accordion-bus83">
           <label class="accordion-header" for="accordion-bus83">
-            <img src="https://cdn.pdfdrive.com/assets/thumbs/ae1/ae16c97a9dc23c976d1ef3235f1527aa.jpg"
+            <img src="https://m.media-amazon.com/images/I/81eQAtzupsL._SL1500_.jpg"
               alt="The Hard Thing About Hard Things by Ben Horowitz">
             <h3>The Hard Thing About Hard Things by Ben Horowitz<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -2876,7 +2858,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus87">
           <label class="accordion-header" for="accordion-bus87">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/07/Atomic-Habits-By-James-Clear.png"
+            <img src="https://m.media-amazon.com/images/I/71F4+7rk2eL._SL1500_.jpg"
               alt="Atomic Habits by James Clear">
             <h3>Atomic Habits by James Clear<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -2910,8 +2892,8 @@ div.search-containera{
           </label>
           <div class="accordion-content">
             <p>The $100 Startup by Chris Guillebeau reveals how to start a business with minimal investment and turn it into a successful venture. In this audiobook, Guillebeau shares inspiring stories of entrepreneurs who built profitable businesses with less than $100, offering practical advice on finding ideas, scaling, and living life on your own terms. Perfect for anyone looking to launch a business without a huge financial risk.</p>
-            <button class="download-button" data-url="https://youtu.be/1yv1GM15gXc">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/1yv1GM15gXc" target="_blank">Play Online</a></button>
+            <button class="download-button" data-url="https://youtu.be/cgFyn6DDJLE">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/cgFyn6DDJLE" target="_blank">Play Online</a></button>
           </div>
         </li>
                  
@@ -3115,14 +3097,14 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-bus105">
           <label class="accordion-header" for="accordion-bus105">
-            <img src="https://m.media-amazon.com/images/I/71vpzoB4VML._SL1360_.jpg"
-              alt="The Intelligent Investor by Benjamin Graham">
-            <h3>The Intelligent Investor by Benjamin Graham<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/81kGBFIvGnL._SL1500_.jpg"
+              alt="The Psychology of Selling by Brian Tracy">
+            <h3>The Psychology of Selling by Brian Tracy<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>The Intelligent Investor by Benjamin Graham is a timeless guide to smart investing, teaching principles of value investing, risk management, and long-term wealth building. Graham emphasizes the importance of a disciplined, research-driven approach to markets while avoiding speculation. Packed with strategies for assessing stocks, bonds, and financial health, it’s an essential read for both beginners and seasoned investors aiming to achieve financial success.</p>
-            <button class="download-button" data-url="https://youtu.be/auAtpSLoKtE">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/auAtpSLoKtE" target="_blank">Play Online</a></button>
+            <p>The Psychology of Selling explores the mindset, habits, and techniques that influence successful selling. Brian Tracy explains how salespeople can build confidence, understand customers, overcome objections, communicate effectively, and improve their ability to close sales.</p>
+            <button class="download-button" data-url="https://youtu.be/IsLZilCVO9U">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/IsLZilCVO9U" target="_blank">Play Online</a></button>
           </div>
         </li>
   
@@ -4854,20 +4836,21 @@ div.search-containera{
             <button class="listen-button"><a href="https://youtu.be/ePNwhabQy-k" target="_blank">Play Online</a></button>
           </div>
         </li>
-<!--   
+  
         <li>
           <input type="checkbox" id="accordion-selfhelp37">
-          <label class="accordion-header" for="accordion-selfhelp37">
-            <img src="https://m.media-amazon.com/images/I/71w56JoATmL._SL1500_.jpg">
-            <h3>The Critical Thinking Toolkit by Dr. Marlene Caroselli<span class="discover">⬇️ Expand</span></h3>
+          <label class="accordion-header" for="accordion-bus42">
+            <img src="https://m.media-amazon.com/images/I/91gWSXWDVoL._SL1500_.jpg"
+              alt="The Way of the Superior Man: A Spiritual Guide to Mastering the Challenges of Women, Work, and Sexual Desire">
+            <h3>The Way of the Superior Man: A Spiritual Guide to Mastering the Challenges of Women, Work, and Sexual Desire<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>The Critical Thinking Toolkit by Dr. Marlene Caroselli offers 35 practical activities to enhance problem-solving and creativity in teams. It equips leaders and professionals with tools to foster innovation, improve decision-making, and tackle challenges effectively. Perfect for boosting team collaboration and critical thinking skills.</p>
-            <button class="download-button" data-url="https://youtu.be/ePNwhabQy-k">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/ePNwhabQy-k" target="_blank">Play Online</a></button>
+            <p>The Way of the Superior Man is a personal-development and spiritual guide focused on masculine purpose, intimate relationships, work, and sexual energy. David Deida explores how men can develop greater clarity, emotional presence, discipline, and purpose while navigating relationships and life’s challenges.</p>
+            <button class="download-button" data-url="#buy">Download Audiobook</a></button>
+            <button class="listen-button"><a href="#buy" target="_blank">Play Online</a></button>
           </div>
         </li>
-   -->
+  
         <li>
           <input type="checkbox" id="accordion-selfhelp38">
           <label class="accordion-header" for="accordion-selfhelp38">
@@ -5858,14 +5841,14 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-hist4">
           <label class="accordion-header" for="accordion-hist4">
-            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/39/Capitalism_and_Freedom.jpg/220px-Capitalism_and_Freedom.jpg"
-              alt="Capitalism and Freedom by Milton Friedma">
-            <h3>Capitalism and Freedom by Milton Friedman<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/618McLpc-qL._SL1280_.jpg"
+              alt="The Most Important Thing by Howard Marks">
+            <h3>The Most Important Thing by Howard Marksn<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>Capitalism and Freedom by Milton Friedman argues that economic freedom is essential for political freedom. In this influential audiobook, Friedman makes the case for free markets, minimal government intervention, and individual choice as the cornerstones of a thriving society. A must-listen for those interested in economics, political theory, and the power of capitalism to foster prosperity and liberty.</p>
-            <button class="download-button" data-url="https://youtu.be/EUZJ_GlT6zc">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/EUZJ_GlT6zc" target="_blank">Play Online</a></button>
+            <p>Lessons about investment risk, market cycles, and second-level thinking.</p>
+            <button class="download-button" data-url="https://youtu.be/0rH9h8L3ZUM">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/0rH9h8L3ZUM" target="_blank">Play Online</a></button>
           </div>
         </li>
   
@@ -6014,7 +5997,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-hist14">
           <label class="accordion-header" for="accordion-hist14">
-            <img src="https://vogandwodbooks.com/wp-content/uploads/2022/10/PRINCE-Niccolo-Machiavelli.jpg"
+            <img src="https://m.media-amazon.com/images/I/613IIHCzXeL._SL1500_.jpg"
               alt="The Prince by Niccolò Machiavelli">
             <h3>The Prince by Niccolò Machiavelli<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -6256,7 +6239,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-hist31">
           <label class="accordion-header" for="accordion-hist31">
-            <img src="https://upload.wikimedia.org/wikipedia/en/c/c7/DWCity.jpg"
+            <img src="https://m.media-amazon.com/images/I/91k-DbzfTyL._SL1500_.jpg"
               alt="The Devil in the White City by Erik Larson">
             <h3>The Devil in the White City by Erik Larson<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -7492,14 +7475,14 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-fiction45">
           <label class="accordion-header" for="accordion-fiction45">
-            <img src="https://m.media-amazon.com/images/I/8158B6v-ugL._SL1500_.jpg"
-              alt="Children of Time by Adrian Tchaikovsky">
-            <h3>Children of Time by Adrian Tchaikovsky<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/715lBsaI4sL._SL1500_.jpg"
+              alt="Great Expectations by Charles Dickens">
+            <h3>Great Expectations by Charles Dickens<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>Children of Time by Adrian Tchaikovsky is a fascinating sci-fi epic that spans millennia, exploring the rise of a new civilization on an alien planet. After a failed human terraforming project, an engineered virus designed to accelerate evolution takes hold on a species of spiders, leading them to develop intelligence and complex society. Meanwhile, the remnants of humanity, aboard a deteriorating ark ship, stumble upon this new world and its unexpected inhabitants. This novel brilliantly explores themes of evolution, survival, and coexistence, blending hard science with an exploration of alien perspectives. It’s a thought-provoking and thrilling read for fans of imaginative, intelligent science fiction.</p>
-            <button class="download-button" data-url="https://youtu.be/zAfx0zbf910">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/zAfx0zbf910" target="_blank">Play Online</a></button>
+            <p>An orphan boy, a decaying mansion, a beautiful girl who will break his heart, and a fortune from a mysterious benefactor—Great Expectations is Dickens at his most haunting, funny, and heartbreaking. In audio, the foggy marshes, eccentric voices, and shocking revelations come alive around you. Press play, and you won’t just hear Pip’s story—you’ll fall into it.</p>
+            <button class="download-button" data-url="https://youtu.be/Yw9fPU4gN_I">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/Yw9fPU4gN_I" target="_blank">Play Online</a></button>
           </div>
         </li>
   
@@ -7654,22 +7637,15 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-fiction56">
           <label class="accordion-header" for="accordion-fiction56">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/11/Children-of-Time-by-Adrian-Tchaikovsky-Series.gif"
-              alt="Children of Time by Adrian Tchaikovsky">
-            <h3>Children of Time by Adrian Tchaikovsky<span class="discover">⬇️ Expand</span></h3>
+            <img src="https://m.media-amazon.com/images/I/71NAX4mpJHL._SL1500_.jpg"
+              alt="East of Eden by John Steinbeck">
+            <h3>East of Eden by John Steinbeck<span class="discover">⬇️ Expand</span></h3>
           </label>
           <div class="accordion-content">
-            <p>In Children of Time, Adrian Tchaikovsky imagines a distant future where humanity's survival hinges on a terraformed planet. After a failed experiment, intelligent spiders rise as the planet’s dominant species, developing a complex civilization and unique ways of thinking. As humans arrive in search of a new home, they must confront this strange new world and its inhabitants. Blending evolutionary science with space adventure, Tchaikovsky creates a thought-provoking exploration of intelligence, empathy, and what it means to be "human."</p>
+            <p>Two brothers, a monstrous mother, a father starving for love, and one Hebrew word—timshel—that asks whether we can ever escape our blood. East of Eden is Steinbeck’s towering Cain-and-Abel saga, soaked in California dust, jealousy, and desperate hope. In audio, the Salinas Valley breathes, the family secrets cut deeper, and “thou mayest” lands like a blessing. Press play—and choose to fall in.</p>
   
-            <button class="download-button" data-url="https://youtu.be/zAfx0zbf910">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/zAfx0zbf910" target="_blank">Play Online</a></button>
-   
-            <button class="download-button" data-url="https://youtu.be/0TZUJIzxxgw">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/0TZUJIzxxgw" target="_blank">Play Online</a></button>
-         
-            <button class="download-button" data-url="https://youtu.be/KayZHoXNvDg">Download Audiobook</a></button>
-            <button class="listen-button"><a href="https://youtu.be/KayZHoXNvDg" target="_blank">Play Online</a></button>
-            
+            <button class="download-button" data-url="https://youtu.be/oE_M68YnvSc">Download Audiobook</a></button>
+            <button class="listen-button"><a href="https://youtu.be/oE_M68YnvSc" target="_blank">Play Online</a></button>
           </div>
         </li>
   
@@ -8135,7 +8111,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-sci3">
           <label class="accordion-header" for="accordion-sci3">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/07/The-Physics-Book-Big-Ideas-Simply-Explained.png"
+            <img src="https://m.media-amazon.com/images/I/81yZ44KSvYL._SL1500_.jpg"
               alt="The Physics Book: Big Ideas Simply Explained">
             <h3>The Physics Book: Big Ideas Simply Explained<span class="discover">⬇️ Expand</span></h3>
           </label>
@@ -8177,7 +8153,7 @@ div.search-containera{
         <li>
           <input type="checkbox" id="accordion-sci8">
           <label class="accordion-header" for="accordion-sci8">
-            <img src="https://frambuklearn.com/wp-content/uploads/2024/07/Introduction-to-Mathematical-Philosophy-by-Bertrand-Russell.jpeg"
+            <img src="https://m.media-amazon.com/images/I/71n4eUwobaL._SL1500_.jpg"
               alt="Introduction to Mathematical Philosophy">
             <h3>Introduction to Mathematical Philosophy<span class="discover">⬇️ Expand</span></h3>
           </label>
