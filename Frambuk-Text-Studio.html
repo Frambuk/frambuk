@@ -159,6 +159,7 @@ th{font-size:13px}td:first-child{text-align:left;font-weight:700;background:#fac
      <button class="btn-main" onclick="cleanText()">🧹 Clean Text</button>
      <button class="btn-dark" onclick="removeVerticalSpaces()">↕ Remove Blank Lines</button>
      <button class="btn-green" onclick="copyText()">⧉ Copy</button>
+     <button class="btn-green" onclick="pasteText()">📋 Paste Copied Text</button>
      <button class="btn-blue" onclick="exportPDF()">📄 PDF</button>
      <button class="btn-dark" onclick="takeScreenshot()">📸 Screenshot</button>
     </div>
@@ -793,6 +794,21 @@ async function copyText(){
  if(!textInput.value){showToast("Nothing to copy");return}
  try{await navigator.clipboard.writeText(textInput.value);showToast("Text copied")}
  catch(e){textInput.select();document.execCommand("copy");showToast("Text copied")}
+}
+async function pasteText(){
+ try{
+  const clip=await navigator.clipboard.readText();
+  if(!clip){showToast("Clipboard is empty");return}
+  const start=textInput.selectionStart,end=textInput.selectionEnd;
+  textInput.value=textInput.value.slice(0,start)+clip+textInput.value.slice(end);
+  textInput.focus();
+  textInput.selectionStart=textInput.selectionEnd=start+clip.length;
+  updateCounts();
+  showToast("Text pasted");
+ }catch(e){
+  textInput.focus();
+  showToast("Allow clipboard access, or press Ctrl+V to paste");
+ }
 }
 function insertSymbol(symbol,el){
  const start=textInput.selectionStart,end=textInput.selectionEnd;
