@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://frambuk.site/hair-regrowth-system/sitemap.xml
