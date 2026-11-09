@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Squeeze — Bulk Video Compressor</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+<style>
+:root{--bg:#f6f4ff;--card:#fff;--ink:#1b1830;--mute:#6f6b8a;--line:#e5e1f5;--a:#7c5cff;--b:#ff6bb5;--ok:#13a874;--warn:#d98a00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0d1c;--card:#191631;--ink:#f1eeff;--mute:#9b97b8;--line:#2b2750;--ok:#3ddc9f;--warn:#ffb340}}
+:root[data-theme="dark"]{--bg:#0f0d1c;--card:#191631;--ink:#f1eeff;--mute:#9b97b8;--line:#2b2750;--ok:#3ddc9f;--warn:#ffb340}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:34px;letter-spacing:-.03em;margin:0;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.sub{color:var(--mute);margin:4px 0 22px}
+.drop{border:2px dashed var(--line);background:var(--card);border-radius:22px;padding:34px 18px;text-align:center;cursor:pointer;transition:.2s}
+.drop.over,.drop:hover{border-color:var(--a);transform:scale(1.01)}
+.drop .ic{font-size:38px}.drop b{display:block;font-size:18px;margin-top:6px}.drop span{color:var(--mute);font-size:14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.opt{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.opt label{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px}
+.seg{display:flex;gap:6px}.seg button{flex:1;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:8px 0;font:inherit;font-size:14px;cursor:pointer}
+.seg button.on{background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-color:transparent;font-weight:600}
+.bar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.btn{border:0;border-radius:14px;padding:13px 20px;font:inherit;font-weight:600;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 8px 20px -8px var(--a)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.sum{margin-left:auto;font-size:14px;color:var(--mute)}.sum b{color:var(--ok)}
+.item{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta{font-size:13px;color:var(--mute)}
+.pbar{height:7px;background:var(--line);border-radius:9px;overflow:hidden;margin:10px 0 6px}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .25s}
+.badge{font-size:13px;font-weight:700;color:var(--ok);white-space:nowrap}
+.badge.w{color:var(--warn)}
+.x{background:none;border:0;color:var(--mute);font-size:20px;cursor:pointer}
+a.dl{color:var(--a);font-weight:600;text-decoration:none;font-size:14px}
+.note{color:var(--mute);font-size:13px;margin-top:22px;text-align:center}
+/* Frambuk header/footer integration */
+.wrap{width:100%}
+</style>
+</head>
+<body data-nav="apps">
+<header>
+    <div class="header-container">
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
+        <nav id="menu" data-site-menu aria-label="Main menu">
+            <a href="index.html" data-nav-key="home">Home</a>
+            <a href="index.html#foods" data-nav-key="foods">Foods &amp; Flours</a>
+            <a href="index.html#apps" data-nav-key="apps">Free Apps</a>
+            <a href="index.html#offers" data-nav-key="offers">Offers</a>
+            <button type="button" class="nav-btn" onclick="clearCacheAndReload()" title="Fetch the newest version of this website">🔄 Clear Cache &amp; Reload</button>
+        </nav>
+        <div class="header-icons">
+            <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+            <div onclick="checkoutWhatsApp()">💳</div>
+        </div>
+    </div>
+</header>
+<div class="wrap">
+  <h1>Squeeze Bulk Video Compressor</h1>
+  <p class="sub">Compress videos in bulk, up to 80% smaller. Everything runs privately in your browser.</p>
+
+  <div class="drop" id="drop">
+    <div class="ic">🎞️</div><b>Drop videos here or tap to choose</b><span>MP4, MOV, WebM and more — add as many as you like</span>
+    <input id="file" type="file" accept="video/*" multiple hidden>
+  </div>
+
+  <div class="opts">
+    <div class="opt"><label>Size reduction</label>
+      <div class="seg" data-k="red"><button data-v="0.3">30%</button><button data-v="0.45">45%</button><button data-v="0.6" class="on">60%</button><button data-v="0.8">80%</button></div></div>
+    <div class="opt"><label>Resolution</label>
+      <div class="seg" data-k="res"><button data-v="0" class="on">Original</button><button data-v="1080">1080p</button><button data-v="720">720p</button></div></div>
+  </div>
+
+  <div class="bar">
+    <button class="btn" id="go" disabled>Compress all</button>
+    <button class="btn ghost" id="saveAll" disabled>Save all</button>
+    <div class="sum" id="sum"></div>
+  </div>
+
+  <div id="list"></div>
+  <p class="note">Files are re-encoded in real time, so a 1-minute clip takes about a minute. Keep this tab open and in front while compressing.</p>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const cfg={red:.6,res:0};
+let items=[],busy=false;
+const fmt=b=>b>1e9?(b/1e9).toFixed(2)+' GB':b>1e6?(b/1e6).toFixed(1)+' MB':Math.max(1,Math.round(b/1e3))+' KB';
+
+document.querySelectorAll('.seg').forEach(s=>s.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  s.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  cfg[s.dataset.k]=+b.dataset.v;
+}));
+
+const drop=$('#drop'),inp=$('#file');
+drop.onclick=()=>inp.click();
+inp.onchange=()=>{add(inp.files);inp.value=''};
+['dragover','dragenter'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('over')}));
+['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>add(e.dataTransfer.files));
+
+function add(files){
+  [...files].filter(f=>f.type.startsWith('video/')).forEach(f=>{
+    const it={f,id:Math.random().toString(36).slice(2),state:'queued',out:null,url:null};
+    items.push(it);render(it);
+  });
+  refresh();
+}
+function render(it){
+  let el=document.getElementById(it.id);
+  if(!el){el=document.createElement('div');el.id=it.id;el.className='item';$('#list').appendChild(el)}
+  const saved=it.out?1-it.out.size/it.f.size:0;
+  const status={queued:'Waiting',work:'Compressing…',done:'',err:'Failed'}[it.state];
+  el.innerHTML=`<div class="row"><div style="min-width:0"><div class="name">${esc(it.f.name)}</div>
+    <div class="meta">${fmt(it.f.size)}${it.out?' → '+fmt(it.out.size):''} ${status?'· '+status:''}${it.msg?' · '+esc(it.msg):''}</div></div>
+    ${it.state==='done'?`<div class="badge ${saved<=0?'w':''}">${saved>0?'−'+Math.round(saved*100)+'%':'No gain'}</div>`:`<button class="x" title="Remove" onclick="rm('${it.id}')">×</button>`}</div>
+    ${it.state==='work'?`<div class="pbar"><i style="width:${(it.p||0)*100}%"></i></div>`:''}
+    ${it.state==='done'?`<div style="margin-top:6px"><a class="dl" href="${it.url}" download="${esc(it.name)}">Download compressed file</a></div>`:''}`;
+}
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+window.rm=id=>{if(busy)return;items=items.filter(i=>i.id!==id);document.getElementById(id)?.remove();refresh()};
+
+function refresh(){
+  $('#go').disabled=busy||!items.some(i=>i.state==='queued'||i.state==='err');
+  const done=items.filter(i=>i.state==='done');
+  $('#saveAll').disabled=!done.length;
+  const o=done.reduce((a,i)=>a+i.f.size,0),n=done.reduce((a,i)=>a+i.out.size,0);
+  $('#sum').innerHTML=done.length?`Saved <b>${fmt(Math.max(0,o-n))}</b> (${Math.round((1-n/o)*100)}%)`:'';
+}
+
+$('#go').onclick=async()=>{
+  busy=true;refresh();
+  for(const it of items.filter(i=>i.state==='queued'||i.state==='err')){
+    it.state='work';it.p=0;it.msg='';render(it);
+    try{await compress(it)}catch(e){it.state='err';it.msg=e.message||'Unsupported file';}
+    render(it);refresh();
+  }
+  busy=false;refresh();
+};
+$('#saveAll').onclick=async()=>{
+  for(const it of items.filter(i=>i.state==='done')){
+    const a=document.createElement('a');a.href=it.url;a.download=it.name;document.body.appendChild(a);a.click();a.remove();
+    await new Promise(r=>setTimeout(r,500));
+  }
+};
+
+function pickMime(){
+  const c=['video/mp4;codecs=avc1.640028,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+  return c.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t));
+}
+
+function compress(it){
+  return new Promise((resolve,reject)=>{
+    const mime=pickMime();if(!mime)return reject(new Error('Recording not supported here'));
+    const src=URL.createObjectURL(it.f);
+    const v=document.createElement('video');v.src=src;v.playsInline=true;v.preload='auto';
+    v.onerror=()=>{URL.revokeObjectURL(src);reject(new Error('Cannot read this video'))};
+    v.onloadedmetadata=async()=>{
+      try{
+        const dur=v.duration;if(!isFinite(dur)||dur<=0)throw new Error('Unknown duration');
+        let w=v.videoWidth,h=v.videoHeight;
+        if(cfg.res&&Math.min(w,h)>cfg.res){const k=cfg.res/Math.min(w,h);w*=k;h*=k}
+        w=Math.round(w/2)*2;h=Math.round(h/2)*2;
+        const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+        const ctx=cv.getContext('2d');
+        const origBps=it.f.size*8/dur;
+        const vbps=Math.max(250e3,Math.round(origBps*(1-cfg.red)*0.93));
+        const stream=cv.captureStream(30);
+        let ac=null;
+        try{
+          ac=new (window.AudioContext||window.webkitAudioContext)();
+          const sn=ac.createMediaElementSource(v),dest=ac.createMediaStreamDestination();
+          sn.connect(dest);dest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+        }catch(e){}
+        const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:vbps,audioBitsPerSecond:96e3});
+        const chunks=[];rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+        let stop=false;
+        const draw=()=>{
+          if(stop)return;
+          ctx.drawImage(v,0,0,w,h);it.p=v.currentTime/dur;
+          const el=document.getElementById(it.id)?.querySelector('.pbar i');if(el)el.style.width=(it.p*100)+'%';
+          v.requestVideoFrameCallback?v.requestVideoFrameCallback(draw):requestAnimationFrame(draw);
+        };
+        rec.onstop=()=>{
+          stop=true;ac&&ac.close();URL.revokeObjectURL(src);
+          const blob=new Blob(chunks,{type:mime.split(';')[0]});
+          it.out=blob;it.url=URL.createObjectURL(blob);
+          const ext=mime.includes('mp4')?'mp4':'webm';
+          it.name=it.f.name.replace(/\.[^.]+$/,'')+'-compressed.'+ext;
+          it.state='done';resolve();
+        };
+        v.onended=()=>setTimeout(()=>rec.state!=='inactive'&&rec.stop(),250);
+        rec.start(1000);
+        if(ac&&ac.state==='suspended')await ac.resume();
+        await v.play();draw();
+      }catch(e){URL.revokeObjectURL(src);reject(e)}
+    };
+  });
+}
+</script>
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+    <div class="video-modal-content bank-modal-content">
+        <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+        <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+        <div style="width:100%; max-width:500px; margin:20px auto;">
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">0464733563</p>
+                <button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+                <p style="font-weight:bold;">🏦 First Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">3133126775</p>
+                <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>            
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-top: 15px;">
+                <p style="font-weight:bold;">🏦 Whatsapp Checkout</p>
+                <p>Chat To Verify Before Purchase</p>
+                <p style="font-size:18px; font-weight:bold;">+2349067040308</p>
+                <button
+                    type="button"
+                    onclick="checkoutWhatsApp()"
+                    class="checkout-btn" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">
+                    Checkout On WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+<a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here For Payments & Support 💵</span></a>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

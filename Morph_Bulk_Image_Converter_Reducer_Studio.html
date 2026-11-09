@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morph — Bulk Image Converter & Reducer Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+<style>
+:root{--bg:#f6f4ff;--card:#fff;--ink:#1b1830;--mute:#6f6b8a;--line:#e5e1f5;--a:#7c5cff;--b:#ff6bb5;--ok:#13a874;--warn:#d98a00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0d1c;--card:#191631;--ink:#f1eeff;--mute:#9b97b8;--line:#2b2750;--ok:#3ddc9f;--warn:#ffb340}}
+:root[data-theme="dark"]{--bg:#0f0d1c;--card:#191631;--ink:#f1eeff;--mute:#9b97b8;--line:#2b2750;--ok:#3ddc9f;--warn:#ffb340}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:34px;letter-spacing:-.03em;margin:0;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.sub{color:var(--mute);margin:4px 0 22px}
+.drop{border:2px dashed var(--line);background:var(--card);border-radius:22px;padding:34px 18px;text-align:center;cursor:pointer;transition:.2s}
+.drop.over,.drop:hover{border-color:var(--a);transform:scale(1.01)}
+.drop .ic{font-size:38px}.drop b{display:block;font-size:18px;margin-top:6px}.drop span{color:var(--mute);font-size:14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.opt{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.opt.full{grid-column:1/-1}
+.opt label{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{flex:1;min-width:52px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:8px 6px;font:inherit;font-size:14px;cursor:pointer}
+.seg button.on{background:linear-gradient(135deg,var(--a),var(--b));color:#fff;border-color:transparent;font-weight:600}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+.bar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.btn{border:0;border-radius:14px;padding:13px 20px;font:inherit;font-weight:600;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 8px 20px -8px var(--a)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.sum{margin-left:auto;font-size:14px;color:var(--mute)}.sum b{color:var(--ok)}
+.item{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:center}
+.th{width:56px;height:56px;border-radius:12px;background:var(--line) center/cover no-repeat;flex:none}
+.mid{flex:1;min-width:0}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta{font-size:13px;color:var(--mute)}
+.pbar{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin:8px 0 4px}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .25s}
+.badge{font-size:13px;font-weight:700;color:var(--ok);white-space:nowrap}.badge.w{color:var(--warn)}
+.x{background:none;border:0;color:var(--mute);font-size:20px;cursor:pointer}
+a.dl{color:var(--a);font-weight:600;text-decoration:none;font-size:14px}
+.note{color:var(--mute);font-size:13px;margin-top:22px;text-align:center}
+/* Frambuk header/footer integration */
+.wrap{width:100%}
+</style>
+</head>
+<body data-nav="apps">
+<header>
+    <div class="header-container">
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
+        <nav id="menu" data-site-menu aria-label="Main menu">
+            <a href="index.html" data-nav-key="home">Home</a>
+            <a href="index.html#foods" data-nav-key="foods">Foods &amp; Flours</a>
+            <a href="index.html#apps" data-nav-key="apps">Free Apps</a>
+            <a href="index.html#offers" data-nav-key="offers">Offers</a>
+            <button type="button" class="nav-btn" onclick="clearCacheAndReload()" title="Fetch the newest version of this website">🔄 Clear Cache &amp; Reload</button>
+        </nav>
+        <div class="header-icons">
+            <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+            <div onclick="checkoutWhatsApp()">💳</div>
+        </div>
+    </div>
+</header>
+<div class="wrap">
+  <h1>Morph Bulk Image Converter & Shrinker</h1>
+  <p class="sub">Convert and shrink images in bulk — HEIC, PNG, JPG, WebP, AVIF and more. Everything runs privately in your browser.</p>
+
+  <div class="drop" id="drop">
+    <div class="ic">🖼️</div><b>Drop images here or tap to choose</b><span>HEIC, HEIF, JPG, PNG, WebP, AVIF, GIF, BMP, SVG, ICO — add as many as you like</span>
+    <input id="file" type="file" accept="image/*,.heic,.heif,.avif,.webp,.bmp,.svg,.ico,.tif,.tiff" multiple hidden>
+  </div>
+
+  <div class="opts">
+    <div class="opt full"><label>Convert to</label>
+      <div class="seg" data-k="fmt"><button data-v="jpg" class="on">JPG</button><button data-v="png">PNG</button><button data-v="webp">WebP</button><button data-v="avif" id="avifBtn">AVIF</button></div></div>
+    <div class="opt"><label>Size reduction (JPG / WebP / AVIF)</label>
+      <div class="seg" data-k="q"><button data-v="0.92">Light</button><button data-v="0.8" class="on">Balanced</button><button data-v="0.6">Strong</button><button data-v="0.4">Max</button></div></div>
+    <div class="opt"><label>Longest side</label>
+      <div class="seg" data-k="max"><button data-v="0" class="on">Original</button><button data-v="2560">2560</button><button data-v="1600">1600</button><button data-v="1080">1080</button></div></div>
+  </div>
+
+  <div class="bar">
+    <button class="btn" id="go" disabled>Convert all</button>
+    <button class="btn ghost" id="zip" disabled>Download ZIP</button>
+    <button class="btn ghost" id="clr" disabled>Clear</button>
+    <div class="sum" id="sum"></div>
+  </div>
+
+  <div id="list"></div>
+  <p class="note">PNG is lossless, so to shrink it further lower the longest side or switch to JPG / WebP / AVIF. Transparent areas become white when converting to JPG.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const cfg={fmt:'jpg',q:.8,max:0};
+const MIME={jpg:'image/jpeg',png:'image/png',webp:'image/webp',avif:'image/avif'};
+let items=[],busy=false;
+const fmt=b=>b>1e9?(b/1e9).toFixed(2)+' GB':b>1e6?(b/1e6).toFixed(1)+' MB':Math.max(1,Math.round(b/1e3))+' KB';
+
+document.querySelectorAll('.seg').forEach(s=>s.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.disabled)return;
+  s.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  const v=b.dataset.v;cfg[s.dataset.k]=s.dataset.k==='fmt'?v:+v;
+}));
+
+// AVIF support check
+(()=>{try{const c=document.createElement('canvas');c.width=c.height=1;
+  c.toBlob(b=>{if(!b||b.type!=='image/avif'){const a=$('#avifBtn');a.disabled=true;a.title='Not supported by this browser'}},'image/avif')}catch(e){$('#avifBtn').disabled=true}})();
+
+const drop=$('#drop'),inp=$('#file');
+drop.onclick=()=>inp.click();
+inp.onchange=()=>{add(inp.files);inp.value=''};
+['dragover','dragenter'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('over')}));
+['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>add(e.dataTransfer.files));
+
+const isImg=f=>f.type.startsWith('image/')||/\.(heic|heif|avif|webp|bmp|svg|ico|tiff?|jpe?g|png|gif)$/i.test(f.name);
+function add(files){
+  [...files].filter(isImg).forEach(f=>{
+    const it={f,id:Math.random().toString(36).slice(2),state:'queued',out:null,url:null,name:''};
+    items.push(it);render(it);
+  });
+  refresh();
+}
+function render(it){
+  let el=document.getElementById(it.id);
+  if(!el){el=document.createElement('div');el.className='item';el.id=it.id;$('#list').appendChild(el);
+    el.innerHTML=`<div class="th"></div><div class="mid"><div class="row"><div class="name"></div><div class="badge"></div></div><div class="pbar"><i></i></div><div class="row"><div class="meta"></div><a class="dl" hidden>Save</a></div></div><button class="x" title="Remove">×</button>`;
+    el.querySelector('.name').textContent=it.f.name;
+    el.querySelector('.x').onclick=()=>{if(busy)return;if(it.url)URL.revokeObjectURL(it.url);items=items.filter(x=>x!==it);el.remove();refresh()};}
+  const m=el.querySelector('.meta'),bd=el.querySelector('.badge'),dl=el.querySelector('.dl');
+  if(it.state==='queued'){m.textContent=fmt(it.f.size)+' · ready'}
+  else if(it.state==='working'){m.textContent='Converting…';el.querySelector('.pbar i').style.width='60%'}
+  else if(it.state==='error'){m.textContent=it.err||'Could not read this file';bd.textContent='Failed';bd.className='badge w';el.querySelector('.pbar i').style.width='0'}
+  else{
+    const d=(1-it.out.size/it.f.size)*100;
+    el.querySelector('.pbar i').style.width='100%';
+    bd.textContent=d>=0?'−'+d.toFixed(0)+'%':'+'+Math.abs(d).toFixed(0)+'%';bd.className='badge'+(d<0?' w':'');
+    m.textContent=`${fmt(it.f.size)} → ${fmt(it.out.size)} · ${it.dim}`;
+    dl.hidden=false;dl.href=it.url;dl.download=it.name;
+    el.querySelector('.th').style.backgroundImage=`url(${it.url})`;
+  }
+}
+function refresh(){
+  const done=items.filter(i=>i.state==='done');
+  $('#go').disabled=busy||!items.some(i=>i.state!=='done'&&i.state!=='working');
+  $('#zip').disabled=busy||!done.length;$('#clr').disabled=busy||!items.length;
+  const a=done.reduce((s,i)=>s+i.f.size,0),b=done.reduce((s,i)=>s+i.out.size,0);
+  $('#sum').innerHTML=done.length?`${done.length} done · saved <b>${fmt(Math.max(0,a-b))}</b>`:(items.length?items.length+' file'+(items.length>1?'s':''):'');
+}
+
+async function decode(f){
+  const h=/heic|heif/i.test(f.type)||/\.(heic|heif)$/i.test(f.name);
+  try{return await createImageBitmap(f)}catch(e){}
+  if(h){
+    const r=await heic2any({blob:f,toType:'image/png'});
+    return await createImageBitmap(Array.isArray(r)?r[0]:r);
+  }
+  return await new Promise((res,rej)=>{
+    const u=URL.createObjectURL(f),im=new Image();
+    im.onload=()=>{if(!im.naturalWidth)im.width=im.height=1024;res(im);};
+    im.onerror=()=>rej(new Error('Unsupported or corrupted image'));im.src=u;
+  });
+}
+const toBlob=(c,m,q)=>new Promise(r=>c.toBlob(r,m,q));
+
+async function convert(it){
+  it.state='working';render(it);
+  try{
+    const img=await decode(it.f);
+    let w=img.width||img.naturalWidth||1024,h=img.height||img.naturalHeight||1024;
+    if(cfg.max&&Math.max(w,h)>cfg.max){const k=cfg.max/Math.max(w,h);w=Math.round(w*k);h=Math.round(h*k)}
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    const x=c.getContext('2d');x.imageSmoothingQuality='high';
+    if(cfg.fmt==='jpg'){x.fillStyle='#fff';x.fillRect(0,0,w,h)}
+    x.drawImage(img,0,0,w,h);
+    if(img.close)img.close();
+    const blob=await toBlob(c,MIME[cfg.fmt],cfg.q);
+    if(!blob||blob.type!==MIME[cfg.fmt])throw new Error('This browser cannot export '+cfg.fmt.toUpperCase());
+    if(it.url)URL.revokeObjectURL(it.url);
+    const base=it.f.name.replace(/\.[^.]+$/,'');
+    it.out=blob;it.url=URL.createObjectURL(blob);it.dim=w+'×'+h;
+    it.name=base+'.'+cfg.fmt;it.state='done';
+  }catch(e){it.state='error';it.err=e.message}
+  render(it);
+}
+$('#go').onclick=async()=>{
+  busy=true;refresh();
+  for(const it of items.filter(i=>i.state!=='done'))await convert(it);
+  busy=false;refresh();
+};
+$('#clr').onclick=()=>{items.forEach(i=>i.url&&URL.revokeObjectURL(i.url));items=[];$('#list').innerHTML='';refresh()};
+$('#zip').onclick=async()=>{
+  const z=new JSZip(),used={};
+  items.filter(i=>i.state==='done').forEach(i=>{
+    let n=i.name;if(used[n]){const p=n.lastIndexOf('.');n=n.slice(0,p)+'-'+used[n]+n.slice(p)}
+    used[i.name]=(used[i.name]||0)+1;z.file(n,i.out);
+  });
+  const b=await z.generateAsync({type:'blob'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='morph-images.zip';a.click();
+};
+</script>
+
+<!-- ====== NEW BANK DETAILS MODAL ====== -->
+<div id="bankModal" class="video-modal" aria-hidden="true">
+    <div class="video-modal-content bank-modal-content">
+        <button class="modal-close" onclick="closeBankDetails()" aria-label="Close">✕</button>
+        <h2 style="color:#fff; margin-bottom:20px;">💳 Transfer Details</h2>
+        <p style="color:#fff; font-size:20px; font-weight:bold;" id="bankTotal">Total: ₦0</p>
+        <div style="width:100%; max-width:500px; margin:20px auto;">
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <p style="font-weight:bold;">🏦 Guarantee Trust Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">0464733563</p>
+                <button onclick="copyBankDetail('Guarantee Trust Bank | Frambuk International Ventures | 0464733563')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px;">
+                <p style="font-weight:bold;">🏦 First Bank</p>
+                <p>Frambuk International Ventures</p>
+                <p style="font-size:18px; font-weight:bold;">3133126775</p>
+                <button onclick="copyBankDetail('First Bank | Frambuk International Ventures | 3133126775')" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">📋 Copy Detail</button>
+            </div>            
+            <div class="bank-account" style="background:#fff; padding:15px; border-radius:10px; margin-top: 15px;">
+                <p style="font-weight:bold;">🏦 Whatsapp Checkout</p>
+                <p>Chat To Verify Before Purchase</p>
+                <p style="font-size:18px; font-weight:bold;">+2349067040308</p>
+                <button
+                    type="button"
+                    onclick="checkoutWhatsApp()"
+                    class="checkout-btn" style="background:#000; color:#fff; border:none; padding:8px 20px; border-radius:20px; cursor:pointer;">
+                    Checkout On WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+<a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here For Payments & Support 💵</span></a>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
