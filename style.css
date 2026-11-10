@@ -384,6 +384,12 @@ nav .active{
    letter-spacing:-0.5px;
 }
 
+.tool-link:nth-of-type(2){
+   background:#000;
+   color:#ffffff;
+   letter-spacing:-0.2px;
+}
+
 .tool-link:nth-of-type(3){
    background:#000;
    color:#ffffff;
@@ -406,6 +412,12 @@ nav .active{
    background:#000;
    color:#FFFFFF;
    letter-spacing:-0.5px;
+}
+
+.tool-link:nth-of-type(13){
+   background:#000;
+   color:#FFFFFF;
+   letter-spacing:-0.4px;
 }
 
 .tool-link:hover,
