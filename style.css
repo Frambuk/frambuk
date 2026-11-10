@@ -399,7 +399,7 @@ nav .active{
 .tool-link:nth-of-type(4){
    background:#000;
    color:#ffffff;
-   letter-spacing:-0.3px;
+   letter-spacing:0.5px;
 }
 
 .tool-link:nth-of-type(11){
