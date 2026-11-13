@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frambuk Transcriber — Video/Audio to MP3 and Text</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/x-icon" href="images/Frambuk-Icon.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5009513277828255" crossorigin="anonymous"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#07111f;--line:rgba(255,255,255,.13);--text:#f8fafc;--muted:#aab6c8;--accent:#fac400;--accent2:#38bdf8;--green:#22c55e;--red:#f87171}
+body{font-family:Poppins,Arial,sans-serif;color:var(--text);min-height:100vh;overflow-x:hidden;
+ background-color:#16121f;
+ background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+ background-size:36px 36px;background-attachment:fixed}
+.shape{position:fixed;z-index:-1;pointer-events:none;border-radius:50%;animation:drift 16s ease-in-out infinite alternate}
+.s1{width:clamp(220px,32vw,440px);aspect-ratio:1;background:#5b2bd9;top:-14vw;right:-9vw}
+.s2{width:clamp(160px,24vw,320px);aspect-ratio:1;background:#10c6b0;bottom:-9vw;left:-7vw;animation-delay:-6s}
+.s3{width:clamp(80px,11vw,150px);aspect-ratio:1;background:#ffd23f;top:46%;right:-4vw;animation-delay:-3s}
+.s4{width:clamp(60px,8vw,110px);aspect-ratio:1;border:12px solid #d7263d;top:30%;left:-3vw;animation-delay:-9s}
+@keyframes drift{to{transform:translate(28px,38px) rotate(8deg)}}
+.header{position:sticky;top:0;z-index:1000;border-bottom:1px solid var(--line);background:rgba(5,11,20,.76);backdrop-filter:blur(18px)}
+.header-container{max-width:1400px;margin:auto;padding:14px 24px;display:flex;align-items:center;gap:28px}
+.logo img{height:42px;max-width:170px;object-fit:contain}
+.hamburger{display:none;font-size:24px;cursor:pointer;color:#fac400}
+nav{display:flex;gap:10px;flex:1}
+nav a{color:#dbeafe;text-decoration:none;padding:10px 14px;border-radius:10px;transition:.25s}
+nav a:hover,nav a.active{background:rgba(250,196,0,.12);color:#fac400}
+.header-icons{display:flex;gap:14px;font-size:20px}.header-icons div{cursor:pointer}
+.main{max-width:1100px;margin:auto;padding:5rem 20px 70px}
+.hero{padding:20px 4px 22px}
+.hero h1{font-family:"Playfair Display",serif;font-size:clamp(32px,5vw,56px);line-height:1.05;margin-bottom:10px}
+.hero p{color:var(--muted);font-size:15px;max-width:780px}.hero strong{color:#fff}
+.panel{background:rgba(22,18,40,.9);border:2px solid rgba(255,255,255,.2);border-radius:24px;padding:22px;box-shadow:8px 8px 0 rgba(250,196,0,.9);margin-bottom:18px;backdrop-filter:blur(10px)}
+.panel:nth-of-type(2n){box-shadow:8px 8px 0 rgba(16,198,176,.9)}
+.panel:nth-of-type(3n){box-shadow:8px 8px 0 rgba(91,43,217,.95)}
+.panel h2{font-size:19px;margin-bottom:4px}.sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.drop{border:2px dashed rgba(250,196,0,.5);border-radius:18px;padding:34px 16px;text-align:center;cursor:pointer;transition:.25s;background:rgba(3,9,18,.5)}
+.drop:hover,.drop.over{border-color:var(--accent2);background:rgba(56,189,248,.08)}
+.drop b{display:block;font-size:17px;margin:6px 0 2px}.drop span{font-size:12px;color:var(--muted)}
+.drop .ico{font-size:34px}
+#fileInfo{margin-top:12px;font-size:13px;color:var(--accent);word-break:break-all}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+select{width:100%;padding:11px 12px;border-radius:11px;border:1px solid var(--line);background:#0b1729;color:#fff;font:13px Poppins}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:11px;padding:11px 15px;font:600 13px Poppins;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;gap:8px}
+button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.06)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,select:focus-visible,.drop:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+.btn-main{background:var(--accent);color:#111}.btn-dark{background:#16243a;color:#fff;border:1px solid var(--line)}
+.btn-green{background:var(--green);color:#06210e}.btn-blue{background:var(--accent2);color:#062033}
+.status{margin-top:16px;display:none}.status.on{display:block}
+.status p{font-size:13px;color:var(--muted);margin-bottom:7px}
+.bar{height:8px;background:#1a293e;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:.3s}
+.err{color:var(--red)!important}
+audio{width:100%;margin-top:12px}
+textarea{width:100%;height:380px;border:1px solid var(--line);border-radius:17px;outline:none;padding:18px;background:rgba(3,9,18,.72);color:#f8fafc;font:15px/1.75 Poppins,sans-serif;resize:vertical}
+textarea:focus{border-color:rgba(56,189,248,.7)}
+.meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:10px 0 14px}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#dbeafe;margin-bottom:12px;cursor:pointer}
+.tog input{accent-color:var(--accent);width:16px;height:16px}
+.toast{position:fixed;right:22px;bottom:22px;background:#111827;color:#fff;padding:13px 17px;border-radius:12px;border:1px solid var(--line);opacity:0;transform:translateY(12px);pointer-events:none;transition:.3s;z-index:2000}
+.toast.show{opacity:1;transform:none}
+.note{font-size:11px;color:var(--muted);line-height:1.7;margin-top:12px}
+@media(max-width:650px){.header-container{padding:12px 15px}.hamburger{display:block}.logo{flex:1}
+ nav{display:none;position:absolute;left:12px;right:12px;top:67px;background:#0b1729;padding:10px;border:1px solid var(--line);border-radius:14px;flex-direction:column}
+ nav.open{display:flex}.main{padding:20px 12px 50px}.panel{padding:15px;border-radius:18px}.opts{grid-template-columns:1fr}
+ .row button{flex:1;justify-content:center}textarea{height:300px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}.shape{animation:none}}
+</style>
+</head>
+<body data-nav="apps">
+<div class="shape s1"></div><div class="shape s2"></div><div class="shape s3"></div><div class="shape s4"></div>
+<header class="header">
+ <div class="header-container">
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png" alt="Frambuk"></a></div>
+  <nav id="menu" data-site-menu aria-label="Main menu">
+   <a href="index.html" data-nav-key="home">Home</a>
+   <a href="index.html#foods" data-nav-key="foods">Foods &amp; Flours</a>
+   <a href="index.html#apps" data-nav-key="apps">Free Apps</a>
+   <a href="index.html#offers" data-nav-key="offers">Offers</a>
+   <button type="button" class="nav-btn" onclick="clearCacheAndReload()" title="Fetch the newest version of this website">🔄 Clear Cache &amp; Reload</button>
+  </nav>
+  <div class="header-icons">
+   <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
+   <div onclick="checkoutWhatsApp()">💳</div>
+  </div>
+ </div>
+</header>
+
+<main class="main">
+ <section class="hero">
+  <h1>Turn any video or audio into MP3 and text</h1>
+  <p>Drop in a video or audio file. Frambuk Transcriber pulls out the sound as an <strong>MP3</strong> and writes the <strong>full transcript</strong>. Everything runs in your browser, so your file is never uploaded.</p>
+ </section>
+
+ <section class="panel">
+  <h2>1. Choose your file</h2>
+  <div class="sub">MP4, MOV, WEBM, MKV, MP3, WAV, M4A, OGG and more.</div>
+  <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a video or audio file">
+   <div class="ico">🎬</div><b>Tap to choose a file, or drop it here</b><span>Your file stays on your device</span>
+  </div>
+  <input type="file" id="file" accept="video/*,audio/*" hidden>
+  <div id="fileInfo"></div>
+  <div class="opts">
+   <div><label for="lang">Spoken language</label>
+    <select id="lang"><option value="">Detect automatically</option><option value="english">English</option><option value="french">French</option><option value="spanish">Spanish</option><option value="portuguese">Portuguese</option><option value="german">German</option><option value="arabic">Arabic</option><option value="hausa">Hausa</option><option value="yoruba">Yoruba</option><option value="swahili">Swahili</option><option value="hindi">Hindi</option><option value="chinese">Chinese</option></select></div>
+   <div><label for="model">Accuracy</label>
+    <select id="model"><option value="Xenova/whisper-tiny">Fast (smaller download)</option><option value="Xenova/whisper-base" selected>Balanced (recommended)</option><option value="Xenova/whisper-small">Most accurate (large download)</option></select></div>
+  </div>
+  <div class="row">
+   <button class="btn-main" id="goText" disabled>📝 Transcribe to text</button>
+   <button class="btn-blue" id="goMp3" disabled>🎵 Extract MP3 only</button>
+  </div>
+  <div class="status" id="status"><p id="statusText">Working…</p><div class="bar"><span id="bar"></span></div></div>
+  <p class="note">The first transcription downloads the speech model once (about 40–250 MB depending on accuracy), then your browser remembers it. Long files take a few minutes. Keep this tab open until it finishes.</p>
+ </section>
+
+ <section class="panel" id="mp3Panel" hidden>
+  <h2>🎵 Your MP3</h2><div class="sub" id="mp3Info"></div>
+  <audio id="player" controls></audio>
+  <div class="row" style="margin-top:12px">
+   <button class="btn-green" id="dlMp3">⬇ Download MP3</button>
+   <button class="btn-dark" id="dlWav">⬇ Download WAV</button>
+   <button class="btn-dark" id="shMp3">↗ Share MP3</button>
+  </div>
+ </section>
+
+ <section class="panel" id="txtPanel" hidden>
+  <h2>📝 Transcript</h2><div class="sub">Edit anything below before you copy or download.</div>
+  <label class="tog"><input type="checkbox" id="stamps"> Show timestamps</label>
+  <textarea id="out" spellcheck="true" aria-label="Transcript"></textarea>
+  <div class="meta"><span id="wc">0 words</span><span id="cc">0 characters</span><span id="rt">0 min read</span></div>
+  <div class="row">
+   <button class="btn-main" id="copy">⧉ Copy</button>
+   <button class="btn-green" id="dlTxt">⬇ TXT</button>
+   <button class="btn-blue" id="dlPdf">⬇ PDF</button>
+   <button class="btn-dark" id="dlSrt">⬇ SRT subtitles</button>
+   <button class="btn-dark" id="dlVtt">⬇ VTT subtitles</button>
+   <button class="btn-dark" id="shTxt">↗ Share</button>
+  </div>
+ </section>
+ <p class="note" style="text-align:center">Frambuk Transcriber · Free to use</p>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>function toggleMenu(){document.getElementById("menu").classList.toggle("open")}</script>
+<script src="script.js"></script>
+<script type="module">
+const $ = id => document.getElementById(id);
+let file, buf, mp3Blob, wavBlob, segs = [], baseName = "frambuk";
+
+const toast = m => { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200); };
+const setStatus = (m, p, bad) => { $("status").classList.add("on"); const s = $("statusText"); s.textContent = m; s.classList.toggle("err", !!bad); if (p != null) $("bar").style.width = p + "%"; };
+const lock = v => { $("goText").disabled = $("goMp3").disabled = v || !file; };
+const save = (blob, name) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); };
+const pad = (n, l = 2) => String(Math.floor(n)).padStart(l, "0");
+const ts = (s, sep) => `${pad(s / 3600)}:${pad(s % 3600 / 60)}:${pad(s % 60)}${sep}${pad((s % 1) * 1000, 3)}`;
+const mb = n => (n / 1048576).toFixed(1) + " MB";
+
+/* file picking */
+const drop = $("drop"), input = $("file");
+const pick = f => {
+  if (!f) return;
+  file = f; buf = null; mp3Blob = wavBlob = null; segs = [];
+  baseName = f.name.replace(/\.[^.]+$/, "") || "frambuk";
+  $("fileInfo").textContent = `${f.name} · ${mb(f.size)}`;
+  $("mp3Panel").hidden = $("txtPanel").hidden = true;
+  lock(false);
+};
+drop.onclick = () => input.click();
+drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); } };
+input.onchange = () => pick(input.files[0]);
+["dragover", "dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => pick(e.dataTransfer.files[0]));
+
+/* decode audio from video or audio file */
+async function decode() {
+  if (buf) return buf;
+  setStatus("Reading the sound from your file…", 5);
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  try { buf = await ctx.decodeAudioData(await file.arrayBuffer()); }
+  catch (e) { throw new Error("This browser could not read the audio in that file. Try MP4, MP3, WAV or M4A, or use Chrome or Edge on a computer."); }
+  finally { ctx.close(); }
+  return buf;
+}
+const mono = b => { const o = new Float32Array(b.length), n = b.numberOfChannels; for (let c = 0; c < n; c++) { const d = b.getChannelData(c); for (let i = 0; i < b.length; i++) o[i] += d[i] / n; } return o; };
+async function to16k(b) {
+  const len = Math.ceil(b.duration * 16000), oc = new OfflineAudioContext(1, len, 16000), s = oc.createBufferSource();
+  const m = oc.createBuffer(1, b.length, b.sampleRate); m.copyToChannel(mono(b), 0);
+  s.buffer = m; s.connect(oc.destination); s.start();
+  return (await oc.startRendering()).getChannelData(0);
+}
+
+/* MP3 + WAV */
+async function makeMp3(b) {
+  setStatus("Creating your MP3…", 10);
+  const pcm = mono(b), i16 = new Int16Array(pcm.length);
+  for (let i = 0; i < pcm.length; i++) i16[i] = Math.max(-1, Math.min(1, pcm[i])) * 32767;
+  const enc = new lamejs.Mp3Encoder(1, b.sampleRate, 128), parts = [], step = 1152 * 20;
+  for (let i = 0; i < i16.length; i += step) {
+    const d = enc.encodeBuffer(i16.subarray(i, i + step)); if (d.length) parts.push(d);
+    if ((i / step) % 40 === 0) { setStatus("Creating your MP3…", 10 + 85 * i / i16.length); await new Promise(r => setTimeout(r)); }
+  }
+  parts.push(enc.flush());
+  mp3Blob = new Blob(parts, { type: "audio/mpeg" });
+  const wav = new ArrayBuffer(44 + i16.length * 2), v = new DataView(wav), w = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  w(0, "RIFF"); v.setUint32(4, 36 + i16.length * 2, true); w(8, "WAVEfmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, b.sampleRate, true); v.setUint32(28, b.sampleRate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, i16.length * 2, true);
+  new Int16Array(wav, 44).set(i16);
+  wavBlob = new Blob([wav], { type: "audio/wav" });
+  $("player").src = URL.createObjectURL(mp3Blob);
+  $("mp3Info").textContent = `${mb(mp3Blob.size)} MP3 · ${Math.round(b.duration / 60 * 10) / 10} min · WAV is ${mb(wavBlob.size)}`;
+  $("mp3Panel").hidden = false;
+}
+
+/* transcription (runs in a background worker so the page stays responsive) */
+const WORKER_SRC = `
+import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1";
+env.allowLocalModels = false;
+let asr, key;
+self.onmessage = async e => {
+  const { model, lang, audio } = e.data;
+  try {
+    if (!asr || key !== model) {
+      asr = await pipeline("automatic-speech-recognition", model, { device: "wasm", dtype: "q8",
+        progress_callback: p => { if (p.status === "progress") postMessage({ type: "dl", p: p.progress }); } });
+      key = model;
+    }
+    postMessage({ type: "run" });
+    const total = Math.max(1, Math.ceil(audio.length / 16000 / 25)); let done = 0;
+    const opts = { chunk_length_s: 30, stride_length_s: 5, task: "transcribe", ...(lang ? { language: lang } : {}),
+      chunk_callback: () => { done++; postMessage({ type: "prog", p: Math.min(97, Math.round(done / total * 100)) }); } };
+    let r;
+    try { r = await asr(audio, { ...opts, return_timestamps: true }); }
+    catch (err) { r = await asr(audio, { ...opts, return_timestamps: false }); }
+    postMessage({ type: "done", text: r.text, chunks: r.chunks || null });
+  } catch (err) { postMessage({ type: "err", m: String((err && err.message) || err) }); }
+};`;
+let worker;
+function getWorker() {
+  if (!worker) worker = new Worker(URL.createObjectURL(new Blob([WORKER_SRC], { type: "text/javascript" })), { type: "module" });
+  return worker;
+}
+async function transcribe(b) {
+  setStatus("Preparing the audio…", 2);
+  const audio = await to16k(b), dur = b.duration;
+  await new Promise((resolve, reject) => {
+    let w;
+    try { w = getWorker(); } catch (e) { return reject(new Error("This browser could not start the speech engine. Please use a recent Chrome, Edge, Firefox or Safari.")); }
+    w.onerror = e => { worker = null; reject(new Error("The speech engine could not load. Check your internet connection and try again. " + (e.message || ""))); };
+    w.onmessage = e => {
+      const d = e.data;
+      if (d.type === "dl") setStatus(`Downloading the speech model (first time only)… ${Math.round(d.p)}%`, d.p);
+      else if (d.type === "run") setStatus("Transcribing… 0%", 0);
+      else if (d.type === "prog") setStatus(`Transcribing… ${d.p}%`, d.p);
+      else if (d.type === "err") { worker = null; w.terminate(); reject(new Error("Transcription failed: " + d.m)); }
+      else if (d.type === "done") {
+        segs = (d.chunks || [{ text: d.text, timestamp: [0, dur] }]).map(c => ({ s: c.timestamp?.[0] ?? 0, e: c.timestamp?.[1] ?? dur, t: (c.text || "").trim() })).filter(c => c.t);
+        if (!segs.length) return reject(new Error("No speech was found in this file."));
+        render(); $("txtPanel").hidden = false; resolve();
+      }
+    };
+    setStatus("Loading the speech engine…", 0);
+    w.postMessage({ model: $("model").value, lang: $("lang").value, audio }, [audio.buffer]);
+  });
+}
+
+/* neat formatting: paragraphs by pause and length, or timestamped lines */
+function render() {
+  let text = "";
+  if ($("stamps").checked) text = segs.map(g => `[${ts(g.s, ".").slice(0, 8)}] ${g.t}`).join("\n\n");
+  else {
+    let para = "", prevEnd = 0; const paras = [];
+    segs.forEach(g => {
+      const long = para.length > 450 && /[.!?]["']?$/.test(para);
+      if (para && (g.s - prevEnd > 1.5 || long)) { paras.push(para); para = ""; }
+      para += (para ? " " : "") + g.t; prevEnd = g.e;
+    });
+    if (para) paras.push(para);
+    text = paras.join("\n\n");
+  }
+  $("out").value = text; count();
+}
+function count() {
+  const t = $("out").value.trim(), w = t ? t.split(/\s+/).length : 0;
+  $("wc").textContent = w + " words"; $("cc").textContent = $("out").value.length + " characters"; $("rt").textContent = Math.max(1, Math.round(w / 200)) + " min read";
+}
+$("out").oninput = count;
+$("stamps").onchange = render;
+
+/* actions */
+async function run(withText) {
+  lock(true);
+  try {
+    const b = await decode();
+    await makeMp3(b);
+    if (withText) await transcribe(b);
+    setStatus("Done. Your results are below.", 100);
+    toast("Finished");
+    (withText ? $("txtPanel") : $("mp3Panel")).scrollIntoView({ behavior: "smooth" });
+  } catch (e) { console.error(e); setStatus(e.message || "Something went wrong. Please try again.", null, true); }
+  lock(false);
+}
+$("goText").onclick = () => run(true);
+$("goMp3").onclick = () => run(false);
+
+$("dlMp3").onclick = () => save(mp3Blob, baseName + ".mp3");
+$("dlWav").onclick = () => save(wavBlob, baseName + ".wav");
+$("dlTxt").onclick = () => save(new Blob([$("out").value], { type: "text/plain" }), baseName + ".txt");
+$("dlSrt").onclick = () => save(new Blob([segs.map((g, i) => `${i + 1}\n${ts(g.s, ",")} --> ${ts(g.e, ",")}\n${g.t}\n`).join("\n")], { type: "text/plain" }), baseName + ".srt");
+$("dlVtt").onclick = () => save(new Blob(["WEBVTT\n\n" + segs.map(g => `${ts(g.s, ".")} --> ${ts(g.e, ".")}\n${g.t}\n`).join("\n")], { type: "text/vtt" }), baseName + ".vtt");
+$("dlPdf").onclick = () => {
+  const { jsPDF } = window.jspdf, doc = new jsPDF(), m = 15, h = doc.internal.pageSize.getHeight(); let y = 20;
+  doc.setFontSize(15); doc.text("Transcript: " + baseName, m, y); y += 10; doc.setFontSize(11);
+  doc.splitTextToSize($("out").value, 180).forEach(l => { if (y > h - 15) { doc.addPage(); y = 20; } doc.text(l, m, y); y += 6; });
+  doc.save(baseName + "-transcript.pdf");
+};
+$("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText($("out").value); } catch { $("out").select(); document.execCommand("copy"); }
+  toast("Transcript copied");
+};
+async function share(files, text) {
+  try {
+    if (files && navigator.canShare?.({ files })) await navigator.share({ files, title: baseName });
+    else if (navigator.share) await navigator.share({ title: baseName, text });
+    else { await navigator.clipboard.writeText(text || baseName); toast("Sharing isn't supported here. Copied instead."); }
+  } catch (e) { if (e.name !== "AbortError") toast("Could not share"); }
+}
+$("shTxt").onclick = () => share([new File([$("out").value], baseName + ".txt", { type: "text/plain" })], $("out").value);
+$("shMp3").onclick = () => share([new File([mp3Blob], baseName + ".mp3", { type: "audio/mpeg" })]);
+</script>
+</body>
+</html>
