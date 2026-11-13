@@ -23,15 +23,16 @@ body{font-family:Poppins,Arial,sans-serif;color:var(--text);min-height:100vh;ove
 .s3{width:clamp(80px,11vw,150px);aspect-ratio:1;background:#ffd23f;top:46%;right:-4vw;animation-delay:-3s}
 .s4{width:clamp(60px,8vw,110px);aspect-ratio:1;border:12px solid #d7263d;top:30%;left:-3vw;animation-delay:-9s}
 @keyframes drift{to{transform:translate(28px,38px) rotate(8deg)}}
-.header{position:sticky;top:0;z-index:1000;border-bottom:1px solid var(--line);background:rgba(5,11,20,.76);backdrop-filter:blur(18px)}
-.header-container{max-width:1400px;margin:auto;padding:14px 24px;display:flex;align-items:center;gap:28px}
-.logo img{height:42px;max-width:170px;object-fit:contain}
-.hamburger{display:none;font-size:24px;cursor:pointer;color:#fac400}
-nav{display:flex;gap:10px;flex:1}
-nav a{color:#dbeafe;text-decoration:none;padding:10px 14px;border-radius:10px;transition:.25s}
-nav a:hover,nav a.active{background:rgba(250,196,0,.12);color:#fac400}
-.header-icons{display:flex;gap:14px;font-size:20px}.header-icons div{cursor:pointer}
-.main{max-width:1100px;margin:auto;padding:5rem 20px 70px}
+header{left:0;right:0;width:100%;background:rgba(22,18,31,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(250,196,0,.55)}
+header .hamburger{color:#fac400}
+nav a{color:#e8ecf5}
+nav a:hover{background:rgba(250,196,0,.16)}
+nav a.active{background:rgba(250,196,0,.2);color:#fac400}
+nav .nav-btn{background:transparent;color:#fff;border:1px solid #fac400}
+nav .nav-btn:hover{background:#fac400;color:#111}
+.header-icons{color:#fff}
+@media(max-width:1280px){nav{background:#16121f;border-right:1px solid rgba(250,196,0,.4)}}
+.main{max-width:1100px;margin:auto;padding:7rem 20px 70px}
 .hero{padding:20px 4px 22px}
 .hero h1{font-family:"Playfair Display",serif;font-size:clamp(32px,5vw,56px);line-height:1.05;margin-bottom:10px}
 .hero p{color:var(--muted);font-size:15px;max-width:780px}.hero strong{color:#fff}
@@ -67,16 +68,15 @@ textarea:focus{border-color:rgba(56,189,248,.7)}
 .toast{position:fixed;right:22px;bottom:22px;background:#111827;color:#fff;padding:13px 17px;border-radius:12px;border:1px solid var(--line);opacity:0;transform:translateY(12px);pointer-events:none;transition:.3s;z-index:2000}
 .toast.show{opacity:1;transform:none}
 .note{font-size:11px;color:var(--muted);line-height:1.7;margin-top:12px}
-@media(max-width:650px){.header-container{padding:12px 15px}.hamburger{display:block}.logo{flex:1}
- nav{display:none;position:absolute;left:12px;right:12px;top:67px;background:#0b1729;padding:10px;border:1px solid var(--line);border-radius:14px;flex-direction:column}
- nav.open{display:flex}.main{padding:20px 12px 50px}.panel{padding:15px;border-radius:18px}.opts{grid-template-columns:1fr}
+@media(max-width:650px){
+ .main{padding:96px 12px 50px}.panel{padding:15px;border-radius:18px}.opts{grid-template-columns:1fr}
  .row button{flex:1;justify-content:center}textarea{height:300px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}.shape{animation:none}}
 </style>
 </head>
 <body data-nav="apps">
 <div class="shape s1"></div><div class="shape s2"></div><div class="shape s3"></div><div class="shape s4"></div>
-<header class="header">
+<header>
  <div class="header-container">
   <div class="hamburger" onclick="toggleMenu()">☰</div>
   <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png" alt="Frambuk"></a></div>
@@ -150,7 +150,6 @@ textarea:focus{border-color:rgba(56,189,248,.7)}
 </main>
 <div class="toast" id="toast" role="status"></div>
 
-<script>function toggleMenu(){document.getElementById("menu").classList.toggle("open")}</script>
 <script src="script.js"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
