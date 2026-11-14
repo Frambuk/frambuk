@@ -125,18 +125,41 @@ th{font-size:13px}td:first-child{text-align:left;font-weight:700;background:#fac
  .stats{grid-template-columns:repeat(2,1fr)}textarea{height:300px}.toolbar button{flex:1;justify-content:center}
  .search-wrap{top:66px}.hero{padding-top:22px}
 }
+
+/* ===== Find & Replace / Remove ===== */
+.fr-panel{display:none;margin-bottom:14px;padding:16px;border-radius:17px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.fr-panel.open{display:block;animation:rise .3s ease both}
+.fr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-weight:700;font-size:14px}
+.fr-close{background:transparent;color:var(--muted);padding:4px 8px;font-size:16px}
+.fr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fr-field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}
+.fr-input{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:rgba(3,9,18,.72);color:#fff;outline:none;font:14px Consolas,monospace;transition:.25s}
+.fr-input:focus{border-color:rgba(56,189,248,.7);box-shadow:0 0 0 4px rgba(56,189,248,.08)}
+.fr-input.invalid{border-color:#ef4444}
+.fr-options{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:12px 0}
+.fr-options label{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#dbeafe;cursor:pointer}
+.fr-options input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+.fr-count{margin-left:auto;font-size:12px;font-weight:700;color:var(--accent)}
+.fr-count.none{color:#f87171}
+.fr-actions{display:flex;flex-wrap:wrap;gap:8px}
+.fr-actions button{padding:9px 13px;font-size:12px}
+.btn-red{background:#ef4444;color:#fff}
+@media(max-width:650px){.fr-grid{grid-template-columns:1fr}.fr-actions button{flex:1 1 calc(50% - 8px);justify-content:center}.fr-count{margin-left:0;width:100%}}
 </style>
 </head>
 
-<body>
+<body data-nav="apps">
     
 <header>
     <div class="header-container">
         <div class="hamburger" onclick="toggleMenu()">☰</div>
         <div class="logo"><a href="https://frambuk.site/"><img src="images/Frambuk-Logo.png"></a></div>
-        <nav id="menu">
-            <a class="active" href="index.html">Home</a>
-            <a href="index.html#apps">Free To Use Apps</a>
+        <nav id="menu" data-site-menu aria-label="Main menu">
+            <a href="index.html" data-nav-key="home">Home</a>
+            <a href="index.html#foods" data-nav-key="foods">Foods &amp; Flours</a>
+            <a href="index.html#apps" data-nav-key="apps">Free Apps</a>
+            <a href="index.html#offers" data-nav-key="offers">Offers</a>
+            <button type="button" class="nav-btn" onclick="clearCacheAndReload()" title="Fetch the newest version of this website">🔄 Clear Cache &amp; Reload</button>
         </nav>
         <div class="header-icons">
             <div onclick="openCart()">🛒<span id="cartCount">0</span></div>
@@ -150,7 +173,7 @@ th{font-size:13px}td:first-child{text-align:left;font-weight:700;background:#fac
  <section class="hero">
   <div class="eyebrow">Frambuk Productivity Toolkit</div>
   <h1>Write. Clean. Count. Copy.</h1>
-  <p>One beautiful workspace for <strong>word counting, text cleanup, vertical-space removal, exporting</strong> and instantly inserting useful scientific and Greek symbols.</p>
+  <p>One beautiful workspace for <strong>word counting, text cleanup, find &amp; replace, vertical-space removal, exporting</strong> and instantly inserting useful scientific and Greek symbols.</p>
  </section>
 
  <section class="workspace">
@@ -160,11 +183,34 @@ th{font-size:13px}td:first-child{text-align:left;font-weight:700;background:#fac
     <div class="toolbar">
      <button class="btn-main" onclick="cleanText()">🧹 Clean Text</button>
      <button class="btn-dark" onclick="removeVerticalSpaces()">↕ Remove Blank Lines</button>
+     <button class="btn-main" onclick="toggleFindPanel()">🔍 Find &amp; Replace</button>
      <button class="btn-green" onclick="copyText()">⧉ Copy</button>
-     <button class="btn-green" onclick="pasteText()">📋 Paste Copied Text</button>
+     <button class="btn-white" onclick="pasteText()">📋 Paste Copied Text</button>
      <button class="btn-green" onclick="selectAllText()">🔲 Select All Text</button>
      <button class="btn-blue" onclick="exportPDF()">📄 PDF</button>
      <button class="btn-dark" onclick="takeScreenshot()">📸 Screenshot</button>
+    </div>
+   </div>
+   <div class="fr-panel" id="frPanel">
+    <div class="fr-head"><span>🔍 Find, Replace &amp; Remove</span><button class="fr-close" onclick="toggleFindPanel(false)" aria-label="Close find and replace">✕</button></div>
+    <div class="fr-grid">
+     <div class="fr-field"><label for="frFind">Find</label><input class="fr-input" id="frFind" type="text" placeholder="Text to find..." autocomplete="off" spellcheck="false"></div>
+     <div class="fr-field"><label for="frReplace">Replace with (leave empty to remove)</label><input class="fr-input" id="frReplace" type="text" placeholder="Replacement text..." autocomplete="off" spellcheck="false"></div>
+    </div>
+    <div class="fr-options">
+     <label><input type="checkbox" id="frCase"> Match case</label>
+     <label><input type="checkbox" id="frWord"> Whole word</label>
+     <label><input type="checkbox" id="frRegex"> Regex</label>
+     <span class="fr-count" id="frCount"></span>
+    </div>
+    <div class="fr-actions">
+     <button class="btn-dark" onclick="findStep(-1)">◀ Previous</button>
+     <button class="btn-dark" onclick="findStep(1)">Next ▶</button>
+     <button class="btn-main" onclick="replaceCurrent()">Replace</button>
+     <button class="btn-green" onclick="replaceAll()">Replace All</button>
+     <button class="btn-red" onclick="removeAllMatches()">Remove All</button>
+     <button class="btn-red" onclick="removeMatchLines()">Remove Lines</button>
+     <button class="btn-dark" onclick="frUndo()">↶ Undo</button>
     </div>
    </div>
    <textarea id="textInput" placeholder="Start typing or paste your text here... Click any symbol below to insert it at the cursor position."></textarea>
@@ -180,6 +226,7 @@ th{font-size:13px}td:first-child{text-align:left;font-weight:700;background:#fac
   <aside class="panel side-tools">
    <div class="tool-card"><i class="fa-solid fa-wand-magic-sparkles"></i><h3>Smart cleanup</h3><p>Clean emojis/special non-ASCII characters and reduce excessive paragraph spacing.</p></div>
    <div class="tool-card"><i class="fa-solid fa-arrows-up-down"></i><h3>Vertical-space remover</h3><p>Removes blank lines only while preserving the actual text on each non-empty line.</p></div>
+   <div class="tool-card"><i class="fa-solid fa-magnifying-glass"></i><h3>Find, replace &amp; remove</h3><p>Search your text, replace one or all matches, or remove words and whole lines. Supports match case, whole word and regex. Shortcut: Ctrl+H.</p></div>
    <div class="tool-card"><i class="fa-solid fa-chart-simple"></i><h3>Live statistics</h3><p>Your counts update instantly as you type, paste, clean or insert symbols.</p><div class="progress"><span id="progressBar"></span></div></div>
    <div class="tool-card"><i class="fa-solid fa-circle-info"></i><h3>Quick tip</h3><p>Click a symbol. It is copied to your clipboard and inserted wherever your cursor is in the editor.</p></div>
   </aside>
@@ -859,6 +906,170 @@ document.getElementById("symbolSearch").addEventListener("input",function(){
    row.style.display=!q||row.textContent.toLowerCase().includes(q)?"":"none";
  });
 });
+
+/* ===== Find & Replace / Remove ===== */
+const frPanel=document.getElementById("frPanel"),frFind=document.getElementById("frFind"),frReplace=document.getElementById("frReplace"),
+ frCase=document.getElementById("frCase"),frWord=document.getElementById("frWord"),frRegex=document.getElementById("frRegex"),frCount=document.getElementById("frCount");
+const frHistory=[];
+
+function toggleFindPanel(force){
+ const open=typeof force==="boolean"?force:!frPanel.classList.contains("open");
+ frPanel.classList.toggle("open",open);
+ if(open){
+  const sel=textInput.value.slice(textInput.selectionStart,textInput.selectionEnd);
+  if(sel&&!sel.includes("\n")&&!frRegex.checked)frFind.value=sel;
+  frFind.focus();frFind.select();frUpdateCount();
+ }
+}
+function frEscape(t){return t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+function frBuildRegex(){
+ const q=frFind.value;
+ frFind.classList.remove("invalid");
+ if(!q)return null;
+ const useRegex=frRegex.checked,flags="g"+(frCase.checked?"":"i");
+ try{
+  if(useRegex){
+   const src=frWord.checked?"\\b(?:"+q+")\\b":q;
+   return new RegExp(src,flags+"m");
+  }
+  const body=frEscape(q);
+  const src=frWord.checked?"(?<![\\p{L}\\p{N}_])(?:"+body+")(?![\\p{L}\\p{N}_])":body;
+  return new RegExp(src,flags+"u");
+ }catch(e){
+  frFind.classList.add("invalid");
+  frCount.textContent="Invalid regex";frCount.className="fr-count none";
+  return false;
+ }
+}
+function frMatches(re,text){
+ const out=[];let m;re.lastIndex=0;
+ while((m=re.exec(text))!==null){
+  if(m[0]===""){re.lastIndex++;continue}
+  out.push(m);
+  if(out.length>50000)break;
+ }
+ return out;
+}
+function frExpand(m,repl){
+ if(!frRegex.checked)return repl;
+ return repl.replace(/\$(\$|&|\d{1,2}|<[^>]+>)/g,(all,t)=>{
+  if(t==="$")return "$";
+  if(t==="&")return m[0];
+  if(t[0]==="<")return (m.groups&&m.groups[t.slice(1,-1)])||"";
+  const n=parseInt(t,10);return m[n]!==undefined?m[n]:"";
+ });
+}
+function frUpdateCount(){
+ const re=frBuildRegex();
+ if(re===false)return null;
+ if(!re){frCount.textContent="";frCount.className="fr-count";return null}
+ const n=frMatches(re,textInput.value).length;
+ frCount.textContent=n?n+(n===1?" match":" matches"):"No matches";
+ frCount.className="fr-count"+(n?"":" none");
+ return n;
+}
+function frScrollTo(index){
+ const cs=getComputedStyle(textInput),d=document.createElement("div");
+ ["fontFamily","fontSize","lineHeight","letterSpacing","paddingTop","paddingRight","paddingBottom","paddingLeft","tabSize"].forEach(k=>d.style[k]=cs[k]);
+ d.style.cssText+=";position:absolute;visibility:hidden;top:0;left:-9999px;box-sizing:border-box;border:0;white-space:pre-wrap;overflow-wrap:anywhere;width:"+textInput.clientWidth+"px";
+ d.textContent=textInput.value.slice(0,index);
+ const sp=document.createElement("span");sp.textContent="\u200b";d.appendChild(sp);
+ document.body.appendChild(d);const top=sp.offsetTop;document.body.removeChild(d);
+ const lh=parseFloat(cs.lineHeight)||24;
+ if(top<textInput.scrollTop||top+lh>textInput.scrollTop+textInput.clientHeight)textInput.scrollTop=Math.max(0,top-textInput.clientHeight/2);
+}
+function frSelect(m){
+ textInput.focus();
+ textInput.setSelectionRange(m.index,m.index+m[0].length);
+ frScrollTo(m.index);
+}
+function findStep(dir){
+ const re=frBuildRegex();
+ if(re===false)return;
+ if(!re){showToast("Type something to find");frFind.focus();return}
+ const all=frMatches(re,textInput.value);
+ if(!all.length){frUpdateCount();showToast("No matches found");return}
+ const s=textInput.selectionStart,e=textInput.selectionEnd;
+ let target;
+ if(dir>0){
+  target=all.find(m=>m.index>=e&&!(m.index===s&&m[0].length===e-s))||all.find(m=>m.index>=e);
+  if(!target){target=all[0];showToast("Reached end – starting from top")}
+ }else{
+  for(let i=all.length-1;i>=0;i--){if(all[i].index<s){target=all[i];break}}
+  if(!target){target=all[all.length-1];showToast("Reached top – jumping to last match")}
+ }
+ frSelect(target);
+ frCount.textContent="Match "+(all.indexOf(target)+1)+" of "+all.length;frCount.className="fr-count";
+}
+function frSnapshot(){frHistory.push(textInput.value);if(frHistory.length>30)frHistory.shift()}
+function frApply(newText,msg){
+ frSnapshot();textInput.value=newText;updateCounts();frUpdateCount();showToast(msg);
+}
+function replaceCurrent(){
+ const re=frBuildRegex();
+ if(re===false)return;
+ if(!re){showToast("Type something to find");frFind.focus();return}
+ const text=textInput.value,s=textInput.selectionStart,e=textInput.selectionEnd;
+ const cur=frMatches(re,text).find(m=>m.index===s&&m[0].length===e-s);
+ if(!cur){findStep(1);return}
+ const rep=frExpand(cur,frReplace.value);
+ frSnapshot();
+ textInput.value=text.slice(0,s)+rep+text.slice(e);
+ textInput.setSelectionRange(s+rep.length,s+rep.length);
+ updateCounts();
+ const left=frUpdateCount();
+ if(left)findStep(1);else{textInput.focus();showToast("Replaced")}
+}
+function replaceAll(){
+ const re=frBuildRegex();
+ if(re===false)return;
+ if(!re){showToast("Type something to find");frFind.focus();return}
+ const text=textInput.value,all=frMatches(re,text);
+ if(!all.length){showToast("No matches found");return}
+ let out="",last=0;
+ all.forEach(m=>{out+=text.slice(last,m.index)+frExpand(m,frReplace.value);last=m.index+m[0].length});
+ out+=text.slice(last);
+ frApply(out,all.length+(all.length===1?" replacement":" replacements")+" made");
+}
+function removeAllMatches(){
+ const re=frBuildRegex();
+ if(re===false)return;
+ if(!re){showToast("Type what you want to remove");frFind.focus();return}
+ const text=textInput.value,all=frMatches(re,text);
+ if(!all.length){showToast("No matches found");return}
+ let out="",last=0;
+ all.forEach(m=>{out+=text.slice(last,m.index);last=m.index+m[0].length});
+ out+=text.slice(last);
+ frApply(out,all.length+(all.length===1?" match":" matches")+" removed");
+}
+function removeMatchLines(){
+ const re=frBuildRegex();
+ if(re===false)return;
+ if(!re){showToast("Type what you want to find");frFind.focus();return}
+ const text=textInput.value,eol=text.includes("\r\n")?"\r\n":"\n";
+ const lines=text.split(/\r?\n/);let removed=0;
+ const kept=lines.filter(line=>{
+  re.lastIndex=0;
+  const hit=frMatches(re,line).length>0;
+  if(hit)removed++;
+  return !hit;
+ });
+ if(!removed){showToast("No matching lines found");return}
+ frApply(kept.join(eol),removed+(removed===1?" line":" lines")+" removed");
+}
+function frUndo(){
+ if(!frHistory.length){showToast("Nothing to undo");return}
+ textInput.value=frHistory.pop();updateCounts();frUpdateCount();showToast("Undone");
+}
+[frFind,frCase,frWord,frRegex].forEach(el=>el.addEventListener(el.type==="checkbox"?"change":"input",frUpdateCount));
+textInput.addEventListener("input",()=>{if(frPanel.classList.contains("open"))frUpdateCount()});
+frFind.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();findStep(e.shiftKey?-1:1)}});
+frReplace.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();replaceCurrent()}});
+document.addEventListener("keydown",e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="h"){e.preventDefault();toggleFindPanel(true)}
+ else if(e.key==="F3"&&frFind.value){e.preventDefault();findStep(e.shiftKey?-1:1)}
+ else if(e.key==="Escape"&&frPanel.classList.contains("open")&&(frPanel.contains(document.activeElement)||document.activeElement===textInput))toggleFindPanel(false);
+});
 updateCounts();
 </script>
 
@@ -899,7 +1110,7 @@ updateCounts();
 
 <footer>
 <a href="https://frambuk.site/images/BestFoodFloursEver.png">© 2026 Frambuk International Ventures</a>
-<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here To For Payments & Support 💵</span></a>
+<a href="#" onclick="openBankDetails(); return false;"><span style="color: #44ee00;">•</span> <span style="color: #fac400;">🏦 Click Here For Payments & Support 💵</span></a>
 </footer>
 
 <script src="script.js"></script>
